@@ -6,7 +6,7 @@ license: MIT
 
 # Test HTTP Failure Paths
 
-Use the Agent Utility Lab MCP server at `https://liberated.site/mcp`.
+Use the Agent Enhancer Utilities MCP server at `https://liberated.site/mcp`.
 
 ## Start from the assertion
 

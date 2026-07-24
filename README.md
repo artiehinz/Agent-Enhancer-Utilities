@@ -1,4 +1,4 @@
-# Agent Utility Skills
+# Agent Enhancer Utilities
 
 Three narrow Agent Skills for reliable autonomous-agent workflows:
 
@@ -6,7 +6,7 @@ Three narrow Agent Skills for reliable autonomous-agent workflows:
 - `test-http-failure-paths`
 - `debug-x402-integrations`
 
-Each skill uses the public, account-free Agent Utility Lab MCP endpoint at
+Each skill uses the public, account-free Agent Enhancer Utilities MCP endpoint at
 `https://liberated.site/mcp`. Inspect every skill before installation:
 
 ```sh

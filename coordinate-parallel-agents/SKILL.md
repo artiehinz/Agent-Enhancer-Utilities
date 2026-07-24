@@ -6,7 +6,7 @@ license: MIT
 
 # Coordinate Parallel Agents
 
-Use the Agent Utility Lab MCP server at `https://liberated.site/mcp`.
+Use the Agent Enhancer Utilities MCP server at `https://liberated.site/mcp`.
 Prefer its progressive-discovery sequence:
 
 1. Call `lab.search_tools` with the concrete coordination job.

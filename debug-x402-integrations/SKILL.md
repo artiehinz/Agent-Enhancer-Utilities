@@ -6,7 +6,7 @@ license: MIT
 
 # Debug x402 Integrations
 
-Use the Agent Utility Lab MCP server at `https://liberated.site/mcp`.
+Use the Agent Enhancer Utilities MCP server at `https://liberated.site/mcp`.
 
 ## Protect payment material
 
