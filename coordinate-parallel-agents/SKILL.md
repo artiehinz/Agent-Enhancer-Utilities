@@ -1,6 +1,7 @@
 ---
 name: coordinate-parallel-agents
 description: Coordinate autonomous workers with bounded distributed locks, deduplication stamps, one-use batons, semaphores, barriers, negative-cache tickets, and renewable freshness leases. Use when parallel agents may duplicate work, exceed a concurrency limit, race to consume one action, wait for a phase threshold, or need one temporary refresh owner.
+license: MIT
 ---
 
 # Coordinate Parallel Agents

@@ -1,6 +1,7 @@
 ---
 name: test-http-failure-paths
 description: Design and run bounded HTTP failure-path tests with temporary status endpoints and deterministic synthetic fixtures. Use when an agent must test retries, Retry-After handling, redirects, webhook errors, delays, malformed assumptions, or non-production test data without hosting caller-controlled content.
+license: MIT
 ---
 
 # Test HTTP Failure Paths
