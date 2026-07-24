@@ -1,0 +1,16 @@
+interface:
+  display_name: "Test HTTP Failure Paths"
+  short_description: "Exercise bounded HTTP failures safely"
+  brand_color: "#7EF0B8"
+  default_prompt: "Use $test-http-failure-paths to design and run a safe deterministic HTTP failure-path test."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-utility-lab"
+      description: "Public bounded HTTP and synthetic test fixtures"
+      transport: "streamable_http"
+      url: "https://liberated.site/mcp"
+
+policy:
+  allow_implicit_invocation: true

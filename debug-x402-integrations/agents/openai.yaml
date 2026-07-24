@@ -1,0 +1,16 @@
+interface:
+  display_name: "Debug x402 Integrations"
+  short_description: "Diagnose x402 failures with evidence"
+  brand_color: "#7EF0B8"
+  default_prompt: "Use $debug-x402-integrations to diagnose this x402 failure without exposing wallet secrets."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-utility-lab"
+      description: "Public evidence-linked x402 compatibility lookups"
+      transport: "streamable_http"
+      url: "https://liberated.site/mcp"
+
+policy:
+  allow_implicit_invocation: true

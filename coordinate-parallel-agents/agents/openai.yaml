@@ -1,0 +1,16 @@
+interface:
+  display_name: "Coordinate Parallel Agents"
+  short_description: "Bound duplicate and concurrent agent work"
+  brand_color: "#7EF0B8"
+  default_prompt: "Use $coordinate-parallel-agents to choose and safely invoke a bounded coordination primitive."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-utility-lab"
+      description: "Public deterministic coordination utilities"
+      transport: "streamable_http"
+      url: "https://liberated.site/mcp"
+
+policy:
+  allow_implicit_invocation: true
