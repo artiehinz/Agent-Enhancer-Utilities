@@ -1,0 +1,52 @@
+name: Skill or workflow problem
+description: Report a reproducible discovery, installation, selection, or execution problem.
+title: "[Workflow]: "
+labels:
+  - workflow
+body:
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Skill
+      options:
+        - coordinate-parallel-agents
+        - test-http-failure-paths
+        - debug-x402-integrations
+        - review-mcp-tool-contracts
+        - guard-x402-retries
+        - measure-webhook-delivery
+    validations:
+      required: true
+  - type: input
+    id: host
+    attributes:
+      label: Agent host and version
+      placeholder: Codex, Claude, Copilot, or another host
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Failure stage
+      options:
+        - Discovery
+        - Installation
+        - Tool selection
+        - Schema validation
+        - Execution
+        - Retry or recovery
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Synthetic reproduction
+      description: Use only synthetic values. Remove secrets, tokens, personal data, and customer content.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true

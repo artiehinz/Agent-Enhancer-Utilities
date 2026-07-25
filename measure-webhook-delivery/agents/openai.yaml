@@ -6,7 +6,7 @@ interface:
 dependencies:
   tools:
     - type: "mcp"
-      value: "agent-utility-lab"
+      value: "agent-enhancer-utilities"
       description: "Public bounded webhook testing utilities"
       transport: "streamable_http"
       url: "https://liberated.site/mcp"

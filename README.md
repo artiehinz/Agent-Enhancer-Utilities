@@ -1,63 +1,87 @@
-# Agent Enhancer Utilities
+<p align="center">
+  <img src="./assets/icon.svg" width="128" height="128" alt="Agent Enhancer Utilities broken-chain icon">
+</p>
 
-Six narrow Agent Skills for reliable autonomous-agent workflows:
+<h1 align="center">Agent Enhancer Utilities</h1>
 
-- `coordinate-parallel-agents`
-- `test-http-failure-paths`
-- `debug-x402-integrations`
-- `review-mcp-tool-contracts`
-- `guard-x402-retries`
-- `measure-webhook-delivery`
+<p align="center">
+  Six inspectable Agent Skills backed by a free, account-free MCP service for
+  coordination, API failure testing, and MCP/x402 contract analysis.
+</p>
 
-Each skill uses the public, account-free Agent Enhancer Utilities service. The
-progressive-discovery MCP endpoint is `https://liberated.site/mcp`; the
-Claude and ChatGPT direct-tool endpoints are
-`https://liberated.site/mcp/claude` and
-`https://liberated.site/mcp/chatgpt`.
+<p align="center">
+  <a href="https://liberated.site/status">Service status</a> ·
+  <a href="https://liberated.site/effectiveness">Effectiveness</a> ·
+  <a href="https://liberated.site/tools">22-module catalog</a> ·
+  <a href="./LICENSE">MIT license</a>
+</p>
 
-Inspect every skill before installation. GitHub's native commands require
-GitHub CLI 2.90 or later:
+## Skills
+
+| Skill | Use it for |
+| --- | --- |
+| `coordinate-parallel-agents` | Locks, deduplication, one-use batons, semaphores, shared rate gates, barriers, and freshness leases |
+| `test-http-failure-paths` | Bounded status/failure sequences, webhook delivery attempts, Retry-After behavior, and synthetic fixtures |
+| `debug-x402-integrations` | Evidence-linked x402 error diagnosis, requirement drift, and facilitator compatibility checks |
+| `review-mcp-tool-contracts` | Tool schema, annotation, capability-handshake, elicitation, and edge-case review |
+| `guard-x402-retries` | Detect changed payment requirements and bind one retry identity to one normalized quote |
+| `measure-webhook-delivery` | Collect one-use, hash-only evidence about bounded webhook delivery attempts |
+
+Every skill is a small Markdown workflow. Inspect its `SKILL.md` before
+installation.
+
+## Install
+
+GitHub's native skill commands require GitHub CLI 2.90 or later:
 
 ```sh
-gh skill preview artiehinz/agent-utility-skills coordinate-parallel-agents
-gh skill install artiehinz/agent-utility-skills coordinate-parallel-agents
+gh skill preview artiehinz/Agent-Enhancer-Utilities coordinate-parallel-agents
+gh skill install artiehinz/Agent-Enhancer-Utilities coordinate-parallel-agents
 ```
 
-The cross-agent alternative is:
+Cross-agent installation:
 
 ```sh
-npx skills add artiehinz/agent-utility-skills
+npx skills add artiehinz/Agent-Enhancer-Utilities
 ```
 
-Service release 0.5.0 contains 22 free production-beta modules. Its
-machine-readable catalog, schemas, limits, side effects, retention, and typed
-errors are published at `https://liberated.site/v1/catalog` after promotion.
+Agents can also connect without installing a skill:
 
-No skill asks for credentials, wallet private keys, personal data, or full
-conversation history. Public service terms, privacy, acceptable-use, security,
-support, and status information are linked from `https://liberated.site`.
+| Surface | Endpoint | Shape |
+| --- | --- | --- |
+| Progressive MCP | `https://liberated.site/mcp` | Search, describe, invoke, and capability request |
+| Claude | `https://liberated.site/mcp/claude` | 32 direct action-specific tools |
+| ChatGPT | `https://liberated.site/mcp/chatgpt` | The same 32 direct tools |
+| HTTP/OpenAPI | `https://liberated.site/v1/openapi.json` | Generated contracts for all 22 modules |
 
-## Roadmap
+All public modules are currently free. Real USDC settlement is disabled.
 
-- **Cross-host acceptance:** Clean-install and exercise all six skills on
-  Codex, Claude, and Copilot after the 0.5.0 backing service is live.
-- **Adoption evidence:** Link each skill to a host-specific 60-second
-  quickstart, add an opt-in issue template for discovery/install failures, and
-  measure successful workflows and repeat use at the service rather than adding
-  hidden install telemetry.
-- **Claude Connectors Directory:** Anthropic's
-  [current submission guidance](https://claude.com/docs/connectors/building/submission)
-  requires a Team or Enterprise organization and Directory management access
-  for remote-server submissions. The isolated free endpoint, annotations,
-  public policies, limits, and negative-case tests are ready. Purchase the
-  minimum suitable plan, submit the free connector, and keep the organization
-  active through review. Before cancelling, confirm with
-  `mcp-review@anthropic.com` whether the listing persists and which health,
-  usage, feedback, and listing-management functions remain available after the
-  plan expires.
-- **Next workflow package:** Keep offer/receipt signature verification
-  demand-gated until its backing module and supplied-key threat model are
-  implemented and externally validated.
+## Trust and effectiveness
+
+The service publishes:
+
+- current per-module self-test results and dataset freshness at
+  [`/status`](https://liberated.site/status);
+- privacy-safe methodology and usage evidence at
+  [`/effectiveness`](https://liberated.site/effectiveness);
+- schemas, limits, side effects, retention, and typed errors in the
+  [catalog](https://liberated.site/v1/catalog);
+- privacy, acceptable-use, security, support, and pricing policies from the
+  [service homepage](https://liberated.site).
+
+The skills contain no hidden install telemetry. Do not send credentials,
+wallet private keys, personal data, customer records, or conversation history
+to the service.
+
+## Repository scope
+
+This public repository contains the reusable skills, their host metadata, and
+project-level validation/documentation. The hosted service implementation is
+operated separately. A skill must use progressive discovery and must not copy
+private schemas, credentials, or backend source.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md), [SECURITY.md](./SECURITY.md), and
+[docs/EFFECTIVENESS.md](./docs/EFFECTIVENESS.md).
 
 ## License
 
