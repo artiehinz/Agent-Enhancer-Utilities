@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/icon.svg" width="128" height="128" alt="Agent Enhancer Utilities broken-chain icon">
+  <img src="./assets/agents.png" width="128" height="128" alt="Agent Enhancer Utilities broken-chain icon">
 </p>
 
 <h1 align="center">Agent Enhancer Utilities</h1>
