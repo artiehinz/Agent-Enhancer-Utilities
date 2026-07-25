@@ -13,6 +13,7 @@
   <a href="https://liberated.site/status">Service status</a> ·
   <a href="https://liberated.site/effectiveness">Effectiveness</a> ·
   <a href="https://liberated.site/tools">22-module catalog</a> ·
+  <a href="https://glama.ai/mcp/connectors/site.liberated/agent-utility-lab">Glama verified</a> ·
   <a href="./LICENSE">MIT license</a>
 </p>
 
@@ -55,6 +56,15 @@ Agents can also connect without installing a skill:
 | HTTP/OpenAPI | `https://liberated.site/v1/openapi.json` | Generated contracts for all 22 modules |
 
 All public modules are currently free. Real USDC settlement is disabled.
+
+## Directory listings
+
+- [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=site.liberated%2Fagent-utility-lab)
+- [Glama](https://glama.ai/mcp/connectors/site.liberated/agent-utility-lab) — ownership verified
+- [Smithery](https://smithery.ai/servers/artemhinz2/Agent-Enhancer-Utilities)
+
+These listings point to the live service. The implementation is not published
+in this skills repository.
 
 ## Trust and effectiveness
 
