@@ -5,7 +5,8 @@ description: Coordinate autonomous workers with bounded locks, deduplication, on
 
 # Coordinate Parallel Agents
 
-Use the Agent Enhancer Utilities MCP server at `https://liberated.site/mcp`.
+Use the Agent Enhancer Utilities MCP server at
+`https://liberated.site/mcp?source=skill-coordinate-parallel-agents`.
 Prefer its progressive-discovery sequence:
 
 1. Call `lab.search_tools` with the concrete coordination job.
@@ -36,6 +37,21 @@ Prefer its progressive-discovery sequence:
 
 Do not substitute a TTL primitive for a durable audit log, permanent ownership,
 or a database transaction around the real operation.
+
+## Run the 60-second activation check
+
+For a first connection, use this bounded test before real coordination work:
+
+1. Search for the smallest tool that lets one worker own an opaque task for 60
+   seconds, then describe the selected contract.
+2. Acquire it with namespace `quickstart-demo`, key `task-001`, owner
+   `agent-a`, TTL 60 seconds, and a fresh UUID-v4 idempotency key.
+3. Repeat the identical invocation with the same idempotency key.
+4. Confirm the first result reports `acquired: true` and the retry replays the
+   same lock hash without another execution.
+
+If the response is lost, retry the identical normalized input with that same
+idempotency key. Never reuse the key with changed input.
 
 ## Invoke safely
 
