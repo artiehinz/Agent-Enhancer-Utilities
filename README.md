@@ -18,9 +18,10 @@
   <a href="./LICENSE">MIT license</a>
 </p>
 
-> Release status: `v1.4.0` and backend `0.6.0` are release candidates. The
-> current production service remains on backend `0.5.3` with 22 modules and
-> 32 direct tools until the isolated connector acceptance gate passes.
+> Release status: `v1.4.0` is the accepted seven-skill release for backend
+> `0.6.0`, which passed isolated connector and Notion acceptance. Check the
+> live [service status](https://liberated.site/status) for the currently
+> deployed backend version.
 
 ## Skills
 
@@ -69,9 +70,9 @@ Agents can also connect without installing a skill:
 | Surface | Endpoint | Shape |
 | --- | --- | --- |
 | Progressive MCP | `https://liberated.site/mcp` | Search, describe, invoke, and capability request |
-| Claude | `https://liberated.site/mcp/claude` | 37 direct action-specific tools after the `0.6.0` promotion; 32 live now |
+| Claude | `https://liberated.site/mcp/claude` | 37 direct action-specific tools on backend `0.6.0` and later |
 | ChatGPT | `https://liberated.site/mcp/chatgpt` | The same release-dependent direct surface |
-| HTTP/OpenAPI | `https://liberated.site/v1/openapi.json` | 24 generated module contracts after the `0.6.0` promotion; 22 live now |
+| HTTP/OpenAPI | `https://liberated.site/v1/openapi.json` | 24 generated module contracts on backend `0.6.0` and later |
 
 All public modules are currently free. Real USDC settlement is disabled.
 
