@@ -1,7 +1,6 @@
 ---
 name: test-http-failure-paths
-description: Design and run bounded HTTP failure-path tests with temporary status endpoints and deterministic synthetic fixtures. Use when an agent must test retries, Retry-After handling, redirects, webhook errors, delays, malformed assumptions, or non-production test data without hosting caller-controlled content.
-license: MIT
+description: Design and run bounded HTTP failure-path tests with ordered retry sequences, temporary status endpoints, and deterministic synthetic fixtures. Use when an agent must test retries, Retry-After handling, redirects, webhook errors, delays, recovery after multiple failures, malformed assumptions, or non-production test data without hosting caller-controlled content.
 ---
 
 # Test HTTP Failure Paths
@@ -25,11 +24,31 @@ open redirects, arbitrary payload hosting, or sensitive data.
 
 1. Call `lab.search_tools` with the failure behavior.
 2. Call `lab.describe_tool` for the top candidate.
-3. Use `status-code-forge` for a short-lived controlled response.
-4. Use `safe-synthetic-fixture-vault` for deterministic identity, network, or
+3. Use `failure-sequence-forge` when the client must traverse two to eight
+   ordered responses ending in success.
+4. Use `status-code-forge` for one short-lived controlled response.
+5. Use `safe-synthetic-fixture-vault` for deterministic identity, network, or
    HTTP-event data made only from reserved non-production values.
-5. If search returns `NO_MATCH`, abstain. Do not bend a fixture into an
+6. If search returns `NO_MATCH`, abstain. Do not bend a fixture into an
    unsupported behavior.
+
+## Build a retry sequence
+
+Use `failure-sequence-forge` when one URL must prove bounded recovery behavior:
+
+- provide two to eight steps;
+- use only 408, 425, 429, or 500 before the terminal step;
+- end with 200, 201, or 202;
+- keep each delay between 0 and 2,000 milliseconds;
+- choose a TTL from 60 to 1,800 seconds;
+- expect the fixed JSON response and a fixed `Retry-After: 1` on 429;
+- expect each `GET` to atomically consume exactly one step;
+- expect `410 Gone` after exhaustion while the record exists;
+- expect `404 NOT_FOUND_OR_EXPIRED` after TTL expiry.
+
+The service does not accept custom response headers, bodies, or redirect
+targets. Creation is side-effecting, so use a stable outer `idempotency_key`
+for retries of the identical sequence request.
 
 ## Build a status fixture
 

@@ -1,7 +1,6 @@
 ---
 name: coordinate-parallel-agents
-description: Coordinate autonomous workers with bounded distributed locks, deduplication stamps, one-use batons, semaphores, barriers, negative-cache tickets, and renewable freshness leases. Use when parallel agents may duplicate work, exceed a concurrency limit, race to consume one action, wait for a phase threshold, or need one temporary refresh owner.
-license: MIT
+description: Coordinate autonomous workers with bounded locks, deduplication, one-use batons, concurrency permits, shared rate gates, barriers, negative-cache tickets, and renewable freshness leases. Use when parallel agents may duplicate work, exceed a concurrency or API quota, race to consume one action, wait for a phase threshold, or need one temporary refresh owner.
 ---
 
 # Coordinate Parallel Agents
@@ -28,6 +27,9 @@ Prefer its progressive-discovery sequence:
   It does not make the underlying business operation transactional.
 - Use `negative-cache-ticket` to share a temporary typed lookup failure.
 - Use `swarm-semaphore` to cap concurrent holders above one.
+- Use `swarm-rate-gate` to share a token budget across workers or processes.
+  `consume` atomically spends the requested token amount at most once;
+  `status` observes the gate without consuming.
 - Use `barrier-bell` to release a phase after a threshold of unique arrivals.
 - Use `freshness-lease` when one worker should renew a temporary refresh
   responsibility.
@@ -43,6 +45,14 @@ or a database transaction around the real operation.
 - For a side-effecting tool, generate one stable `idempotency_key` of 16–128
   letters, numbers, underscores, or hyphens. Reuse it only for recovery of the
   same normalized request.
+- For `swarm-rate-gate`, keep the outer `idempotency_key` stable only while
+  recovering the same MCP attempt. A completed insufficient-token response is
+  replayed under that outer key, so after `retry_after_ms` use a new outer key
+  while keeping the same inner `operation_key`. A successful inner operation
+  key deduplicates later consumption. Never reuse either key for changed work.
+- The first successful rate-gate consume fixes its capacity, refill cadence,
+  and TTL. Treat a configuration mismatch as a caller bug; do not probe by
+  changing those values.
 - Choose the shortest practical TTL inside the described limits.
 - Treat a successful lock, lease, permit, or baton result as coordination state,
   not proof that downstream work completed.

@@ -1,7 +1,6 @@
 ---
 name: debug-x402-integrations
 description: Diagnose covered x402 v2 client, header, network, scheme, and repeated-402 failures with versioned evidence-linked lookup records. Use when an x402 buyer or seller integration fails and the agent needs a normalized cause, a known-good recipe, or an explicit NOT_COVERED abstention without handling wallet secrets.
-license: MIT
 ---
 
 # Debug x402 Integrations
