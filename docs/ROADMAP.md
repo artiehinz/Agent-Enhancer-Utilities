@@ -427,12 +427,16 @@ Completed in the public skills repository on 2026-07-25:
 6. Added cross-plugin outcome-evidence rules to the effectiveness methodology.
 7. Used the live seen-stamp and lock behavior to select Opaque Workflow
    Checkpoints first and retain a Shared Circuit Breaker as the next candidate.
+8. Passed the isolated `0.6.0` preview and five controlled synthetic Notion
+   scenarios: normal, identical replay, concurrent workers, crash before
+   create, and crash after create before verification. Each stable marker
+   produced exactly one verified page.
 
 The ChatGPT submission copy and multilingual starter prompts now position the
 target 37-tool app as a deliberate reliability sidecar, include a guarded
 cross-plugin test, and preserve abstention for a one-time external write.
 
 See [SIDECAR_RECIPE_TESTS.md](./SIDECAR_RECIPE_TESTS.md) for observed evidence
-and remaining vendor-specific end-to-end tests. The planner and checkpoint
-have backend `0.6.0` release-candidate implementations maintained outside this
-repository; the circuit breaker remains a specification.
+and remaining vendor-specific coverage. The planner and checkpoint have
+accepted backend `0.6.0` implementations maintained outside this repository;
+the circuit breaker remains a specification.

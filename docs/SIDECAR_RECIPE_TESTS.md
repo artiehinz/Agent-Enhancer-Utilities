@@ -2,14 +2,74 @@
 
 Test date: 2026-07-25
 
+This file contains the isolated Sidecar v1 release evidence followed by the
+earlier production-primitive observations that selected the checkpoint design.
+
+## Isolated Sidecar v1 acceptance
+
+Candidate:
+
+- public skills commit: `a7c37775aa1cefa1b5eb6024786fc9a7bf6ec78d`;
+- backend commit: `52bfd816738bd8af36d5dcf54dbe6beb59146eb7`;
+- backend version: `0.6.0`;
+- DigitalOcean deployment:
+  `6d5397ae-b2ee-4203-b4a0-bb52a1477aef`;
+- recipe version: `sidecar-v1/1`;
+- external connector: the Notion connector exposed through plugin package
+  `0.1.7`;
+- observed window: 2026-07-25 22:49–22:56 UTC.
+
+The short-lived preview used a fresh development PostgreSQL component, the
+existing managed Valkey cluster under a unique preview namespace, disabled
+payments, disabled automatic deployment, and independently generated preview
+secrets. The external test used one disposable Notion database and five
+synthetic records. No production Notion, investment, messaging, customer, or
+other plugin data was read or changed.
+
+Observed platform gates:
+
+- 24 of 24 hosted module self-tests passed;
+- all 37 Claude tools and all 37 ChatGPT tools were invoked successfully;
+- PostgreSQL, Valkey, discovery, replay, free-boundary, negative-case, status,
+  and exact-deployment-commit checks passed;
+- the planner selected `create-once` with the honest
+  `duplicate-resistant` guarantee;
+- the local Valkey integration gate gave exactly one owner to 100 concurrent
+  claims, and a separate hosted 20-contender check also gave exactly one
+  owner.
+
+Observed Notion scenarios:
+
+| Scenario | Result |
+| --- | --- |
+| Normal | One marker search, one create, one read-back, and one `caller_verified` transition |
+| Identical replay | Replayed the same outer execution, searched the stable marker, skipped a second create, and retained one page |
+| Concurrent workers | Ten callers produced one checkpoint owner and one page |
+| Crash before create | The first generation was abandoned before any external call; a second generation recovered and created one page |
+| Crash after create | The first generation recorded `external_result_uncertain`; after claim expiry, generation two found the existing marker and verified it without another create |
+
+The final aggregate query returned exactly five rows—one per stable marker—with
+`Verified` checked on every row. The checkpoint continued to report
+`external_proof: false`; the Notion read-back, not the checkpoint, supplied the
+external evidence.
+
+Limitations:
+
+- Notion creation did not expose provider idempotency, so the achieved
+  guarantee is duplicate-resistant, not exactly once.
+- The run observed immediate marker visibility. It did not inject a prolonged
+  Notion search-consistency delay or a Notion-wide outage.
+- The preview proved the specified connector and recipe versions at the
+  observed time; it is not a future guarantee for changed tool contracts.
+
+## Earlier production primitive checks
+
 Environment: live Agent Enhancer Utilities direct tools backed by
 `https://liberated.site/mcp`, using opaque synthetic namespaces and 60-second
-temporary state. No Notion, investment, messaging, customer, or other
-production plugin data was read or changed.
+temporary state. No external record was created in these earlier checks.
 
-These tests validate the current coordination contracts used by the recipes.
-They do not prove an external plugin's consistency, idempotency, or write
-behavior.
+These checks validate the coordination contracts used by the recipes. They do
+not prove an external plugin's consistency, idempotency, or write behavior.
 
 ## Prior cross-plugin observations
 
@@ -77,17 +137,16 @@ occur only after the caller has verified its durable result.
 
 ## Resulting design decision
 
-The most immediate missing state is not another rate or concurrency limiter. It
-is an explicit distinction between:
+The most immediate missing state was not another rate or concurrency limiter.
+It was an explicit distinction between:
 
 - work claimed;
 - an external result that is uncertain;
 - external evidence reported by the caller;
 - failure or compensation.
 
-That evidence selected
-[Opaque Workflow Checkpoints](./OPAQUE_WORKFLOW_CHECKPOINTS.md) as the first
-new stateful sidecar proposal. A
+That evidence selected and led to the `0.6.0` implementation of
+[Opaque Workflow Checkpoints](./OPAQUE_WORKFLOW_CHECKPOINTS.md). A
 [Shared Circuit Breaker](./SHARED_CIRCUIT_BREAKER.md) remains the next candidate
 for swarm-wide dependency failure containment.
 
@@ -110,18 +169,16 @@ capacity two. It produced:
 - explicit eventual-search, lock-expiry, advisory-stamp, and
   no-cross-plugin-transaction risks.
 
-This is deterministic planning evidence, not a deployed MCP planner or an
-external write test.
+The isolated `0.6.0` preview subsequently exercised the deployed planner and
+checkpoint against the controlled Notion write scenarios recorded above.
 
-## Remaining end-to-end tests
+## Remaining vendor coverage
 
-Before publishing a vendor-named recipe as worked-once evidence, test against
-the exact external plugin/tool version:
+Before expanding this worked recipe to other capability shapes or vendors,
+test against each exact external plugin/tool version:
 
-- timeout before the external call;
-- timeout after the destination accepts the action;
-- crash before verification;
 - eventual-search delay;
 - destination record removed after a sidecar stamp;
 - unguarded external writer;
-- changed tool schema or action annotations.
+- changed tool schema or action annotations;
+- uncertain send behavior for messaging tools that cannot be searched.
