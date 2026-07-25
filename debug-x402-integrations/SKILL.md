@@ -1,6 +1,6 @@
 ---
 name: debug-x402-integrations
-description: Diagnose covered x402 v2 client, header, network, scheme, and repeated-402 failures with versioned evidence-linked lookup records. Use when an x402 buyer or seller integration fails and the agent needs a normalized cause, a known-good recipe, or an explicit NOT_COVERED abstention without handling wallet secrets.
+description: Diagnose covered x402 v2 failures and compare supplied requirements or facilitator capabilities without handling wallet secrets. Use when a buyer or seller integration fails, retry terms may have changed, a facilitator document may not cover the requirement, or the agent needs a normalized cause, known-good recipe, or explicit NOT_COVERED abstention.
 ---
 
 # Debug x402 Integrations
@@ -29,8 +29,13 @@ unless they are already public and necessary for evidence.
 4. Use `worked-once-recipe-vault` for a covered, versioned integration recipe.
 5. Use `error-code-cemetery` only for a covered host-specific compatibility
    error outside the narrower x402 corpus.
-6. Invoke the lookup. These tools are read-only, but still follow the manifest
-   and current service policy.
+6. Use `x402-requirement-drift-diff` before retrying when two normalized
+   requirements are available.
+7. Use `x402-facilitator-compatibility-diff` only with a capability document
+   the caller already supplied; it does not fetch or probe the facilitator.
+8. Use `x402-quote-fingerprint-guard` to bind/check one quote fingerprint for
+   an opaque retry identity.
+9. Invoke only the selected bounded tool and follow its current manifest.
 
 Never guess a key from the submitted prose. Normalize only to a fingerprint or
 recipe key explicitly listed in the described contract.
@@ -46,6 +51,10 @@ recipe key explicitly listed in the described contract.
   version, and facilitator environment before changing code.
 - Preserve the payment identifier only for an identical replay; never bind a
   changed request to an old identifier.
+- Stop and request explicit review when amount, receiver, network, asset, or
+  resource changes.
+- A facilitator compatibility result proves document-level matching, not live
+  verification, settlement, availability, or future support.
 
 ## Abstain correctly
 

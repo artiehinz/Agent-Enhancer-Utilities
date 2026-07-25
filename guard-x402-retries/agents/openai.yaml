@@ -1,0 +1,15 @@
+interface:
+  display_name: "Guard x402 Retries"
+  short_description: "Detect changed x402 retry terms safely"
+  default_prompt: "Use $guard-x402-retries to compare and bind these x402 retry requirements safely."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-utility-lab"
+      description: "Public bounded x402 contract utilities"
+      transport: "streamable_http"
+      url: "https://liberated.site/mcp"
+
+policy:
+  allow_implicit_invocation: true

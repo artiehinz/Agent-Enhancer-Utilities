@@ -1,14 +1,19 @@
 # Agent Enhancer Utilities
 
-Three narrow Agent Skills for reliable autonomous-agent workflows:
+Six narrow Agent Skills for reliable autonomous-agent workflows:
 
 - `coordinate-parallel-agents`
 - `test-http-failure-paths`
 - `debug-x402-integrations`
+- `review-mcp-tool-contracts`
+- `guard-x402-retries`
+- `measure-webhook-delivery`
 
 Each skill uses the public, account-free Agent Enhancer Utilities service. The
 progressive-discovery MCP endpoint is `https://liberated.site/mcp`; the
-Claude-specific direct-tool endpoint is `https://liberated.site/mcp/claude`.
+Claude and ChatGPT direct-tool endpoints are
+`https://liberated.site/mcp/claude` and
+`https://liberated.site/mcp/chatgpt`.
 
 Inspect every skill before installation. GitHub's native commands require
 GitHub CLI 2.90 or later:
@@ -24,7 +29,7 @@ The cross-agent alternative is:
 npx skills add artiehinz/agent-utility-skills
 ```
 
-Service release 0.4.0 contains 14 free production-beta modules. Its
+Service release 0.5.0 contains 22 free production-beta modules. Its
 machine-readable catalog, schemas, limits, side effects, retention, and typed
 errors are published at `https://liberated.site/v1/catalog` after promotion.
 
@@ -34,8 +39,8 @@ support, and status information are linked from `https://liberated.site`.
 
 ## Roadmap
 
-- **Cross-host acceptance:** Clean-install and exercise all three skills on
-  Codex, Claude, and Copilot after the 0.4.0 backing service is live.
+- **Cross-host acceptance:** Clean-install and exercise all six skills on
+  Codex, Claude, and Copilot after the 0.5.0 backing service is live.
 - **Adoption evidence:** Link each skill to a host-specific 60-second
   quickstart, add an opt-in issue template for discovery/install failures, and
   measure successful workflows and repeat use at the service rather than adding
@@ -50,11 +55,9 @@ support, and status information are linked from `https://liberated.site`.
   `mcp-review@anthropic.com` whether the listing persists and which health,
   usage, feedback, and listing-management functions remain available after the
   plan expires.
-- **New workflow packages:** Add focused skills after their backing modules are
-  live and externally validated. Current candidates are MCP contract and
-  capability-handshake compatibility, webhook delivery measurement, x402
-  requirement drift, facilitator compatibility, quote fingerprints, and
-  offer/receipt verification.
+- **Next workflow package:** Keep offer/receipt signature verification
+  demand-gated until its backing module and supplied-key threat model are
+  implemented and externally validated.
 
 ## License
 

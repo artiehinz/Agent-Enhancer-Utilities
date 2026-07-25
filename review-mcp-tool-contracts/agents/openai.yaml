@@ -1,0 +1,15 @@
+interface:
+  display_name: "MCP Contract Review"
+  short_description: "Lint and compare bounded MCP contracts"
+  default_prompt: "Use $review-mcp-tool-contracts to review this MCP tool contract and capability boundary."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-utility-lab"
+      description: "Public bounded MCP contract utilities"
+      transport: "streamable_http"
+      url: "https://liberated.site/mcp"
+
+policy:
+  allow_implicit_invocation: true

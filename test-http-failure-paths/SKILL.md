@@ -1,6 +1,6 @@
 ---
 name: test-http-failure-paths
-description: Design and run bounded HTTP failure-path tests with ordered retry sequences, temporary status endpoints, and deterministic synthetic fixtures. Use when an agent must test retries, Retry-After handling, redirects, webhook errors, delays, recovery after multiple failures, malformed assumptions, or non-production test data without hosting caller-controlled content.
+description: Design and run bounded HTTP failure-path tests with ordered retry sequences, temporary status endpoints, hash-only webhook attempt meters, and deterministic synthetic fixtures. Use when an agent must test retries, Retry-After handling, redirects, webhook delivery attempts, delays, recovery after multiple failures, malformed assumptions, or non-production test data without hosting caller-controlled content.
 ---
 
 # Test HTTP Failure Paths
@@ -29,7 +29,9 @@ open redirects, arbitrary payload hosting, or sensitive data.
 4. Use `status-code-forge` for one short-lived controlled response.
 5. Use `safe-synthetic-fixture-vault` for deterministic identity, network, or
    HTTP-event data made only from reserved non-production values.
-6. If search returns `NO_MATCH`, abstain. Do not bend a fixture into an
+6. Use `webhook-attempt-meter` when the assertion concerns callback methods,
+   timing, attempt count, or payload hashes rather than response behavior.
+7. If search returns `NO_MATCH`, abstain. Do not bend a fixture into an
    unsupported behavior.
 
 ## Build a retry sequence
@@ -72,6 +74,15 @@ Choose one supported kind—`identity`, `network`, or `http-event`—and a
 non-sensitive seed. The same kind and seed produce the same fixture. Never use
 a credential, email address, customer identifier, production hostname, or raw
 record as the seed.
+
+## Measure webhook attempts
+
+Create a meter for 60–1,800 seconds and no more than ten attempts. Send only
+authorized POST, PUT, or PATCH test requests up to 65,536 bytes. Retrieve the
+result once. The service stores timestamps, methods, byte counts, content
+types, and body/user-agent hashes; it discards bodies, raw user agents, source
+IPs, and arbitrary headers. Do not treat a body hash as sender
+authentication.
 
 ## Execute the client test
 
