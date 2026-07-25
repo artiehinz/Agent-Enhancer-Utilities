@@ -1,0 +1,564 @@
+{
+  "$schema": "https://developers.openai.com/plugins/schemas/chatgpt-app-submission.v1.json",
+  "schema_version": 1,
+  "app_info": {
+    "display_name": "Agent Enhancer Utilities",
+    "subtitle": "Reliability sidecar for agents",
+    "description": "Use Agent Enhancer Utilities as a reliability sidecar around repeated, scheduled, parallel, quota-sensitive, or duplicate-sensitive agent workflows. Its 37 deterministic tools plan and checkpoint guarded work, coordinate opaque agents, inspect MCP and x402 contracts, and test bounded API failure paths. It is free and account-free. It does not automatically intercept other plugins and exposes no transfers, wallets, settlement, or real payment capability.",
+    "category": "DEVELOPER_TOOLS"
+  },
+  "tools": {
+    "penny_lock": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Acquiring a lock creates temporary coordination state, so this tool is not read-only.",
+        "open_world_justification": "The lock exists only in the service's private coordination store and cannot change public internet state.",
+        "destructive_justification": "The lock expires automatically and does not delete or overwrite user data."
+      }
+    },
+    "global_seen_stamp": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Marking an opaque item as seen creates temporary deduplication state, so this tool is not read-only.",
+        "open_world_justification": "Seen-state is confined to the service's private store and is not published externally.",
+        "destructive_justification": "The operation adds bounded expiring state and does not delete or overwrite user content."
+      }
+    },
+    "exactly_once_baton_issue": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Issuing a baton creates a temporary one-use coordination capability, so this tool is not read-only.",
+        "open_world_justification": "The baton is stored within the service and is not published to an external system.",
+        "destructive_justification": "Issuance creates bounded expiring state and does not remove or overwrite existing user data."
+      }
+    },
+    "exactly_once_baton_consume": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Consuming a baton changes its stored state and prevents future consumption, so this tool is not read-only.",
+        "open_world_justification": "Consumption affects only a private service capability and does not change public internet state.",
+        "destructive_justification": "Consumption irreversibly invalidates the one-use baton and therefore has a destructive side effect."
+      }
+    },
+    "negative_cache_ticket_record": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Recording a negative-cache ticket creates temporary service state, so this tool is not read-only.",
+        "open_world_justification": "The ticket remains inside the service's private store and is not published externally.",
+        "destructive_justification": "The operation adds bounded expiring state without deleting or overwriting user content."
+      }
+    },
+    "negative_cache_ticket_check": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool only checks whether a caller-specified negative-cache ticket exists and does not change it.",
+        "open_world_justification": "The lookup reads private service state and makes no external network or public-state change.",
+        "destructive_justification": "The lookup does not consume, delete, or overwrite the ticket."
+      }
+    },
+    "status_code_forge": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Creating a temporary status-code fixture writes bounded service state, so this tool is not read-only.",
+        "open_world_justification": "The tool creates an unguessable HTTPS fixture URL that can be requested over the public internet.",
+        "destructive_justification": "Creation does not delete or overwrite user data, and the fixture expires automatically."
+      }
+    },
+    "safe_synthetic_fixture_vault": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool generates bounded synthetic fixture data without creating persistent or external state.",
+        "open_world_justification": "Generation is local to the service and does not contact or modify an external system.",
+        "destructive_justification": "The operation does not delete, overwrite, or consume any caller resource."
+      }
+    },
+    "error_code_cemetery": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool performs a bounded lookup in a static error-code reference.",
+        "open_world_justification": "The lookup does not contact or modify an external system.",
+        "destructive_justification": "The lookup has no write, delete, consume, or irreversible side effect."
+      }
+    },
+    "x402_error_rosetta_stone": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool performs a bounded lookup in a static x402 error reference.",
+        "open_world_justification": "The lookup analyzes supplied values without contacting a facilitator or changing external state.",
+        "destructive_justification": "The operation does not transfer funds, sign data, delete content, or consume a capability."
+      }
+    },
+    "worked_once_recipe_vault": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool retrieves a bounded static integration recipe without changing stored state.",
+        "open_world_justification": "Retrieval does not execute the recipe or contact any external service.",
+        "destructive_justification": "The operation has no write, delete, transfer, or irreversible side effect."
+      }
+    },
+    "swarm_semaphore_acquire": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Acquiring a semaphore permit changes temporary coordination state, so this tool is not read-only.",
+        "open_world_justification": "The semaphore is private service state and cannot change a public external system.",
+        "destructive_justification": "Acquisition reserves bounded expiring capacity and does not delete or overwrite user data."
+      }
+    },
+    "swarm_semaphore_release": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Releasing a semaphore permit changes coordination state, so this tool is not read-only.",
+        "open_world_justification": "Release affects only private service coordination state.",
+        "destructive_justification": "Release irreversibly gives up the caller's current permit and changes available capacity."
+      }
+    },
+    "swarm_semaphore_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool only reads current bounded semaphore status.",
+        "open_world_justification": "The status lookup reads private coordination state and does not modify an external system.",
+        "destructive_justification": "The lookup does not acquire, release, delete, or consume a permit."
+      }
+    },
+    "barrier_bell_arrive": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Registering an arrival changes temporary barrier coordination state, so this tool is not read-only.",
+        "open_world_justification": "Barrier state remains private to the service and is not published externally.",
+        "destructive_justification": "Arrival adds bounded state and does not delete or overwrite user content."
+      }
+    },
+    "barrier_bell_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool only reads the current state of a caller-specified barrier.",
+        "open_world_justification": "The status lookup stays within private service coordination state.",
+        "destructive_justification": "The lookup does not alter arrivals, release participants, or consume the barrier."
+      }
+    },
+    "freshness_lease_acquire": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Acquiring or renewing a freshness lease changes temporary coordination state, so this tool is not read-only.",
+        "open_world_justification": "The lease is private service state and does not change a public external system.",
+        "destructive_justification": "The bounded lease expires automatically and acquisition does not delete user data."
+      }
+    },
+    "freshness_lease_release": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Releasing a freshness lease changes stored coordination state, so this tool is not read-only.",
+        "open_world_justification": "Release affects only private service state and does not modify a public system.",
+        "destructive_justification": "Release irreversibly ends the current lease before its natural expiration."
+      }
+    },
+    "freshness_lease_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool only reads current lease status and does not acquire, renew, or release it.",
+        "open_world_justification": "The lookup reads private coordination state without contacting an external system.",
+        "destructive_justification": "The lookup does not shorten, remove, or consume the lease."
+      }
+    },
+    "failure_sequence_forge": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Creating a failure sequence writes temporary fixture state, so this tool is not read-only.",
+        "open_world_justification": "The tool publishes an unguessable HTTPS fixture URL that can be requested over the public internet.",
+        "destructive_justification": "Creation does not delete or overwrite user data, and the fixture expires after bounded use or time."
+      }
+    },
+    "swarm_rate_gate_consume": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Consuming rate-gate capacity changes temporary coordination state, so this tool is not read-only.",
+        "open_world_justification": "The rate gate is private service state and does not affect an external public system.",
+        "destructive_justification": "Consumption irreversibly uses part of the current bounded rate allowance."
+      }
+    },
+    "swarm_rate_gate_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool only reads the current bounded rate-gate status.",
+        "open_world_justification": "The lookup remains within private service coordination state.",
+        "destructive_justification": "The lookup does not consume allowance or alter the rate gate."
+      }
+    },
+    "mcp_tool_contract_linter": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool performs bounded in-memory analysis of a caller-supplied MCP contract.",
+        "open_world_justification": "The linter never contacts the declared MCP server or changes external state.",
+        "destructive_justification": "Analysis does not write, delete, consume, or overwrite any caller resource."
+      }
+    },
+    "x402_requirement_drift_diff": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool compares two caller-supplied x402 requirement snapshots in memory.",
+        "open_world_justification": "Comparison performs no facilitator request, payment, signature, or external network action.",
+        "destructive_justification": "The operation does not transfer value, change a requirement, or consume a payment capability."
+      }
+    },
+    "webhook_attempt_meter_create": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Creating a webhook meter writes temporary endpoint state, so this tool is not read-only.",
+        "open_world_justification": "The tool publishes an unguessable HTTPS endpoint that accepts bounded callbacks from the public internet.",
+        "destructive_justification": "Creation does not delete or overwrite user data, and the endpoint expires automatically."
+      }
+    },
+    "webhook_attempt_meter_retrieve": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": true,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Retrieval atomically consumes the meter and disables its endpoint, so this tool is not read-only.",
+        "open_world_justification": "Consumption changes the availability of the meter's publicly reachable HTTPS endpoint.",
+        "destructive_justification": "The first successful retrieval irreversibly deletes the meter and prevents later retrieval or callbacks."
+      }
+    },
+    "mcp_capability_handshake_diff": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool compares two caller-supplied MCP capability handshakes in memory.",
+        "open_world_justification": "Comparison does not connect to either MCP server or modify external state.",
+        "destructive_justification": "The operation does not change, consume, or delete either supplied contract."
+      }
+    },
+    "x402_facilitator_compatibility_diff": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool compares caller-supplied x402 facilitator capability descriptions in memory.",
+        "open_world_justification": "It does not contact a facilitator, submit a payment, or change external state.",
+        "destructive_justification": "The comparison has no transfer, signature, deletion, or other irreversible effect."
+      }
+    },
+    "mcp_elicitation_safety_linter": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool performs bounded in-memory safety analysis of caller-supplied elicitation metadata.",
+        "open_world_justification": "It does not display an elicitation, collect user data, or contact an external server.",
+        "destructive_justification": "Analysis does not write, delete, consume, or overwrite any resource."
+      }
+    },
+    "x402_quote_fingerprint_guard_bind": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Binding a retry identity to a quote fingerprint creates temporary guard state, so this tool is not read-only.",
+        "open_world_justification": "The binding remains in the service's private store and performs no payment or external request.",
+        "destructive_justification": "The operation creates bounded expiring state and does not transfer value or delete user data."
+      }
+    },
+    "x402_quote_fingerprint_guard_check": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool only checks whether a supplied quote matches an existing private binding.",
+        "open_world_justification": "The check performs no payment, signature, facilitator call, or external state change.",
+        "destructive_justification": "The check does not consume or remove the binding and does not transfer value."
+      }
+    },
+    "mcp_schema_edge_case_atlas": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool performs a bounded lookup in a static MCP schema edge-case reference.",
+        "open_world_justification": "The lookup does not contact an MCP server or modify external state.",
+        "destructive_justification": "The operation has no write, delete, consume, or irreversible side effect."
+      }
+    },
+    "workflow_guard_planner": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "The tool converts 17 bounded capability facts into a deterministic plan and creates no coordination state.",
+        "open_world_justification": "The planner does not contact the external plugin, fetch URLs, or change internet state.",
+        "destructive_justification": "Planning performs no write, delete, transfer, consumption, or other irreversible operation."
+      }
+    },
+    "workflow_checkpoint_claim": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Claiming creates or recovers one bounded expiring checkpoint generation.",
+        "open_world_justification": "The claim changes only private keyed-digest coordination state and never contacts the external plugin.",
+        "destructive_justification": "A claim adds bounded recovery state and does not delete external or user content."
+      }
+    },
+    "workflow_checkpoint_transition": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "A transition records one holder-owned caller assertion and changes the checkpoint stage.",
+        "open_world_justification": "The transition affects only private expiring coordination state and does not verify or modify the external service.",
+        "destructive_justification": "The operation preserves the bounded checkpoint record and does not erase user or external content."
+      }
+    },
+    "workflow_checkpoint_status": {
+      "annotations": {
+        "readOnlyHint": true,
+        "openWorldHint": false,
+        "destructiveHint": false
+      },
+      "justifications": {
+        "read_only_justification": "Status reads one already-known opaque checkpoint without acquiring, transitioning, or consuming it.",
+        "open_world_justification": "The read stays inside private service state and makes no external request.",
+        "destructive_justification": "Status does not clear ownership, change stages, consume evidence, or delete state."
+      }
+    },
+    "workflow_checkpoint_abandon": {
+      "annotations": {
+        "readOnlyHint": false,
+        "openWorldHint": false,
+        "destructiveHint": true
+      },
+      "justifications": {
+        "read_only_justification": "Abandon clears the caller's active pre-action claim and therefore changes checkpoint state.",
+        "open_world_justification": "The operation changes only private expiring coordination state and never contacts the external plugin.",
+        "destructive_justification": "Abandon removes current ownership from a claimed generation and cannot be reversed within that generation."
+      }
+    }
+  },
+  "test_cases": [
+    {
+      "description": "Acquire a short lock and repeat the identical call with the same idempotency key to verify deterministic replay.",
+      "user_prompt": "Acquire a 60-second lock in namespace review-lock for opaque task task-42 on behalf of agent-a. Generate one fresh UUID-v4 idempotency key, call the lock tool, then repeat the identical call with the same UUID and compare the replay metadata.",
+      "file_attachment_urls": null,
+      "tools_triggered": "penny_lock",
+      "expected_output": "The first call reports ok=true, result.acquired=true, and idempotency_replayed=false. The identical second call returns the same result and reports idempotency_replayed=true.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Bound parallel work performed through another plugin without sending that plugin's private records to the sidecar.",
+      "user_prompt": "I will use another plugin to process opaque items with three workers. Use namespace sidecar-review and opaque key batch-42. Limit active workers to two and share a two-token-per-minute request gate. Acquire a permit and one token for worker-a, then report the guard evidence and explain that it does not prove the other plugin completed its action.",
+      "file_attachment_urls": null,
+      "tools_triggered": "swarm_semaphore_acquire, swarm_rate_gate_consume",
+      "expected_output": "The semaphore admits worker-a within capacity two and the rate gate allows one unique token operation, using separate stable idempotency keys for the two sidecar calls. The response reports only opaque guard evidence, labels the result rate/concurrency-bounded, and states that neither result proves the external plugin completed.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Create a bounded 429-to-500-to-200 retry fixture and confirm that its URL advances once per request.",
+      "user_prompt": "Create a short-lived retry fixture that returns 429, then 500, then 200, with no artificial delay and a 300-second lifetime. Then request the returned fixture URL three times and report the status sequence.",
+      "file_attachment_urls": null,
+      "tools_triggered": "failure_sequence_forge",
+      "expected_output": "The tool returns an HTTPS fixture_url, sequence [429, 500, 200], max_hits 3, and exhausted_status 410. Three successive GET requests return 429, 500, and 200; a later request returns 410.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Lint a closed read-only MCP lookup contract and verify that its schema and annotations produce no findings.",
+      "user_prompt": "Lint this closed, read-only MCP lookup contract and summarize any findings: tool name lookup_record; description 'Look up one bounded record without external side effects.'; one required string input named key; no additional properties; readOnly true, destructive false, openWorld false, idempotent true; no authentication.",
+      "file_attachment_urls": null,
+      "tools_triggered": "mcp_tool_contract_linter",
+      "expected_output": "The tool returns ok=true with result.valid=true, finding_count 0, checked_rules 9, and an empty findings array.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Compare two x402 requirements that differ only in their atomic amount and verify the exact changed field.",
+      "user_prompt": "Compare these two x402 requirements and report exactly what changed. Before: exact scheme, eip155:8453, USDC, amount_atomic 1000, pay_to 0x1111111111111111111111111111111111111111, resource https://api.example.invalid/job, no extensions. After: identical except amount_atomic is 2000.",
+      "file_attachment_urls": null,
+      "tools_triggered": "x402_requirement_drift_diff",
+      "expected_output": "The result reports changed=true, changed_fields containing only amount_atomic, commercial_terms_changed=true, retry_binding_changed=false, and distinct SHA-256 fingerprints. No payment or network action occurs.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Create a two-attempt webhook meter, send one bounded callback, and consume the meter to inspect hash-only attempt metadata.",
+      "user_prompt": "Create a webhook attempt meter with a 300-second lifetime and a maximum of two attempts. After I send one test callback, retrieve the meter once and summarize only the recorded method, timing, byte count, content type, and hashes.",
+      "file_attachment_urls": null,
+      "tools_triggered": "webhook_attempt_meter_create, webhook_attempt_meter_retrieve",
+      "expected_output": "Creation returns an unguessable HTTPS meter_url and separate retrieval_token. After one callback, retrieval returns found=true and one attempt containing observed_at, method, body_bytes, body_sha256, content_type, and a nullable user_agent_sha256. It never returns the raw body, raw user agent, source IP, arbitrary headers, or internal IDs.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Plan a scheduled duplicate-sensitive external create from the closed capability contract.",
+      "user_prompt": "Use the workflow planner for a scheduled create with three workers, retries possible, material duplicate harm, no provider idempotency, eventual destination search, a stable marker, read-after-write, no conditional write, manual compensation, and no shared rate limit. Do not create anything.",
+      "file_attachment_urls": null,
+      "tools_triggered": "workflow_guard_planner",
+      "expected_output": "The tool returns decision sidecar, profile create-once, additional profile scheduled-run, guarantee duplicate-resistant, search before create, read-back after create, and explicit eventual-search and cross-plugin-transaction residual risks. It creates no state.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Claim and verify an opaque checkpoint without exposing the holder or pretending to prove the external result.",
+      "user_prompt": "Using opaque synthetic identifiers only, claim a 120-second workflow checkpoint with 600-second state retention, then record caller verification using stable_marker_readback and inspect status. Use a fresh UUID-v4 idempotency key for each distinct mutation and a stable observation key for the transition.",
+      "file_attachment_urls": null,
+      "tools_triggered": "workflow_checkpoint_claim, workflow_checkpoint_transition, workflow_checkpoint_status",
+      "expected_output": "Claim returns generation 1 and acquired true. Transition reaches caller_verified with external_proof false. Status reveals no holder or evidence fingerprint and allows only status.",
+      "expected_output_url": null
+    },
+    {
+      "description": "Abandon only a pre-action workflow claim and preserve generation history.",
+      "user_prompt": "Claim a synthetic workflow checkpoint, assert that the external action has not started, abandon generation 1 as the same holder, then inspect status. Use fresh UUID-v4 idempotency keys for claim and abandon.",
+      "file_attachment_urls": null,
+      "tools_triggered": "workflow_checkpoint_claim, workflow_checkpoint_abandon, workflow_checkpoint_status",
+      "expected_output": "Abandon succeeds only from claimed, clears active ownership without deleting the checkpoint, preserves generation 1, and status exposes no holder. It cannot be used after external_result_uncertain.",
+      "expected_output_url": null
+    }
+  ],
+  "negative_test_cases": [
+    {
+      "description": "A general-knowledge history question should not invoke a reliability utility.",
+      "user_prompt": "Summarize the causes of the French Revolution.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "Answer from general knowledge without selecting an Agent Enhancer Utilities tool.",
+      "expected_output_url": null
+    },
+    {
+      "description": "A messaging request is outside the plugin's available capabilities.",
+      "user_prompt": "Send my coworker a message.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "Do not select a plugin tool; explain that the plugin has no messaging capability.",
+      "expected_output_url": null
+    },
+    {
+      "description": "An ordinary one-time write in another plugin should not add sidecar calls.",
+      "user_prompt": "Create this one Notion note for me.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "Use the Notion plugin if available without selecting Agent Enhancer Utilities. No repeated, parallel, scheduled, quota, freshness, retry, or duplicate-sensitive concern was stated.",
+      "expected_output_url": null
+    },
+    {
+      "description": "A cryptocurrency transfer request must not invoke the plugin's analysis-only x402 tools.",
+      "user_prompt": "Send 10 USDC to this wallet.",
+      "file_attachment_urls": null,
+      "tools_triggered": null,
+      "expected_output": "Do not select a plugin tool; explain that the plugin cannot transfer funds. Its x402 tools only analyze caller-supplied protocol contracts.",
+      "expected_output_url": null
+    }
+  ]
+}

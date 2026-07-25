@@ -1,0 +1,16 @@
+interface:
+  display_name: "Guard External Plugin Workflows"
+  short_description: "Plan reliable cross-plugin operations"
+  brand_color: "#7EF0B8"
+  default_prompt: "Use $guard-external-plugin-workflows to guard this repeated or high-consequence plugin workflow and report the achievable guarantee."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "agent-enhancer-utilities"
+      description: "Public deterministic coordination utilities"
+      transport: "streamable_http"
+      url: "https://liberated.site/mcp"
+
+policy:
+  allow_implicit_invocation: true

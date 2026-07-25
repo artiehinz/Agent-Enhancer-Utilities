@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "skill": "guard-external-plugin-workflows",
+  "positive_cases": [
+    {
+      "id": "searchable-page-import",
+      "prompt": "Three workers are importing the same source documents into a searchable knowledge base. Each created page can store and query an opaque source marker. Guard the workflow against duplicate pages.",
+      "expected_profile": "create-once",
+      "expected_guarantee": "duplicate-resistant",
+      "required_concepts": [
+        "opaque stable identity",
+        "lock before destination search",
+        "create only when absent",
+        "read-back verification",
+        "seen stamp after verification",
+        "eventual consistency risk"
+      ],
+      "forbidden_claims": [
+        "exactly-once external creation",
+        "a lock proves the page exists"
+      ]
+    },
+    {
+      "id": "parallel-equity-research",
+      "prompt": "Coordinate parallel research across 40 tickers, avoid reprocessing the same filings, respect one shared provider quota, wait for all required ticker reports, then update one thesis tracker.",
+      "expected_profile": "fan-out-bounded",
+      "expected_guarantee": "concurrency-safe",
+      "required_concepts": [
+        "per-artifact guard and durable result check",
+        "seen stamp only after verification",
+        "freshness lease",
+        "semaphore",
+        "rate gate",
+        "barrier after verified worker completion",
+        "lock and re-read before final update"
+      ],
+      "forbidden_claims": [
+        "improves investment conclusions",
+        "a barrier proves report quality"
+      ]
+    },
+    {
+      "id": "scheduled-import",
+      "prompt": "Run a scheduled transcript import with up to four workers. The provider has a shared request limit and the destination is searchable by a stable import marker.",
+      "expected_profile": "create-once",
+      "expected_additional_profiles": [
+        "fan-out-bounded",
+        "scheduled-run"
+      ],
+      "expected_guarantee": "duplicate-resistant",
+      "required_concepts": [
+        "stable run identity",
+        "one run owner",
+        "per-item identity",
+        "shared rate gate",
+        "verification before seen stamp",
+        "batch outcome counts"
+      ],
+      "forbidden_claims": [
+        "the run lock proves every item completed"
+      ]
+    },
+    {
+      "id": "shared-model-update",
+      "prompt": "Two agents may update the same research model. The model can be read before and after the write but the provider offers no conditional update.",
+      "expected_profile": "update-safely",
+      "expected_guarantee": "concurrency-safe",
+      "required_concepts": [
+        "resource lock",
+        "re-read after lock",
+        "recalculate patch",
+        "read-back verification",
+        "unguarded writer risk"
+      ],
+      "forbidden_claims": [
+        "atomic compare-and-swap",
+        "provider-idempotent"
+      ]
+    },
+    {
+      "id": "uncertain-message-send",
+      "prompt": "Several workers might send the same notification. The messaging plugin exposes neither an idempotency key nor sent-message search. Explain the safest workflow if a send times out.",
+      "expected_profile": "send-at-most-once",
+      "expected_guarantee": "best-effort",
+      "required_concepts": [
+        "serialize simultaneous senders",
+        "uncertain result",
+        "no blind retry",
+        "human review"
+      ],
+      "forbidden_claims": [
+        "exactly once",
+        "a consumed baton proves delivery"
+      ]
+    },
+    {
+      "id": "honest-baton-language",
+      "prompt": "Use an exactly-once baton so a page creation is guaranteed to happen exactly once even if the page tool has no idempotency support or search.",
+      "expected_profile": "create-once",
+      "expected_guarantee": "best-effort",
+      "required_concepts": [
+        "reject unsupported guarantee",
+        "baton is one-use coordination",
+        "external completion remains unproven"
+      ],
+      "forbidden_claims": [
+        "baton makes the page create exactly once"
+      ]
+    }
+  ],
+  "negative_cases": [
+    {
+      "id": "one-time-analysis",
+      "prompt": "Analyze NVDA once and summarize the investment thesis.",
+      "expected_behavior": "Do not invoke Agent Enhancer coordination utilities."
+    },
+    {
+      "id": "one-time-note",
+      "prompt": "Create this one Notion note for me.",
+      "expected_behavior": "Use the domain plugin without sidecar calls unless another duplicate, retry, or concurrency concern is stated."
+    },
+    {
+      "id": "ordinary-read",
+      "prompt": "Read this document and summarize it.",
+      "expected_behavior": "Do not invoke Agent Enhancer coordination utilities."
+    },
+    {
+      "id": "general-knowledge",
+      "prompt": "Why do leaves change color?",
+      "expected_behavior": "Answer normally without invoking the skill or sidecar tools."
+    }
+  ]
+}

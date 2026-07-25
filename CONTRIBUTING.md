@@ -13,7 +13,10 @@ instructions.
 5. Preserve bounded inputs, idempotency rules, abstention, privacy, and typed
    recovery behavior.
 6. Update `agents/openai.yaml` when a skill's purpose or dependency changes.
-7. Run:
+7. For cross-plugin sidecar recipes, document the external capability
+   assumptions, verification step, guarantee label, and residual risk. Never
+   derive exactly-once external execution from a lock, stamp, lease, or baton.
+8. Run:
 
    ```sh
    python scripts/validate.py

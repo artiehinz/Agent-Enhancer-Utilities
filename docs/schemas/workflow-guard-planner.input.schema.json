@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Workflow Guard Planner input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "operation_class",
+    "item_operation_class",
+    "duplicate_harm",
+    "parallel_workers",
+    "scheduled",
+    "retry_possible",
+    "provider_idempotency",
+    "destination_search",
+    "stable_marker",
+    "conditional_write",
+    "read_after_write",
+    "delivery_status",
+    "compensation",
+    "shared_rate_limit",
+    "maximum_concurrency",
+    "freshness_required"
+  ],
+  "properties": {
+    "contract_version": {
+      "type": "string",
+      "enum": ["1"]
+    },
+    "operation_class": {
+      "type": "string",
+      "enum": ["read", "create", "update", "send", "delete", "refresh", "batch"]
+    },
+    "item_operation_class": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": ["read", "create", "update", "send", "delete", "refresh"]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "duplicate_harm": {
+      "type": "string",
+      "enum": ["none", "low", "material", "irreversible"]
+    },
+    "parallel_workers": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "scheduled": {
+      "type": "boolean"
+    },
+    "retry_possible": {
+      "type": "boolean"
+    },
+    "provider_idempotency": {
+      "type": "string",
+      "enum": ["none", "request_key", "atomic_unique_constraint"]
+    },
+    "destination_search": {
+      "type": "string",
+      "enum": ["none", "eventual", "strong"]
+    },
+    "stable_marker": {
+      "type": "boolean"
+    },
+    "conditional_write": {
+      "type": "boolean"
+    },
+    "read_after_write": {
+      "type": "boolean"
+    },
+    "delivery_status": {
+      "type": "boolean"
+    },
+    "compensation": {
+      "type": "string",
+      "enum": ["none", "reversible", "manual"]
+    },
+    "shared_rate_limit": {
+      "type": "boolean"
+    },
+    "maximum_concurrency": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "freshness_required": {
+      "type": "boolean"
+    }
+  }
+}

@@ -34,3 +34,29 @@ reliability is displayed.
 Planned outcome evidence is a one-use, receipt-linked rating with fixed
 categories and no free text. It must be abuse-resistant and optional before it
 can be treated as product-effectiveness evidence.
+
+## Cross-plugin sidecar outcomes
+
+For guarded external-plugin workflows, report evidence from the larger
+workflow separately from Agent Enhancer tool success:
+
+- a denied lock is direct evidence that an overlapping worker was blocked, but
+  not that the external operation completed;
+- a seen-stamp hit is evidence of prior sidecar state, not proof that an
+  external record still exists;
+- a verified destination marker is evidence that the external record was
+  observed, subject to the destination's consistency guarantees;
+- a rate-gate denial is evidence that shared quota consumption was bounded;
+- a barrier release is evidence of the configured unique arrivals, not the
+  quality of their work.
+
+A future workflow checkpoint must return `external_proof: false` even for a
+`caller_verified` stage. It can preserve the class of evidence reported by the
+caller, but the service does not independently inspect or attest to the
+external plugin.
+
+Aggregate guarded-batch outcomes may count attempted, already seen, blocked,
+throttled, verified, uncertain, failed, and awaiting-review items. Do not
+retain source records or infer duplicate prevention without an observed
+conflicting attempt. Every material outcome should include one standard
+guarantee label from the sidecar reliability contract.

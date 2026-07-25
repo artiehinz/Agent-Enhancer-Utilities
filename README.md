@@ -5,22 +5,28 @@
 <h1 align="center">Agent Enhancer Utilities</h1>
 
 <p align="center">
-  Six inspectable Agent Skills backed by a free, account-free MCP service for
-  coordination, API failure testing, and MCP/x402 contract analysis.
+  A reliability sidecar for agent workflows: seven inspectable Agent Skills
+  backed by a free, account-free MCP service for coordination, API failure
+  testing, and MCP/x402 contract analysis.
 </p>
 
 <p align="center">
   <a href="https://liberated.site/status">Service status</a> ·
   <a href="https://liberated.site/effectiveness">Effectiveness</a> ·
-  <a href="https://liberated.site/tools">22-module catalog</a> ·
+  <a href="https://liberated.site/tools">24-module catalog</a> ·
   <a href="https://glama.ai/mcp/connectors/site.liberated/agent-utility-lab">Glama verified</a> ·
   <a href="./LICENSE">MIT license</a>
 </p>
+
+> Release status: `v1.4.0` and backend `0.6.0` are release candidates. The
+> current production service remains on backend `0.5.3` with 22 modules and
+> 32 direct tools until the isolated connector acceptance gate passes.
 
 ## Skills
 
 | Skill | Use it for |
 | --- | --- |
+| `guard-external-plugin-workflows` | Add honest reliability profiles, verification, and recovery around repeated or high-consequence work performed by other plugins |
 | `coordinate-parallel-agents` | Locks, deduplication, one-use batons, semaphores, shared rate gates, barriers, and freshness leases |
 | `test-http-failure-paths` | Bounded status/failure sequences, webhook delivery attempts, Retry-After behavior, and synthetic fixtures |
 | `debug-x402-integrations` | Evidence-linked x402 error diagnosis, requirement drift, and facilitator compatibility checks |
@@ -30,6 +36,18 @@
 
 Every skill is a small Markdown workflow. Inspect its `SKILL.md` before
 installation.
+
+## Sidecar model
+
+Agent Enhancer does not automatically intercept or extend another plugin.
+Agents deliberately combine it with domain tools when a workflow is repeated,
+parallel, scheduled, quota-sensitive, freshness-sensitive, or vulnerable to
+harmful duplicates.
+
+The sidecar coordinates the workflow; the domain plugin still performs and
+verifies its own reads, writes, sends, and analysis. See the
+[`guard-external-plugin-workflows`](./guard-external-plugin-workflows/SKILL.md)
+skill for the standard lifecycle and guarantee labels.
 
 ## Install
 
@@ -51,9 +69,9 @@ Agents can also connect without installing a skill:
 | Surface | Endpoint | Shape |
 | --- | --- | --- |
 | Progressive MCP | `https://liberated.site/mcp` | Search, describe, invoke, and capability request |
-| Claude | `https://liberated.site/mcp/claude` | 32 direct action-specific tools |
-| ChatGPT | `https://liberated.site/mcp/chatgpt` | The same 32 direct tools |
-| HTTP/OpenAPI | `https://liberated.site/v1/openapi.json` | Generated contracts for all 22 modules |
+| Claude | `https://liberated.site/mcp/claude` | 37 direct action-specific tools after the `0.6.0` promotion; 32 live now |
+| ChatGPT | `https://liberated.site/mcp/chatgpt` | The same release-dependent direct surface |
+| HTTP/OpenAPI | `https://liberated.site/v1/openapi.json` | 24 generated module contracts after the `0.6.0` promotion; 22 live now |
 
 All public modules are currently free. Real USDC settlement is disabled.
 
@@ -91,7 +109,15 @@ operated separately. A skill must use progressive discovery and must not copy
 private schemas, credentials, or backend source.
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md), [SECURITY.md](./SECURITY.md), and
-[docs/EFFECTIVENESS.md](./docs/EFFECTIVENESS.md).
+[docs/EFFECTIVENESS.md](./docs/EFFECTIVENESS.md). The product direction and
+planned cross-plugin reliability work are described in
+[docs/ROADMAP.md](./docs/ROADMAP.md). The proposed read-only planning contract
+is in
+[docs/WORKFLOW_GUARD_PLANNER.md](./docs/WORKFLOW_GUARD_PLANNER.md), the bounded
+checkpoint contract is in
+[docs/OPAQUE_WORKFLOW_CHECKPOINTS.md](./docs/OPAQUE_WORKFLOW_CHECKPOINTS.md),
+and current live primitive evidence is recorded in
+[docs/SIDECAR_RECIPE_TESTS.md](./docs/SIDECAR_RECIPE_TESTS.md).
 
 ## License
 
