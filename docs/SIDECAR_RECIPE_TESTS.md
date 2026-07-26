@@ -62,6 +62,28 @@ Limitations:
 - The preview proved the specified connector and recipe versions at the
   observed time; it is not a future guarantee for changed tool contracts.
 
+## Production promotion
+
+The accepted runtime was promoted to the existing `agent-utility-lab`
+production app, not a replacement app. A production-only Redis JSON
+normalization issue was found by the hosted gate, corrected at the public
+output boundary, and covered by a regression test before promotion.
+
+Final release evidence:
+
+- live backend version: `0.6.1`;
+- final production commit:
+  `d28fe0af12778b010c877ea69ddfc6e6de4b6046`;
+- production deployment:
+  `eef2bec1-d77b-41b1-9caf-03fdadec4866`;
+- 206 automated tests, production build, Compose integration, container and
+  secret scans, and both branch CI workflows passed;
+- two repeated 24/24 preview self-test runs and the canonical authenticated
+  production acceptance passed;
+- all 37 Claude and all 37 ChatGPT direct tools were invoked;
+- Official MCP Registry `0.6.1` is active and marked latest;
+- payments remain disabled and all public modules remain free.
+
 ## Earlier production primitive checks
 
 Environment: live Agent Enhancer Utilities direct tools backed by

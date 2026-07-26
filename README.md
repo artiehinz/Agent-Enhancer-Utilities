@@ -18,10 +18,10 @@
   <a href="./LICENSE">MIT license</a>
 </p>
 
-> Release status: `v1.4.0` is the accepted seven-skill release for backend
-> `0.6.0`, which passed isolated connector and Notion acceptance. Check the
-> live [service status](https://liberated.site/status) for the currently
-> deployed backend version.
+> Release status: `v1.4.0` is the accepted seven-skill release. Backend
+> `0.6.1` is live, passed isolated and canonical production acceptance, and is
+> marked latest in the Official MCP Registry. Check the live
+> [service status](https://liberated.site/status) for current evidence.
 
 ## Skills
 
@@ -78,7 +78,7 @@ All public modules are currently free. Real USDC settlement is disabled.
 
 ## Directory listings
 
-- [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=site.liberated%2Fagent-utility-lab)
+- [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=site.liberated%2Fagent-utility-lab) — `0.6.1` latest
 - [Glama](https://glama.ai/mcp/connectors/site.liberated/agent-utility-lab) — ownership verified
 - [Smithery](https://smithery.ai/servers/artemhinz2/Agent-Enhancer-Utilities)
 

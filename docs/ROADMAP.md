@@ -25,6 +25,27 @@ it acts:
 Agent Enhancer should turn the answers into a small, inspectable guard plan and
 help execute that plan using opaque identifiers and bounded temporary state.
 
+## Current focus
+
+Backend `0.6.1` is live on the existing production app with 24 modules, 37
+Claude tools, 37 ChatGPT tools, and Official MCP Registry `0.6.1` marked
+latest. Real USDC remains disabled.
+
+The next work is commercial validation, not another broad module expansion:
+
+1. Recruit five external design partners and run the Sidecar v1 recipes for 14
+   days.
+2. Measure correct selection and abstention, duplicate recovery, successful
+   verification, D7 repeat, and willingness to pay for higher capacity.
+3. Reconcile the first real hosting invoice and owner-support time so
+   profitability has an evidence-backed cost floor.
+4. Keep the shared circuit breaker, action budget, and version fence
+   demand-gated. Build the smallest one only when observed failures show that
+   the planner, checkpoint, and existing primitives cannot express the need.
+5. Prepare the paid-capacity configuration and operator checklist, but do not
+   enable settlement until the existing storage, wallet, demand, and approval
+   gates are satisfied.
+
 ## Product boundary
 
 The sidecar can:
@@ -104,7 +125,7 @@ capabilities of the external plugin.
 
 ## Phase 0 — Clarify and teach the sidecar model
 
-Priority: now
+Status: complete in public release `v1.4.0`.
 
 - Position Agent Enhancer as a reliability sidecar for other agent tools and
   plugins.
@@ -136,7 +157,7 @@ Exit criteria:
 
 ## Phase 1 — Add a Workflow Guard Planner
 
-Priority: next
+Status: live in backend `0.6.1`.
 
 Create a read-only planning module. It should accept bounded capability facts,
 not raw records or credentials:
@@ -172,7 +193,8 @@ Exit criteria:
 
 ## Phase 2 — Add bounded workflow state
 
-Priority: after the planner proves useful
+Status: Opaque Workflow Checkpoint is live in backend `0.6.1`; remaining
+proposals are demand-gated.
 
 Evaluate these small, generic modules:
 
@@ -221,7 +243,8 @@ Exit criteria:
 
 ## Phase 3 — Build and validate integration recipe packs
 
-Priority: grow from tested demand
+Priority: now — validate the released Sidecar with five external design
+partners before adding another stateful module.
 
 Recipes should be organized by capability shape first and named plugin second.
 Candidate packs include:
@@ -431,6 +454,9 @@ Completed in the public skills repository on 2026-07-25:
    scenarios: normal, identical replay, concurrent workers, crash before
    create, and crash after create before verification. Each stable marker
    produced exactly one verified page.
+9. Promoted backend `0.6.1` to the existing production app, passed canonical
+   all-tools acceptance, and published `0.6.1` as latest in the Official MCP
+   Registry without enabling USDC.
 
 The ChatGPT submission copy and multilingual starter prompts now position the
 target 37-tool app as a deliberate reliability sidecar, include a guarded
@@ -438,5 +464,5 @@ cross-plugin test, and preserve abstention for a one-time external write.
 
 See [SIDECAR_RECIPE_TESTS.md](./SIDECAR_RECIPE_TESTS.md) for observed evidence
 and remaining vendor-specific coverage. The planner and checkpoint have
-accepted backend `0.6.0` implementations maintained outside this repository;
-the circuit breaker remains a specification.
+live backend `0.6.1` implementations maintained outside this repository; the
+circuit breaker remains a specification.
