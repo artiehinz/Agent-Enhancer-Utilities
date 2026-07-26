@@ -44,8 +44,10 @@ For a first connection, use this bounded test before real coordination work:
 
 1. Search for the smallest tool that lets one worker own an opaque task for 60
    seconds, then describe the selected contract.
-2. Acquire it with namespace `quickstart-demo`, key `task-001`, owner
-   `agent-a`, TTL 60 seconds, and a fresh UUID-v4 idempotency key.
+2. Generate one private workflow namespace as
+   `quickstart:<fresh UUID-v4>`. Acquire the lock with that namespace, key
+   `task-001`, owner `agent-a`, TTL 60 seconds, and a separate fresh UUID-v4
+   idempotency key.
 3. Repeat the identical invocation with the same idempotency key.
 4. Confirm the first result reports `acquired: true` and the retry replays the
    same lock hash without another execution.
@@ -58,6 +60,10 @@ idempotency key. Never reuse the key with changed input.
 - Send only opaque identifiers. Never send credentials, personal data, raw
   document contents, customer records, or secrets as namespace, key, owner,
   holder, participant, or reason fields.
+- Format every coordination namespace as `<scope>:<fresh UUID-v4>`. Generate it
+  once per independent workflow, share it only with participating agents, and
+  reuse it across that workflow's related calls. Never use a human-readable
+  project name alone because unrelated callers could collide.
 - For a side-effecting tool, generate one stable `idempotency_key` of 16–128
   letters, numbers, underscores, or hyphens. Reuse it only for recovery of the
   same normalized request.

@@ -456,7 +456,7 @@
   "test_cases": [
     {
       "description": "Acquire a short lock and repeat the identical call with the same idempotency key to verify deterministic replay.",
-      "user_prompt": "Acquire a 60-second lock in namespace review-lock for opaque task task-42 on behalf of agent-a. Generate one fresh UUID-v4 idempotency key, call the lock tool, then repeat the identical call with the same UUID and compare the replay metadata.",
+      "user_prompt": "Generate a private namespace as review-lock:<fresh UUID-v4>. Acquire a 60-second lock in that namespace for opaque task task-42 on behalf of agent-a. Generate a separate fresh UUID-v4 idempotency key, call the lock tool, then repeat the identical call with the same idempotency key and compare the replay metadata.",
       "file_attachment_urls": null,
       "tools_triggered": "penny_lock",
       "expected_output": "The first call reports ok=true, result.acquired=true, and idempotency_replayed=false. The identical second call returns the same result and reports idempotency_replayed=true.",
@@ -464,7 +464,7 @@
     },
     {
       "description": "Bound parallel work performed through another plugin without sending that plugin's private records to the sidecar.",
-      "user_prompt": "I will use another plugin to process opaque items with three workers. Use namespace sidecar-review and opaque key batch-42. Limit active workers to two and share a two-token-per-minute request gate. Acquire a permit and one token for worker-a, then report the guard evidence and explain that it does not prove the other plugin completed its action.",
+      "user_prompt": "I will use another plugin to process opaque items with three workers. Generate one private namespace as sidecar-review:<fresh UUID-v4>, reuse it for the related coordination calls, and use opaque key batch-42. Limit active workers to two and share a two-token-per-minute request gate. Acquire a permit and one token for worker-a, then report the guard evidence and explain that it does not prove the other plugin completed its action.",
       "file_attachment_urls": null,
       "tools_triggered": "swarm_semaphore_acquire, swarm_rate_gate_consume",
       "expected_output": "The semaphore admits worker-a within capacity two and the rate gate allows one unique token operation, using separate stable idempotency keys for the two sidecar calls. The response reports only opaque guard evidence, labels the result rate/concurrency-bounded, and states that neither result proves the external plugin completed.",
@@ -480,7 +480,7 @@
     },
     {
       "description": "Lint a closed read-only MCP lookup contract and verify that its schema and annotations produce no findings.",
-      "user_prompt": "Lint this closed, read-only MCP lookup contract and summarize any findings: tool name lookup_record; description 'Look up one bounded record without external side effects.'; one required string input named key; no additional properties; readOnly true, destructive false, openWorld false, idempotent true; no authentication.",
+      "user_prompt": "Lint this closed, read-only MCP lookup contract and summarize any findings: tool name lookup_entry; description 'Retrieve one bounded entry without external side effects.'; one required string input named key; no additional properties; readOnly true, destructive false, openWorld false, idempotent true; no authentication.",
       "file_attachment_urls": null,
       "tools_triggered": "mcp_tool_contract_linter",
       "expected_output": "The tool returns ok=true with result.valid=true, finding_count 0, checked_rules 9, and an empty findings array.",
