@@ -16,6 +16,20 @@ SKILL_NAMES = (
     "measure-webhook-delivery",
     "guard-external-plugin-workflows",
 )
+PORTABLE_TEXT_SUFFIXES = {
+    ".json",
+    ".md",
+    ".py",
+    ".yaml",
+    ".yml",
+}
+
+
+def portable_source_bytes(source_path: Path) -> bytes:
+    data = source_path.read_bytes()
+    if source_path.suffix.lower() in PORTABLE_TEXT_SUFFIXES:
+        return data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return data
 
 
 def fail(message: str) -> None:
@@ -289,7 +303,7 @@ with zipfile.ZipFile(archive_path) as archive:
             archive_entry = f"skills/{skill_name}/{relative}"
             if archive_entry not in archive_entries:
                 fail(f"skills archive: missing source file {archive_entry}")
-            if archive.read(archive_entry) != source_path.read_bytes():
+            if archive.read(archive_entry) != portable_source_bytes(source_path):
                 fail(f"skills archive: stale source file {archive_entry}")
 
 print(f"validated {len(SKILL_NAMES)} skills")

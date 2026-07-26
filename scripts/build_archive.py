@@ -15,6 +15,13 @@ SKILL_NAMES = (
     "measure-webhook-delivery",
     "guard-external-plugin-workflows",
 )
+PORTABLE_TEXT_SUFFIXES = {
+    ".json",
+    ".md",
+    ".py",
+    ".yaml",
+    ".yml",
+}
 
 
 def included_files(skill_root: Path) -> list[Path]:
@@ -25,6 +32,13 @@ def included_files(skill_root: Path) -> list[Path]:
         and "__pycache__" not in path.parts
         and path.suffix != ".pyc"
     )
+
+
+def portable_source_bytes(source_path: Path) -> bytes:
+    data = source_path.read_bytes()
+    if source_path.suffix.lower() in PORTABLE_TEXT_SUFFIXES:
+        return data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return data
 
 
 temporary = tempfile.NamedTemporaryFile(
@@ -56,7 +70,7 @@ try:
                 archive_entry.external_attr = 0o100644 << 16
                 archive.writestr(
                     archive_entry,
-                    source_path.read_bytes(),
+                    portable_source_bytes(source_path),
                     compresslevel=9,
                 )
     os.replace(temporary_path, ARCHIVE_PATH)
