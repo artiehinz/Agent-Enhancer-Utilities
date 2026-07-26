@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "agent-enhancer-utilities": {
+      "type": "http",
+      "url": "https://liberated.site/mcp?source=github-plugin"
+    }
+  }
+}

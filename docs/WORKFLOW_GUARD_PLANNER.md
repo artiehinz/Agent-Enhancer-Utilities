@@ -1,7 +1,7 @@
 # Workflow Guard Planner specification
 
-Status: release candidate for Agent Enhancer backend `0.6.0`, with an
-executable local reference planner
+Status: live on Agent Enhancer backend `0.6.2`, with an executable local
+reference planner
 
 The Workflow Guard Planner converts a bounded description of an external
 operation's capability shape into a deterministic reliability plan. It does not
@@ -9,9 +9,9 @@ invoke the external plugin, acquire coordination state, inspect private
 records, or prove that an external action occurred.
 
 The contract has 17 required fields. The skill includes
-[`scripts/plan_workflow.py`](../guard-external-plugin-workflows/scripts/plan_workflow.py)
-as a local dry-run reference. The hosted MCP module described here is not yet
-claimed as deployed.
+[`scripts/plan_workflow.py`](../skills/guard-external-plugin-workflows/scripts/plan_workflow.py)
+as a local dry-run reference. The hosted module is discoverable as
+`workflow-guard-planner` through `https://liberated.site/mcp`.
 
 ## Goals
 

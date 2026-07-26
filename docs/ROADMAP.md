@@ -27,9 +27,10 @@ help execute that plan using opaque identifiers and bounded temporary state.
 
 ## Current focus
 
-Backend `0.6.1` is live on the existing production app with 24 modules, 37
-Claude tools, 37 ChatGPT tools, and Official MCP Registry `0.6.1` marked
-latest. Real USDC remains disabled.
+Backend `0.6.2` is live on the existing production app with 24 modules, 37
+Claude tools, 37 ChatGPT tools, and Official MCP Registry `0.6.2` marked
+latest. Public package `v1.5.0` provides all seven skills, cross-host manifests,
+and two runnable sidecar examples. Real USDC remains disabled.
 
 The next work is commercial validation, not another broad module expansion:
 
@@ -45,6 +46,26 @@ The next work is commercial validation, not another broad module expansion:
 5. Prepare the paid-capacity configuration and operator checklist, but do not
    enable settlement until the existing storage, wallet, demand, and approval
    gates are satisfied.
+
+### Open-source integration lane
+
+Use the public package to contribute working integration artifacts rather than
+generic promotional links:
+
+1. Keep the existing Docker and curated-list submissions accurate; open no
+   additional general awesome-list PRs while they remain under review.
+2. Contribute the no-auth remote MCP definition to OpenHands Extensions with
+   its generated catalog index and full upstream tests.
+3. Keep a tested Goose recipe in this repository, but do not submit it while
+   Goose maintainers are pausing new external recipes and MCP servers.
+4. After OpenHands, approach Agno and the Microsoft MCP educational/sample
+   repositories issue-first with vendor-neutral reliability-sidecar examples.
+5. Contribute x402 retry fixtures only as neutral protocol tests coordinated
+   with the existing upstream retry discussion.
+
+Keep at most two new integration PRs active at once. Every upstream artifact
+must have a runnable local equivalent, a source-tagged endpoint, exact test
+instructions, and a maintainer-appropriate contribution path.
 
 ## Product boundary
 
@@ -157,7 +178,7 @@ Exit criteria:
 
 ## Phase 1 — Add a Workflow Guard Planner
 
-Status: live in backend `0.6.1`.
+Status: live in backend `0.6.2` (introduced in `0.6.1`).
 
 Create a read-only planning module. It should accept bounded capability facts,
 not raw records or credentials:
@@ -193,7 +214,7 @@ Exit criteria:
 
 ## Phase 2 — Add bounded workflow state
 
-Status: Opaque Workflow Checkpoint is live in backend `0.6.1`; remaining
+Status: Opaque Workflow Checkpoint is live in backend `0.6.2`; remaining
 proposals are demand-gated.
 
 Evaluate these small, generic modules:

@@ -15,6 +15,7 @@ body:
         - review-mcp-tool-contracts
         - guard-x402-retries
         - measure-webhook-delivery
+        - guard-external-plugin-workflows
     validations:
       required: true
   - type: input

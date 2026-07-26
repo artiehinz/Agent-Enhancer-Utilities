@@ -1,0 +1,96 @@
+name: Weekly owned-surface smoke
+
+on:
+  schedule:
+    - cron: "17 14 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: weekly-owned-surface-smoke
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.13"
+
+      - name: Validate package and read-only production discovery
+        id: verify
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          {
+            python -B scripts/validate.py
+            python -B scripts/smoke_live_mcp.py
+          } 2>&1 | tee owned-surface-smoke.log
+
+      - name: Open one owned-surface drift issue
+        if: steps.verify.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_TITLE: "[automation] Public package or MCP drift detected"
+        run: |
+          existing="$(
+            gh issue list \
+              --repo "$GITHUB_REPOSITORY" \
+              --state open \
+              --search "$ISSUE_TITLE in:title" \
+              --json number \
+              --jq '.[0].number // empty'
+          )"
+          if [ -z "$existing" ]; then
+            {
+              echo "The weekly owned-surface smoke check failed."
+              echo
+              echo "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+              echo
+              echo "This automation checks only this repository and the public"
+              echo "read-only MCP discovery surface. It never edits, comments on,"
+              echo "or opens pull requests in third-party repositories."
+            } > issue-body.md
+            gh issue create \
+              --repo "$GITHUB_REPOSITORY" \
+              --title "$ISSUE_TITLE" \
+              --body-file issue-body.md
+          fi
+
+      - name: Close recovered owned-surface drift issue
+        if: steps.verify.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_TITLE: "[automation] Public package or MCP drift detected"
+        run: |
+          existing="$(
+            gh issue list \
+              --repo "$GITHUB_REPOSITORY" \
+              --state open \
+              --search "$ISSUE_TITLE in:title" \
+              --json number \
+              --jq '.[0].number // empty'
+          )"
+          if [ -n "$existing" ]; then
+            gh issue close \
+              "$existing" \
+              --repo "$GITHUB_REPOSITORY" \
+              --comment "Recovered in weekly run $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID."
+          fi
+
+      - name: Preserve the smoke log
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: owned-surface-smoke-${{ github.run_id }}
+          path: owned-surface-smoke.log
+          retention-days: 14
+
+      - name: Fail after issue reconciliation
+        if: steps.verify.outcome == 'failure'
+        run: exit 1

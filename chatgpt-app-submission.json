@@ -1,11 +1,81 @@
 {
-  "$schema": "https://developers.openai.com/plugins/schemas/chatgpt-app-submission.v1.json",
+  "$schema": "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json",
   "schema_version": 1,
   "app_info": {
     "display_name": "Agent Enhancer Utilities",
     "subtitle": "Reliability sidecar for agents",
     "description": "Use Agent Enhancer Utilities as a reliability sidecar around repeated, scheduled, parallel, quota-sensitive, or duplicate-sensitive agent workflows. Its 37 deterministic tools plan and checkpoint guarded work, coordinate opaque agents, inspect MCP and x402 contracts, and test bounded API failure paths. It is free and account-free. It does not automatically intercept other plugins and exposes no transfers, wallets, settlement, or real payment capability.",
     "category": "DEVELOPER_TOOLS"
+  },
+  "portal_submission": {
+    "submission_type": "WITH_MCP",
+    "package_name": "agent-enhancer-utilities",
+    "version": "1.5.0",
+    "developer_name": "Agent Enhancer Utilities",
+    "developer_identity_note": "Use Agent Enhancer Utilities only if that exact business identity is verified in the Platform. If submitting under an individually verified identity, replace the developer name with the exact verified individual name shown by the portal.",
+    "listing": {
+      "display_name": "Agent Enhancer Utilities",
+      "short_description": "Reliability sidecar for agents",
+      "long_description": "Use Agent Enhancer Utilities as a reliability sidecar around repeated, scheduled, parallel, quota-sensitive, or duplicate-sensitive agent workflows. Its 37 deterministic tools plan and checkpoint guarded work, coordinate opaque agents, inspect MCP and x402 contracts, and test bounded API failure paths. It is free and account-free. It does not automatically intercept other plugins and exposes no transfers, wallets, settlement, or real payment capability.",
+      "category": "DEVELOPER_TOOLS",
+      "capabilities": [
+        "Guarded workflow planning",
+        "Multi-agent coordination",
+        "Retry and failure-path testing",
+        "MCP contract review",
+        "x402 compatibility analysis",
+        "Webhook delivery measurement"
+      ]
+    },
+    "urls": {
+      "website": "https://liberated.site",
+      "support": "https://liberated.site/support",
+      "privacy_policy": "https://liberated.site/privacy",
+      "terms_of_service": "https://liberated.site/terms",
+      "acceptable_use": "https://liberated.site/acceptable-use",
+      "security": "https://liberated.site/security",
+      "service_status": "https://liberated.site/status",
+      "documentation": "https://liberated.site/docs",
+      "repository": "https://github.com/artiehinz/Agent-Enhancer-Utilities",
+      "demo_recording": "https://liberated.site/demo.mp4"
+    },
+    "assets": {
+      "logo_file": "assets/agents.png",
+      "brand_color": "#10A37F",
+      "custom_ui": false,
+      "screenshots_required": false
+    },
+    "mcp": {
+      "server_url": "https://liberated.site/mcp/chatgpt",
+      "server_url_type": "UNIVERSAL",
+      "authentication": "NONE",
+      "challenge_base_url": "https://liberated.site",
+      "custom_ui": false,
+      "content_security_policy": "Not applicable. The MCP server exposes tools only and does not provide a custom UI or output template.",
+      "demo_credentials": "Not applicable. The production MCP server is public and does not require an account, API key, OAuth, or other credentials."
+    },
+    "skills": {
+      "archive_file": "agent-enhancer-utilities-skills.zip",
+      "skill_count": 7
+    },
+    "starter_prompts": [
+      "Guard a parallel import: prevent duplicates and limit active agents to two.",
+      "Create a temporary 429-to-200 sequence to test whether my HTTP client respects Retry-After.",
+      "Compare two x402 requirements and flag changes to amount, recipient, network, asset, or resource."
+    ],
+    "availability": {
+      "recommended_selection": "All countries and regions offered by the portal",
+      "confirmation": "Select all offered countries and regions only if the verified publisher is ready to provide the public service, policies, and support there."
+    },
+    "release_notes": "Initial public submission of Agent Enhancer Utilities. This release combines seven bundled skills with a public, no-auth MCP server exposing 37 deterministic reliability tools for guarded workflow planning, multi-agent coordination, API failure testing, webhook evidence, and MCP/x402 contract analysis. The service is free and account-free, stores only bounded expiring coordination or fixture state as documented, and performs no real payments or asset transfers. Reviewers can run all supplied test cases without credentials. No custom UI is included.",
+    "reviewer_notes": "Use the production MCP endpoint at https://liberated.site/mcp/chatgpt. Authentication is None, so no demo account or credentials are required. The plugin has no custom UI, so screenshots and UI CSP allowlists are not applicable. Some tools intentionally create bounded, expiring private coordination state or unguessable public test-fixture URLs; their annotations and justifications describe those effects. The x402 tools only analyze caller-supplied protocol requirements and cannot sign, settle, transfer funds, or access a wallet. Use fresh UUID-v4 values in tests to avoid collisions. A public walkthrough is available at https://liberated.site/demo.mp4.",
+    "policy_attestation_notes": [
+      "The listing, URLs, tool metadata, skills, tests, and release notes describe the production release accurately.",
+      "The service does not require authentication and reviewers do not need credentials, MFA, email confirmation, SMS confirmation, or private-network access.",
+      "Tool responses are designed to exclude credentials, unnecessary personal data, raw webhook bodies, source IPs, debug payloads, and undisclosed user identifiers.",
+      "The plugin cannot perform real payments, transfers, wallet operations, settlement, signing, messaging, publishing, or writes through another plugin.",
+      "The bundled skills were tested using the same final file tree included in the upload archive."
+    ]
   },
   "tools": {
     "penny_lock": {
@@ -455,14 +525,6 @@
   },
   "test_cases": [
     {
-      "description": "Acquire a short lock and repeat the identical call with the same idempotency key to verify deterministic replay.",
-      "user_prompt": "Generate a private namespace as review-lock:<fresh UUID-v4>. Acquire a 60-second lock in that namespace for opaque task task-42 on behalf of agent-a. Generate a separate fresh UUID-v4 idempotency key, call the lock tool, then repeat the identical call with the same idempotency key and compare the replay metadata.",
-      "file_attachment_urls": null,
-      "tools_triggered": "penny_lock",
-      "expected_output": "The first call reports ok=true, result.acquired=true, and idempotency_replayed=false. The identical second call returns the same result and reports idempotency_replayed=true.",
-      "expected_output_url": null
-    },
-    {
       "description": "Bound parallel work performed through another plugin without sending that plugin's private records to the sidecar.",
       "user_prompt": "I will use another plugin to process opaque items with three workers. Generate one private namespace as sidecar-review:<fresh UUID-v4>, reuse it for the related coordination calls, and use opaque key batch-42. Limit active workers to two and share a two-token-per-minute request gate. Acquire a permit and one token for worker-a, then report the guard evidence and explain that it does not prove the other plugin completed its action.",
       "file_attachment_urls": null,
@@ -495,35 +557,11 @@
       "expected_output_url": null
     },
     {
-      "description": "Create a two-attempt webhook meter, send one bounded callback, and consume the meter to inspect hash-only attempt metadata.",
-      "user_prompt": "Create a webhook attempt meter with a 300-second lifetime and a maximum of two attempts. After I send one test callback, retrieve the meter once and summarize only the recorded method, timing, byte count, content type, and hashes.",
-      "file_attachment_urls": null,
-      "tools_triggered": "webhook_attempt_meter_create, webhook_attempt_meter_retrieve",
-      "expected_output": "Creation returns an unguessable HTTPS meter_url and separate retrieval_token. After one callback, retrieval returns found=true and one attempt containing observed_at, method, body_bytes, body_sha256, content_type, and a nullable user_agent_sha256. It never returns the raw body, raw user agent, source IP, arbitrary headers, or internal IDs.",
-      "expected_output_url": null
-    },
-    {
       "description": "Plan a scheduled duplicate-sensitive external create from the closed capability contract.",
       "user_prompt": "Use the workflow planner for a scheduled create with three workers, retries possible, material duplicate harm, no provider idempotency, eventual destination search, a stable marker, read-after-write, no conditional write, manual compensation, and no shared rate limit. Do not create anything.",
       "file_attachment_urls": null,
       "tools_triggered": "workflow_guard_planner",
       "expected_output": "The tool returns decision sidecar, profile create-once, additional profile scheduled-run, guarantee duplicate-resistant, search before create, read-back after create, and explicit eventual-search and cross-plugin-transaction residual risks. It creates no state.",
-      "expected_output_url": null
-    },
-    {
-      "description": "Claim and verify an opaque checkpoint without exposing the holder or pretending to prove the external result.",
-      "user_prompt": "Using opaque synthetic identifiers only, claim a 120-second workflow checkpoint with 600-second state retention, then record caller verification using stable_marker_readback and inspect status. Use a fresh UUID-v4 idempotency key for each distinct mutation and a stable observation key for the transition.",
-      "file_attachment_urls": null,
-      "tools_triggered": "workflow_checkpoint_claim, workflow_checkpoint_transition, workflow_checkpoint_status",
-      "expected_output": "Claim returns generation 1 and acquired true. Transition reaches caller_verified with external_proof false. Status reveals no holder or evidence fingerprint and allows only status.",
-      "expected_output_url": null
-    },
-    {
-      "description": "Abandon only a pre-action workflow claim and preserve generation history.",
-      "user_prompt": "Claim a synthetic workflow checkpoint, assert that the external action has not started, abandon generation 1 as the same holder, then inspect status. Use fresh UUID-v4 idempotency keys for claim and abandon.",
-      "file_attachment_urls": null,
-      "tools_triggered": "workflow_checkpoint_claim, workflow_checkpoint_abandon, workflow_checkpoint_status",
-      "expected_output": "Abandon succeeds only from claimed, clears active ownership without deleting the checkpoint, preserves generation 1, and status exposes no holder. It cannot be used after external_result_uncertain.",
       "expected_output_url": null
     }
   ],
@@ -534,14 +572,6 @@
       "file_attachment_urls": null,
       "tools_triggered": null,
       "expected_output": "Answer from general knowledge without selecting an Agent Enhancer Utilities tool.",
-      "expected_output_url": null
-    },
-    {
-      "description": "A messaging request is outside the plugin's available capabilities.",
-      "user_prompt": "Send my coworker a message.",
-      "file_attachment_urls": null,
-      "tools_triggered": null,
-      "expected_output": "Do not select a plugin tool; explain that the plugin has no messaging capability.",
       "expected_output_url": null
     },
     {

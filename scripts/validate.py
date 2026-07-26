@@ -7,6 +7,7 @@ import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
+PACKAGE_VERSION = "1.5.0"
 SKILL_NAMES = (
     "coordinate-parallel-agents",
     "test-http-failure-paths",
@@ -39,7 +40,12 @@ def fail(message: str) -> None:
 
 readme = (ROOT / "README.md").read_text(encoding="utf-8")
 for name in SKILL_NAMES:
-    folder = ROOT / name
+    legacy_folder = ROOT / name
+    if legacy_folder.is_dir() and any(
+        path.is_file() for path in legacy_folder.rglob("*")
+    ):
+        fail(f"{name}: legacy root skill directory must not coexist with skills/")
+    folder = ROOT / "skills" / name
     skill_path = folder / "SKILL.md"
     metadata_path = folder / "agents" / "openai.yaml"
     if not skill_path.is_file():
@@ -73,15 +79,120 @@ for name in SKILL_NAMES:
     if 'url: "https://liberated.site/mcp"' not in metadata:
         fail(f"{name}: MCP dependency URL is stale")
 
+manifest_paths = (
+    ".codex-plugin/plugin.json",
+    ".claude-plugin/plugin.json",
+    "plugin.json",
+    "gemini-extension.json",
+)
+manifests = {}
+for relative_path in manifest_paths:
+    path = ROOT / relative_path
+    if not path.is_file():
+        fail(f"release package: missing {relative_path}")
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    manifests[relative_path] = manifest
+    if manifest.get("name") != "agent-enhancer-utilities":
+        fail(f"{relative_path}: plugin name is stale")
+    if manifest.get("version") != PACKAGE_VERSION:
+        fail(f"{relative_path}: version must be {PACKAGE_VERSION}")
+
+for relative_path in (
+    ".codex-plugin/plugin.json",
+    ".claude-plugin/plugin.json",
+    "plugin.json",
+):
+    manifest = manifests[relative_path]
+    if str(manifest.get("skills", "")).rstrip("/") not in {
+        "./skills",
+        "skills",
+    }:
+        fail(f"{relative_path}: skills must resolve to the canonical skills/")
+    if str(manifest.get("mcpServers", "")).lstrip("./") != ".mcp.json".lstrip("./"):
+        fail(f"{relative_path}: MCP companion path is stale")
+
+mcp_config = json.loads((ROOT / ".mcp.json").read_text(encoding="utf-8"))
+server_config = mcp_config.get("mcpServers", {}).get("agent-enhancer-utilities", {})
+if server_config != {
+    "type": "http",
+    "url": "https://liberated.site/mcp?source=github-plugin",
+}:
+    fail(".mcp.json: packaged remote server definition drifted")
+
+gemini_server = (
+    manifests["gemini-extension.json"]
+    .get("mcpServers", {})
+    .get("agent-enhancer-utilities", {})
+)
+if gemini_server != {
+    "httpUrl": "https://liberated.site/mcp?source=github-plugin"
+}:
+    fail("gemini-extension.json: Streamable HTTP definition drifted")
+
+codex_interface = manifests[".codex-plugin/plugin.json"].get("interface", {})
+for field in (
+    "displayName",
+    "shortDescription",
+    "longDescription",
+    "developerName",
+    "category",
+    "websiteURL",
+    "privacyPolicyURL",
+    "termsOfServiceURL",
+):
+    if not codex_interface.get(field):
+        fail(f".codex-plugin/plugin.json: missing interface.{field}")
+for asset_field in ("composerIcon", "logo"):
+    asset_path = str(codex_interface.get(asset_field, "")).removeprefix("./")
+    if not asset_path or not (ROOT / asset_path).is_file():
+        fail(f".codex-plugin/plugin.json: missing {asset_field} asset")
+
+for relative_path in (
+    "docs/ARCHITECTURE.md",
+    "docs/COMPATIBILITY.md",
+    "examples/README.md",
+    "examples/reliability-sidecar/README.md",
+    "examples/reliability-sidecar/run.py",
+    "examples/multi-agent-checkpoint/README.md",
+    "examples/multi-agent-checkpoint/run.py",
+):
+    if not (ROOT / relative_path).is_file():
+        fail(f"release package: missing {relative_path}")
+
+for relative_path in (
+    "examples/common/mcp_client.py",
+    "examples/reliability-sidecar/run.py",
+    "examples/multi-agent-checkpoint/run.py",
+    "scripts/smoke_live_mcp.py",
+):
+    source = (ROOT / relative_path).read_text(encoding="utf-8")
+    compile(source, relative_path, "exec")
+
+weekly_workflow = ROOT / ".github" / "workflows" / "weekly-owned-surface-smoke.yml"
+if not weekly_workflow.is_file():
+    fail("release package: missing weekly owned-surface smoke workflow")
+weekly_text = weekly_workflow.read_text(encoding="utf-8")
+if "scripts/smoke_live_mcp.py" not in weekly_text or "issues: write" not in weekly_text:
+    fail("weekly owned-surface smoke workflow is incomplete")
+if any(
+    third_party in weekly_text
+    for third_party in (
+        "docker/mcp-registry",
+        "punkpeye/awesome-mcp-servers",
+        "punkpeye/awesome-mcp-devtools",
+    )
+):
+    fail("weekly workflow must never mutate third-party repositories")
+
 sidecar_skill = (
-    ROOT / "guard-external-plugin-workflows" / "SKILL.md"
+    ROOT / "skills" / "guard-external-plugin-workflows" / "SKILL.md"
 ).read_text(encoding="utf-8")
 if "[TODO:" in sidecar_skill:
     fail("guard-external-plugin-workflows: unresolved TODO")
 
 for relative_path in (
-    "guard-external-plugin-workflows/references/reliability-contract.md",
-    "guard-external-plugin-workflows/references/recipes.md",
+    "skills/guard-external-plugin-workflows/references/reliability-contract.md",
+    "skills/guard-external-plugin-workflows/references/recipes.md",
     "docs/WORKFLOW_GUARD_PLANNER.md",
     "docs/guard-external-plugin-workflows-evals.json",
     "docs/schemas/workflow-guard-planner.input.schema.json",
@@ -158,6 +269,7 @@ planner_tests = subprocess.run(
         "-B",
         str(
             ROOT
+            / "skills"
             / "guard-external-plugin-workflows"
             / "scripts"
             / "test_plan_workflow.py"
@@ -179,11 +291,13 @@ submission = json.loads(
 )
 if (
     submission.get("$schema")
-    != "https://developers.openai.com/plugins/schemas/chatgpt-app-submission.v1.json"
+    != "https://developers.openai.com/apps-sdk/schemas/chatgpt-app-submission.v1.json"
 ):
     fail("chatgpt app submission: canonical schema URL is stale")
 if submission.get("schema_version") != 1:
     fail("chatgpt app submission: schema_version must be 1")
+if submission.get("portal_submission", {}).get("version") != PACKAGE_VERSION:
+    fail("chatgpt app submission: portal package version is stale")
 if len(submission.get("tools", {})) != 37:
     fail("chatgpt app submission: expected 37 release-candidate direct tools")
 for required_tool in (
@@ -242,8 +356,11 @@ for tool_name, tool in submission["tools"].items():
 
 positive_submission_cases = submission.get("test_cases", [])
 negative_submission_cases = submission.get("negative_test_cases", [])
-if len(positive_submission_cases) < 5 or len(negative_submission_cases) < 3:
-    fail("chatgpt app submission: insufficient positive or negative test cases")
+if len(positive_submission_cases) != 5 or len(negative_submission_cases) != 3:
+    fail(
+        "chatgpt app submission: directory review requires exactly "
+        "5 positive and 3 negative test cases"
+    )
 for case in positive_submission_cases:
     if not str(case.get("description", "")).strip():
         fail("chatgpt app submission: positive case missing description")
@@ -295,7 +412,7 @@ if any("__pycache__" in entry or entry.endswith(".pyc") for entry in archive_ent
     fail("skills archive: generated Python cache files are not allowed")
 with zipfile.ZipFile(archive_path) as archive:
     for skill_name in SKILL_NAMES:
-        skill_root = ROOT / skill_name
+        skill_root = ROOT / "skills" / skill_name
         for source_path in skill_root.rglob("*"):
             if not source_path.is_file():
                 continue

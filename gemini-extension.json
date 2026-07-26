@@ -1,0 +1,10 @@
+{
+  "name": "agent-enhancer-utilities",
+  "version": "1.5.0",
+  "description": "Seven Agent Skills and a free MCP reliability sidecar for guarded agent workflows.",
+  "mcpServers": {
+    "agent-enhancer-utilities": {
+      "httpUrl": "https://liberated.site/mcp?source=github-plugin"
+    }
+  }
+}

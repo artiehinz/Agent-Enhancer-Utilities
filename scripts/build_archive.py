@@ -58,7 +58,7 @@ try:
         compresslevel=9,
     ) as archive:
         for skill_name in SKILL_NAMES:
-            skill_root = ROOT / skill_name
+            skill_root = ROOT / "skills" / skill_name
             for source_path in included_files(skill_root):
                 relative = source_path.relative_to(skill_root).as_posix()
                 archive_entry = zipfile.ZipInfo(

@@ -5,24 +5,28 @@
 <h1 align="center">Agent Enhancer Utilities</h1>
 
 <p align="center">
-  A reliability sidecar for agent workflows: seven inspectable Agent Skills
-  backed by a free, account-free MCP service for coordination, API failure
-  testing, and MCP/x402 contract analysis.
+  Add Agent Enhancer to an existing agent workflow for planning, checkpoints,
+  deduplication, recovery, and evidence.
 </p>
 
 <p align="center">
   <a href="https://liberated.site/status">Service status</a> ·
   <a href="https://liberated.site/effectiveness">Effectiveness</a> ·
   <a href="https://liberated.site/tools">24-module catalog</a> ·
+  <a href="https://liberated.site/demo.mp4">Video demo</a> ·
   <a href="https://glama.ai/mcp/connectors/site.liberated/agent-utility-lab">Glama verified</a> ·
   <a href="./LICENSE">MIT license</a>
 </p>
 
-> Release status: `v1.4.1` is the accepted seven-skill release. Backend
-> `0.6.2` is the matching security release, passed isolated and canonical
-> production acceptance, and is
-> marked latest in the Official MCP Registry. Check the live
-> [service status](https://liberated.site/status) for current evidence.
+> Release status: `v1.5.0` is the universal seven-skill package. It adds
+> versioned host manifests, a canonical `skills/` layout, and two runnable
+> sidecar examples. Backend `0.6.2` remains the matching production release,
+> and all public modules remain free.
+
+Agent Enhancer is a **reliability sidecar**, not a replacement for the agent or
+domain tools you already use. Connect it to an existing workflow and call the
+smallest relevant utility only when coordination or failure handling will
+materially help.
 
 ## Skills
 
@@ -48,23 +52,37 @@ harmful duplicates.
 
 The sidecar coordinates the workflow; the domain plugin still performs and
 verifies its own reads, writes, sends, and analysis. See the
-[`guard-external-plugin-workflows`](./guard-external-plugin-workflows/SKILL.md)
+[`guard-external-plugin-workflows`](./skills/guard-external-plugin-workflows/SKILL.md)
 skill for the standard lifecycle and guarantee labels.
 
 ## Install
 
-GitHub's native skill commands require GitHub CLI 2.90 or later:
+List all seven skills before installing:
+
+```sh
+npx skills add artiehinz/Agent-Enhancer-Utilities --list
+```
+
+GitHub CLI 2.90 or later can preview or install one skill:
 
 ```sh
 gh skill preview artiehinz/Agent-Enhancer-Utilities coordinate-parallel-agents
 gh skill install artiehinz/Agent-Enhancer-Utilities coordinate-parallel-agents
 ```
 
-Cross-agent installation:
+The same repository includes versioned package entry points:
 
-```sh
-npx skills add artiehinz/Agent-Enhancer-Utilities
-```
+| Host | Entry point | Current evidence |
+| --- | --- | --- |
+| ChatGPT and Codex | [`.codex-plugin/plugin.json`](./.codex-plugin/plugin.json) | Package validator passed |
+| Claude Code | [`.claude-plugin/plugin.json`](./.claude-plugin/plugin.json) | Claude validator passed |
+| GitHub Copilot CLI | [`plugin.json`](./plugin.json) | Isolated install found all seven skills |
+| Gemini CLI | [`gemini-extension.json`](./gemini-extension.json) | Extension prepared; clean host install remains |
+| Generic MCP clients | [`.mcp.json`](./.mcp.json) | Live Streamable HTTP contract passed |
+
+See the exact, deliberately conservative
+[compatibility evidence](./docs/COMPATIBILITY.md). A prepared manifest is not a
+claim of marketplace approval.
 
 Agents can also connect without installing a skill:
 
@@ -77,9 +95,29 @@ Agents can also connect without installing a skill:
 
 All public modules are currently free. Real USDC settlement is disabled.
 
+## Runnable examples
+
+The examples use Python's standard library, synthetic identifiers, and the
+public no-auth MCP endpoint:
+
+```sh
+python -B examples/reliability-sidecar/run.py
+python -B examples/multi-agent-checkpoint/run.py
+```
+
+- The [general sidecar example](./examples/reliability-sidecar/) combines the
+  live guard planner with a mock domain agent and proves one searchable record
+  survives a replay.
+- The [multi-agent checkpoint example](./examples/multi-agent-checkpoint/)
+  races two workers, admits one owner, records one synthetic action, and keeps
+  `external_proof: false`.
+
+Both examples search, describe, and invoke through the progressive MCP facade
+instead of hard-coding private backend schemas.
+
 ## Directory listings
 
-- [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=site.liberated%2Fagent-utility-lab) — `0.6.1` latest
+- [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=site.liberated%2Fagent-utility-lab) — `0.6.2` latest
 - [Glama](https://glama.ai/mcp/connectors/site.liberated/agent-utility-lab) — ownership verified
 - [Smithery](https://smithery.ai/servers/artemhinz2/Agent-Enhancer-Utilities)
 
@@ -110,9 +148,10 @@ project-level validation/documentation. The hosted service implementation is
 operated separately. A skill must use progressive discovery and must not copy
 private schemas, credentials, or backend source.
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md), [SECURITY.md](./SECURITY.md), and
-[docs/EFFECTIVENESS.md](./docs/EFFECTIVENESS.md). The product direction and
-planned cross-plugin reliability work are described in
+See the [architecture](./docs/ARCHITECTURE.md),
+[CONTRIBUTING.md](./CONTRIBUTING.md), [SECURITY.md](./SECURITY.md), and
+[effectiveness methodology](./docs/EFFECTIVENESS.md). The product direction
+and planned cross-plugin reliability work are described in
 [docs/ROADMAP.md](./docs/ROADMAP.md). The proposed read-only planning contract
 is in
 [docs/WORKFLOW_GUARD_PLANNER.md](./docs/WORKFLOW_GUARD_PLANNER.md), the bounded

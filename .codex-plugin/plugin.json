@@ -1,0 +1,42 @@
+{
+  "name": "agent-enhancer-utilities",
+  "version": "1.5.0",
+  "description": "Add planning, checkpoints, deduplication, recovery, and evidence to agent workflows with seven skills and a free MCP reliability sidecar.",
+  "author": {
+    "name": "Artie Hinz",
+    "url": "https://github.com/artiehinz"
+  },
+  "homepage": "https://liberated.site",
+  "repository": "https://github.com/artiehinz/Agent-Enhancer-Utilities",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "mcp",
+    "orchestration",
+    "reliability",
+    "x402"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Agent Enhancer Utilities",
+    "shortDescription": "Reliability sidecar for agent workflows",
+    "longDescription": "Seven inspectable skills and a free, no-auth MCP service for planning guarded work, coordinating agents, preventing harmful duplicates, recovering uncertain workflows, and reporting evidence without claiming control of another tool.",
+    "developerName": "Artie Hinz",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive"
+    ],
+    "websiteURL": "https://liberated.site",
+    "privacyPolicyURL": "https://liberated.site/privacy",
+    "termsOfServiceURL": "https://liberated.site/terms",
+    "defaultPrompt": [
+      "Plan a duplicate-resistant workflow around my task.",
+      "Coordinate parallel agents with checkpoints and evidence.",
+      "Test my MCP or HTTP retry failure paths."
+    ],
+    "brandColor": "#10A37F",
+    "composerIcon": "./assets/agents.png",
+    "logo": "./assets/agents.png"
+  }
+}

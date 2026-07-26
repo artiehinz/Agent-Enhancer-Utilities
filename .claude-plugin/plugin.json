@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "agent-enhancer-utilities",
+  "displayName": "Agent Enhancer Utilities",
+  "version": "1.5.0",
+  "description": "Seven Agent Skills plus a free MCP reliability sidecar for planning, checkpoints, deduplication, recovery, and evidence.",
+  "author": {
+    "name": "Artie Hinz",
+    "url": "https://github.com/artiehinz"
+  },
+  "homepage": "https://liberated.site",
+  "repository": "https://github.com/artiehinz/Agent-Enhancer-Utilities",
+  "license": "MIT",
+  "keywords": [
+    "agent-skills",
+    "mcp",
+    "orchestration",
+    "reliability",
+    "x402"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

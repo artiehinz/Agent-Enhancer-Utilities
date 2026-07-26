@@ -16,7 +16,7 @@ planner = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(planner)
 OUTPUT_SCHEMA = json.loads(
     (
-        Path(__file__).resolve().parents[2]
+        Path(__file__).resolve().parents[3]
         / "docs"
         / "schemas"
         / "workflow-guard-planner.output.schema.json"
