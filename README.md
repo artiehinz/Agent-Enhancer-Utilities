@@ -18,8 +18,9 @@
   <a href="./LICENSE">MIT license</a>
 </p>
 
-> Release status: `v1.4.0` is the accepted seven-skill release. Backend
-> `0.6.1` is live, passed isolated and canonical production acceptance, and is
+> Release status: `v1.4.1` is the accepted seven-skill release. Backend
+> `0.6.2` is the matching security release, passed isolated and canonical
+> production acceptance, and is
 > marked latest in the Official MCP Registry. Check the live
 > [service status](https://liberated.site/status) for current evidence.
 
