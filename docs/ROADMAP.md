@@ -47,6 +47,32 @@ The next work is commercial validation, not another broad module expansion:
    enable settlement until the existing storage, wallet, demand, and approval
    gates are satisfied.
 
+### Future licensing review
+
+Keep the current MIT license unchanged while the first integrations and
+distribution reviews are active. Before commercial launch, evaluate whether
+new releases should move to a source-available, attribution-required,
+noncommercial license such as PolyForm Noncommercial 1.0.0, with a separate
+commercial license available from Artie Hinz.
+
+Treat this as a deliberate release decision, not a silent metadata edit:
+
+1. Confirm the intended attribution wording and commercial-use boundary with
+   qualified legal counsel.
+2. Accept that already-published MIT releases remain available under their
+   original terms; apply any new license only to a clearly versioned future
+   release.
+3. Review the effect on Agent Skills, MCP directories, host marketplaces,
+   external integrations, contributors, and commercial adopters.
+4. If changed, replace every MIT reference in the repository manifests,
+   README, archive, contribution policy, and release metadata; include the
+   complete license and required notice in downloadable packages.
+5. Stop describing future noncommercial releases as open source. Use
+   `source-available` and explain that commercial use requires a separate
+   written license.
+6. Keep upstream contributions under each upstream project's license and do
+   not attempt to relicense work already contributed elsewhere.
+
 ### Open-source integration lane
 
 Use the public package to contribute working integration artifacts rather than
