@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: "3.13"
 
-      - name: Validate package and read-only production discovery
+      - name: Validate package and bounded production examples
         id: verify
         continue-on-error: true
         run: |
@@ -30,6 +30,8 @@ jobs:
           {
             python -B scripts/validate.py
             python -B scripts/smoke_live_mcp.py
+            python -B examples/reliability-sidecar/run.py
+            python -B examples/multi-agent-checkpoint/run.py
           } 2>&1 | tee owned-surface-smoke.log
 
       - name: Open one owned-surface drift issue
@@ -53,7 +55,7 @@ jobs:
               echo "Run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
               echo
               echo "This automation checks only this repository and the public"
-              echo "read-only MCP discovery surface. It never edits, comments on,"
+              echo "bounded MCP surfaces. It never edits, comments on,"
               echo "or opens pull requests in third-party repositories."
             } > issue-body.md
             gh issue create \

@@ -62,10 +62,21 @@ generic promotional links:
 3. Keep the validated [Goose recipe](../examples/goose/) in this repository,
    but do not submit it while Goose maintainers are pausing new external
    recipes and MCP servers.
-4. After OpenHands, approach Agno and the Microsoft MCP educational/sample
-   repositories issue-first with vendor-neutral reliability-sidecar examples.
-5. Contribute x402 retry fixtures only as neutral protocol tests coordinated
-   with the existing upstream retry discussion.
+4. Maintain the focused
+   [Agno cookbook PR #9178](https://github.com/agno-agi/agno/pull/9178),
+   which demonstrates failed-generation recovery, competing-worker fencing,
+   lost-response marker read-back, and an honest duplicate-resistant
+   guarantee with a synthetic destination.
+5. Wait for maintainer interest on the vendor-neutral
+   [Microsoft MCP for Beginners proposal #949](https://github.com/microsoft/mcp-for-beginners/issues/949)
+   and
+   [Agent Framework Samples proposal #115](https://github.com/microsoft/Agent-Framework-Samples/issues/115);
+   do not open either implementation PR first.
+6. Coordinate neutral x402 retry fixtures through
+   [issue #831](https://github.com/x402-foundation/x402/issues/831).
+   Challenge drift is reproducible without wallets or settlement, but
+   overlapping fixes already exist, so wait for maintainer direction instead
+   of opening a duplicate PR.
 
 Keep at most two new integration PRs active at once. Every upstream artifact
 must have a runnable local equivalent, a source-tagged endpoint, exact test

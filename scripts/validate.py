@@ -155,6 +155,8 @@ for relative_path in (
     "examples/reliability-sidecar/run.py",
     "examples/multi-agent-checkpoint/README.md",
     "examples/multi-agent-checkpoint/run.py",
+    "examples/goose/README.md",
+    "examples/goose/agent-enhancer-reliability-sidecar.yaml",
 ):
     if not (ROOT / relative_path).is_file():
         fail(f"release package: missing {relative_path}")
@@ -172,7 +174,12 @@ weekly_workflow = ROOT / ".github" / "workflows" / "weekly-owned-surface-smoke.y
 if not weekly_workflow.is_file():
     fail("release package: missing weekly owned-surface smoke workflow")
 weekly_text = weekly_workflow.read_text(encoding="utf-8")
-if "scripts/smoke_live_mcp.py" not in weekly_text or "issues: write" not in weekly_text:
+if (
+    "scripts/smoke_live_mcp.py" not in weekly_text
+    or "examples/reliability-sidecar/run.py" not in weekly_text
+    or "examples/multi-agent-checkpoint/run.py" not in weekly_text
+    or "issues: write" not in weekly_text
+):
     fail("weekly owned-surface smoke workflow is incomplete")
 if any(
     third_party in weekly_text
@@ -183,6 +190,24 @@ if any(
     )
 ):
     fail("weekly workflow must never mutate third-party repositories")
+
+goose_recipe = (
+    ROOT / "examples" / "goose" / "agent-enhancer-reliability-sidecar.yaml"
+).read_text(encoding="utf-8")
+for required_fragment in (
+    'version: "1.0.0"',
+    "requirement: user_prompt",
+    "type: streamable_http",
+    'uri: "https://liberated.site/mcp?source=goose-recipe"',
+    "`lab.search_tools`",
+    "`lab.describe_tool`",
+    "`lab.invoke_tool`",
+    "`workflow-guard-planner`",
+    "`workflow-checkpoint`",
+    "`external_proof: false`",
+):
+    if required_fragment not in goose_recipe:
+        fail(f"goose recipe: missing {required_fragment}")
 
 sidecar_skill = (
     ROOT / "skills" / "guard-external-plugin-workflows" / "SKILL.md"

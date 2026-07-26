@@ -1,1 +1,3 @@
 /demo-video/
+__pycache__/
+*.py[cod]
