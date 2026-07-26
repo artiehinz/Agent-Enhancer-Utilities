@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Add an upstream-schema-validated Goose reliability-sidecar recipe using the
+  free, no-auth progressive MCP endpoint.
+
 ## 1.5.0 - 2026-07-25
 
 - Package the repository for Codex/ChatGPT, Claude Code, GitHub Copilot CLI,

@@ -54,10 +54,14 @@ generic promotional links:
 
 1. Keep the existing Docker and curated-list submissions accurate; open no
    additional general awesome-list PRs while they remain under review.
-2. Contribute the no-auth remote MCP definition to OpenHands Extensions with
-   its generated catalog index and full upstream tests.
-3. Keep a tested Goose recipe in this repository, but do not submit it while
-   Goose maintainers are pausing new external recipes and MCP servers.
+2. Maintain the focused
+   [OpenHands Extensions PR #418](https://github.com/OpenHands/extensions/pull/418),
+   which adds only the no-auth remote MCP definition and generated catalog
+   index. Its schema/catalog tests and live initialization pass; fork workflows
+   still require maintainer approval.
+3. Keep the validated [Goose recipe](../examples/goose/) in this repository,
+   but do not submit it while Goose maintainers are pausing new external
+   recipes and MCP servers.
 4. After OpenHands, approach Agno and the Microsoft MCP educational/sample
    repositories issue-first with vendor-neutral reliability-sidecar examples.
 5. Contribute x402 retry fixtures only as neutral protocol tests coordinated

@@ -8,7 +8,10 @@ standard library:
 - [`multi-agent-checkpoint`](./multi-agent-checkpoint/) races two workers for
   one expiring checkpoint and verifies that only the owner crosses the
   simulated action boundary.
+- [`goose`](./goose/) is a validated Goose recipe that adds the same
+  reliability-sidecar lifecycle to an authorized workspace or domain task.
 
-Both examples discover and describe a module before invoking it. They fail
-closed if the expected free module is unavailable or its result no longer
-matches the documented safety contract.
+The Python examples discover and describe a module before invoking it. They
+fail closed if the expected free module is unavailable or its result no longer
+matches the documented safety contract. The Goose recipe uses the same
+progressive discovery tools and keeps the destination action in Goose.

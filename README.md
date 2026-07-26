@@ -103,6 +103,7 @@ public no-auth MCP endpoint:
 ```sh
 python -B examples/reliability-sidecar/run.py
 python -B examples/multi-agent-checkpoint/run.py
+goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
 ```
 
 - The [general sidecar example](./examples/reliability-sidecar/) combines the
@@ -111,8 +112,11 @@ python -B examples/multi-agent-checkpoint/run.py
 - The [multi-agent checkpoint example](./examples/multi-agent-checkpoint/)
   races two workers, admits one owner, records one synthetic action, and keeps
   `external_proof: false`.
+- The [Goose recipe](./examples/goose/) adds the no-auth sidecar to a Goose
+  task, stops ambiguous retries, and requires destination read-back before
+  recording caller verification.
 
-Both examples search, describe, and invoke through the progressive MCP facade
+All examples search, describe, and invoke through the progressive MCP facade
 instead of hard-coding private backend schemas.
 
 ## Directory listings
