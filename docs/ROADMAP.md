@@ -47,6 +47,63 @@ The next work is commercial validation, not another broad module expansion:
    enable settlement until the existing storage, wallet, demand, and approval
    gates are satisfied.
 
+### Reliability proof, clean measurement, and paired benchmark
+
+The next evidence release must demonstrate value in the larger agent workflow,
+not merely show that an Agent Enhancer tool returned successfully. It has three
+ordered workstreams:
+
+1. **Prove ambiguous-success recovery.** Extend the synthetic reliability
+   example so an external write commits and its first response is lost. Compare
+   a naive retry, which can create a duplicate, with a guarded run that records
+   `external_result_uncertain`, reads back a stable marker, records
+   `caller_verified`, and does not repeat the mutation. Preserve the honest
+   `duplicate-resistant` guarantee and `external_proof: false`; this is not a
+   cross-plugin transaction or universal exactly-once claim.
+2. **Start a clean external-use baseline.** Treat the first 655 module
+   observations as a mixed automation window, not verified beta-user usage.
+   Archive an aggregate-only internal snapshot, mark every owned test and
+   integration run, exclude the old window publicly, and begin a new baseline
+   only after marked automation is proven to write zero public observations.
+3. **Run a controlled with/without-sidecar benchmark.** Execute the same
+   multi-agent, multi-step fixtures with Agent Enhancer disabled and enabled.
+   Keep the model/version, reasoning setting, agent count, prompts, tool set,
+   workspace snapshot, budgets, timeouts, and injected failures fixed. Reset
+   the destination between paired runs, randomize run order, repeat each
+   condition enough to report a distribution, and evaluate outcomes without
+   using the condition label.
+
+The initial benchmark matrix should include:
+
+- a duplicate-sensitive create whose success response is lost;
+- a parallel multi-agent development task with overlapping implementation and
+  verification responsibilities;
+- a bounded batch under a shared rate limit;
+- a scheduled or repeated refresh where stale work should be suppressed; and
+- an ordinary one-time low-risk task where correct abstention should add
+  negligible overhead.
+
+Capture total model input, output, cached, and reasoning tokens when the host
+reports them; model and external-tool cost at the recorded rate sheet; agent
+turns; tool calls; repeated or conflicting calls; wall-clock and critical-path
+latency; successful final-state verification; duplicate mutations; recovery
+rate; unresolved ambiguous outcomes; manual interventions; and sidecar-only
+overhead. Do not infer token savings when a host does not expose usage.
+
+Pre-register the fixtures, evaluator, sample size, exclusions, and success
+thresholds before running the comparison. Publish sanitized run-level results,
+the aggregation script, confidence intervals or full distributions, and
+failures as well as successes. The benchmark may show that the sidecar helps
+failure-prone workflows while adding overhead to simple work; do not select
+only tasks or runs that make the product look beneficial.
+
+After at least one benchmark meets its pre-registered reliability or net-cost
+gate, publish a GitHub case study and add a summarized comparison to the
+Evidence page. A later video may show the same fixture side by side, including
+the injected failure, tool timeline, tokens, cost, verified result, and
+limitations. Produce that video from captured benchmark evidence rather than
+from an unverified marketing script.
+
 ### Future licensing review
 
 Keep the current MIT license unchanged while the first integrations and
@@ -463,6 +520,9 @@ utility returned HTTP 200:
 - stale refreshes suppressed;
 - workflows recovered from a tested failure;
 - uncertain outcomes correctly stopped and escalated;
+- paired task-success, duplicate, retry, token, cost, and latency differences
+  between guarded and unguarded runs;
+- net benefit after subtracting the sidecar's own tokens, calls, and latency;
 - guarded workflows with an explicit guarantee label;
 - correct abstention on low-risk one-time requests;
 - zero sensitive payloads or credentials retained by coordination utilities.
