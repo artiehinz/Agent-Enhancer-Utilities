@@ -262,7 +262,9 @@ Do not describe automated smoke tests as beta-user usage.
 
 ## Immediate order of work
 
-1. Run the published deterministic fixture suite in a metered agent host.
+1. Complete the frozen Codex metered-agent tier: five excluded validation
+   pairs and then 20 publishable pairs per scenario, with Apps disabled and
+   all production MCP calls marked as owned automation.
 2. Respond to review on Agno PR #9178; `Closes #9179` is present.
 3. Monitor and maintain OpenHands PR #418.
 4. Monitor the Docker and two curated-list submissions without opening more

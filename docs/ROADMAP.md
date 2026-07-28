@@ -115,6 +115,16 @@ quality or token savings. Model tokens, cost, and agent latency remain
 unavailable until the same preregistered scenarios are run through real,
 metered agent hosts.
 
+The metered Codex tier is now frozen under
+`examples/sidecar-agent-benchmark/`. It pins Codex CLI `0.144.0-alpha.4`,
+`gpt-5.6-sol` at medium reasoning, identical paired prompts, disposable
+destination state, randomized condition order, condition-blind evaluation,
+real token/tool/latency capture, and a combined protocol hash. Codex Apps are
+disabled in both conditions so the only condition difference is the marked
+production Agent Enhancer MCP. Five pairs per scenario remain local validation;
+the later 20-pair sample is the only publishable metered evidence. Early
+setup and discovery pilots are explicitly excluded.
+
 Backend `0.6.4` also completed the clean measurement boundary. It preserved
 the mixed pre-marker window as aggregate-only internal evidence, removed its
 raw discovery and module observations, recorded the cutoff in the operator

@@ -107,6 +107,7 @@ public no-auth MCP endpoint:
 python -B examples/reliability-sidecar/run.py
 python -B examples/multi-agent-checkpoint/run.py
 python -B examples/sidecar-benchmark/test_benchmark.py
+python -B examples/sidecar-agent-benchmark/test_benchmark.py
 goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
 ```
 
@@ -122,13 +123,18 @@ goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
 - The [paired sidecar benchmark](./examples/sidecar-benchmark/) executes five
   deterministic with/without scenarios, publishes 20 pairs per scenario, and
   exposes model-token fields as unavailable rather than inferring savings.
+- The [metered Codex tier](./examples/sidecar-agent-benchmark/) freezes the
+  same five scenario classes, a condition-blind evaluator, real host token and
+  latency capture, five excluded validation pairs, and 20 later publishable
+  pairs. It rejects app/MCP contamination and keeps cost `null` when the host
+  supplies no defensible dollar rate.
 
 All examples search, describe, and invoke through the progressive MCP facade
 instead of hard-coding private backend schemas.
 
 ## Directory listings
 
-- [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=site.liberated%2Fagent-utility-lab) — `0.6.2` latest
+- [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=site.liberated%2Fagent-utility-lab) — `0.6.4` latest
 - [Glama](https://glama.ai/mcp/connectors/site.liberated/agent-utility-lab) — ownership verified
 - [Smithery](https://smithery.ai/servers/artemhinz2/Agent-Enhancer-Utilities)
 

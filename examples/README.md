@@ -12,10 +12,15 @@ standard library:
   reliability-sidecar lifecycle to an authorized workspace or domain task.
 - [`sidecar-benchmark`](./sidecar-benchmark/) is a pre-registered,
   deterministic with/without benchmark with sanitized run-level evidence.
+- [`sidecar-agent-benchmark`](./sidecar-agent-benchmark/) is the frozen,
+  metered Codex tier that measures real token use, tool calls, latency,
+  multi-agent behavior, and machine-verified outcomes.
 
 The Python examples discover and describe a module before invoking it. They
 fail closed if the expected free module is unavailable or its result no longer
 matches the documented safety contract. The Goose recipe uses the same
 progressive discovery tools and keeps the destination action in Goose.
-The benchmark is intentionally model-free and makes no token-saving or
-agent-quality claim.
+The deterministic benchmark is intentionally model-free and makes no
+token-saving or agent-quality claim. The metered tier keeps its five validation
+pairs local and will publish only the later 20-pair sample, including neutral
+or negative outcomes.

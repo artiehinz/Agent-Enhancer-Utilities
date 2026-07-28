@@ -1,0 +1,109 @@
+{
+  "schema_version": "1",
+  "evidence_class": "metered-agent-host",
+  "registered_at": "2026-07-28T20:37:00Z",
+  "seed": 56020260728,
+  "validation_pairs_per_scenario": 5,
+  "published_pairs_per_scenario": 20,
+  "scenarios": [
+    "ambiguous-success-create",
+    "overlapping-workers",
+    "shared-rate-limit",
+    "scheduled-refresh",
+    "low-risk-abstention"
+  ],
+  "host": {
+    "executable": "codex",
+    "cli_version": "codex-cli 0.144.0-alpha.4",
+    "authentication": "ChatGPT-managed",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "medium",
+    "requested_subagents_in_parallel_scenarios": 2,
+    "host_subagent_limit_override": null,
+    "timeout_seconds": 360,
+    "sandbox": "danger-full-access",
+    "approval_policy": "never",
+    "codex_apps_enabled": false,
+    "user_config_loaded": false,
+    "session_persisted": false,
+    "agent_enhancer_endpoint": "https://liberated.site/mcp",
+    "owned_automation_source": "codex-agent-benchmark"
+  },
+  "fixed_controls": [
+    "Codex CLI version",
+    "model and reasoning effort",
+    "maximum subagent count",
+    "task prompt within each pair",
+    "fresh fixture workspace",
+    "synthetic destination behavior",
+    "failure injection",
+    "timeout and sandbox",
+    "structured final-response schema"
+  ],
+  "only_condition_difference": "The with-sidecar condition connects the production Agent Enhancer MCP using an owned-automation marker; the without-sidecar condition exposes no MCP server.",
+  "protocol_hash_files": [
+    "preregistered-plan.json",
+    "benchmark.py",
+    "evaluator.py",
+    "fixture_cli.py",
+    "final-response.schema.json"
+  ],
+  "primary_metrics": [
+    "verified",
+    "duplicate_mutations",
+    "conflicting_actions",
+    "provider_rejections",
+    "unresolved_ambiguous",
+    "manual_interventions"
+  ],
+  "secondary_metrics": [
+    "external_attempts",
+    "sidecar_calls",
+    "repeated_sidecar_calls",
+    "agent_tool_calls",
+    "collab_tool_calls",
+    "model_input_tokens",
+    "model_cached_input_tokens",
+    "model_output_tokens",
+    "model_reasoning_output_tokens",
+    "wall_clock_ms",
+    "model_cost_usd"
+  ],
+  "success_thresholds": {
+    "failure_scenario_harm_reduction_percent": 80,
+    "maximum_verified_completion_drop_percentage_points": 5,
+    "maximum_low_risk_input_token_overhead_percent": 5,
+    "maximum_low_risk_latency_overhead_percent": 5,
+    "low_risk_sidecar_calls": 0
+  },
+  "evaluation": {
+    "condition_blind": true,
+    "source": "evaluator.py",
+    "machine_state_is_authoritative": true,
+    "agent_self_report_is_used_only_for_the_read_only_answer_and_manual_intervention_flag": true,
+    "harm_and_completion_estimator": "aggregate rate across the four side-effecting scenarios",
+    "low_risk_overhead_estimator": "median paired percent change"
+  },
+  "validation_amendments_before_the_five_pair_sample": [
+    "Moved approval policy to a config override because codex exec does not accept the global flag after the subcommand.",
+    "Removed unsupported agents.* CLI overrides; the shared scenario prompt still requires exactly two subagents.",
+    "Changed the disposable Windows sandbox from workspace-write to danger-full-access after policy declined the public fixture interpreter before execution.",
+    "Specified the exact workflow guard planner search intent without a category filter and prohibited capability requests after a pilot search missed the existing module.",
+    "Disabled Codex Apps in both conditions and reject unexpected MCP servers after the control pilot attempted a separately installed Agent Enhancer app.",
+    "Added a combined protocol hash and require at least one observed collaboration-tool event in every parallel scenario."
+  ],
+  "exclusions": [
+    "five harness-validation pairs per scenario",
+    "a pair where either host run fails before a structured result because of authentication, rate limiting, MCP initialization, process timeout, or runner failure",
+    "manual edits to generated run rows"
+  ],
+  "limitations": [
+    "The destination and injected failures are synthetic.",
+    "Codex runs with danger-full-access inside a newly created disposable workspace because this Windows build blocks the fixture interpreter under workspace-write.",
+    "One Codex model and one reasoning setting cannot establish universal agent behavior.",
+    "ChatGPT-managed Codex auth exposes token counts but no defensible per-run dollar rate, so model_cost_usd remains null.",
+    "The sidecar is advisory and cannot enforce a transaction inside another MCP.",
+    "Prompt-visible failure semantics may allow the unguarded model to reproduce some reliability techniques on its own.",
+    "Neutral and negative outcomes will be retained."
+  ]
+}

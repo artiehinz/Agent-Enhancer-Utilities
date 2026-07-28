@@ -1,3 +1,4 @@
 /demo-video/
 __pycache__/
 *.py[cod]
+/examples/sidecar-agent-benchmark/.local-results/

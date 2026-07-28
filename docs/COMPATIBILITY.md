@@ -16,6 +16,7 @@ to be run after the `v1.6.0` tag is public.
 | GitHub Copilot CLI plugin | Copilot CLI `1.0.75` | An isolated local install accepted `plugin.json` and reported version `1.5.0` with seven installed skills | Passed |
 | Agent Skills archive | Package `1.6.0` | Repository validator checks all seven frontmatter blocks, host metadata, supporting files, contract artifacts, benchmark results, and deterministic ZIP contents | Passed |
 | Reliability contract and benchmark | Contract `1`, package `1.6.0` | Eleven adapter and fixture tests passed; 200 published run-level records satisfy the preregistered deterministic thresholds | Passed |
+| Metered Codex benchmark harness | Codex CLI `0.144.0-alpha.4`, model `gpt-5.6-sol` | Nine local harness/evaluator tests pass; protocol hash, condition isolation, owned-automation marking, and resumable infrastructure exclusions are implemented | Validation sample in progress; no hosted outcome published |
 | Python examples | Python `3.12.0` | General sidecar, two-contender checkpoint, and deterministic paired benchmark examples passed | Passed |
 | Goose recipe | Goose CLI `1.44.0` | Official recipe validation and parameter rendering passed; live discovery and the checkpoint race completed against production | Passed |
 

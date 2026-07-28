@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "completed": {
+      "type": "boolean"
+    },
+    "answer": {
+      "type": ["string", "null"]
+    },
+    "verification": {
+      "type": "string"
+    },
+    "manual_intervention_required": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "completed",
+    "answer",
+    "verification",
+    "manual_intervention_required"
+  ],
+  "additionalProperties": false
+}

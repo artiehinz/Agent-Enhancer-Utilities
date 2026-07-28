@@ -164,6 +164,14 @@ for relative_path in (
     "examples/sidecar-benchmark/run.py",
     "examples/sidecar-benchmark/test_benchmark.py",
     "examples/sidecar-benchmark/results/latest.json",
+    "examples/sidecar-agent-benchmark/README.md",
+    "examples/sidecar-agent-benchmark/preregistered-plan.json",
+    "examples/sidecar-agent-benchmark/final-response.schema.json",
+    "examples/sidecar-agent-benchmark/fixture_cli.py",
+    "examples/sidecar-agent-benchmark/evaluator.py",
+    "examples/sidecar-agent-benchmark/benchmark.py",
+    "examples/sidecar-agent-benchmark/run.py",
+    "examples/sidecar-agent-benchmark/test_benchmark.py",
     "docs/RELIABILITY_SIDECAR_CONTRACT_V1.md",
     "docs/schemas/reliability-sidecar-contract-v1.schema.json",
     "docs/OPEN_SOURCE_INTEGRATION_PLAN.md",
@@ -179,6 +187,11 @@ for relative_path in (
     "examples/sidecar-benchmark/benchmark.py",
     "examples/sidecar-benchmark/run.py",
     "examples/sidecar-benchmark/test_benchmark.py",
+    "examples/sidecar-agent-benchmark/fixture_cli.py",
+    "examples/sidecar-agent-benchmark/evaluator.py",
+    "examples/sidecar-agent-benchmark/benchmark.py",
+    "examples/sidecar-agent-benchmark/run.py",
+    "examples/sidecar-agent-benchmark/test_benchmark.py",
     "scripts/smoke_live_mcp.py",
 ):
     source = (ROOT / relative_path).read_text(encoding="utf-8")
@@ -345,6 +358,28 @@ if benchmark_tests.returncode:
         "reliability sidecar benchmark tests failed:\n"
         + benchmark_tests.stdout
         + benchmark_tests.stderr
+    )
+
+agent_benchmark_tests = subprocess.run(
+    [
+        sys.executable,
+        "-B",
+        str(
+            ROOT
+            / "examples"
+            / "sidecar-agent-benchmark"
+            / "test_benchmark.py"
+        ),
+    ],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+if agent_benchmark_tests.returncode:
+    fail(
+        "metered agent benchmark tests failed:\n"
+        + agent_benchmark_tests.stdout
+        + agent_benchmark_tests.stderr
     )
 
 benchmark_result = json.loads(
