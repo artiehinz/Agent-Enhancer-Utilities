@@ -30,9 +30,8 @@ help execute that plan using opaque identifiers and bounded temporary state.
 Backend `0.6.4` is live on the existing production app and public package
 `v1.6.0` is released. They retain all 24 modules, 37 Claude tools, 37 ChatGPT
 tools, and all seven skills, and add Reliability Sidecar Contract v1 plus a
-deterministic paired evidence suite. Official MCP Registry `0.6.2` remains the
-latest registry version until an immutable `0.6.4` registry update is
-submitted. Real USDC remains disabled.
+deterministic paired evidence suite. Official MCP Registry `0.6.4` is active
+and marked latest. Real USDC remains disabled.
 
 The next work is commercial validation, not another broad module expansion:
 
