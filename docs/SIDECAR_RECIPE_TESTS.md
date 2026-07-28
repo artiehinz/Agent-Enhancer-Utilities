@@ -87,7 +87,7 @@ Final release evidence:
 ## Earlier production primitive checks
 
 Environment: live Agent Enhancer Utilities direct tools backed by
-`https://liberated.site/mcp`, using opaque synthetic namespaces and 60-second
+`https://liberated.site/mcp?profile=core`, using opaque synthetic namespaces and 60-second
 temporary state. No external record was created in these earlier checks.
 
 These checks validate the coordination contracts used by the recipes. They do

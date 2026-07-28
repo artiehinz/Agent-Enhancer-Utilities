@@ -1,8 +1,8 @@
 {
-  "schema_version": "1",
+  "schema_version": "2",
   "evidence_class": "metered-agent-host",
-  "registered_at": "2026-07-28T20:37:00Z",
-  "seed": 56020260728,
+  "registered_at": "2026-07-28T21:55:09Z",
+  "seed": 56020260729,
   "validation_pairs_per_scenario": 5,
   "published_pairs_per_scenario": 20,
   "scenarios": [
@@ -26,8 +26,16 @@
     "codex_apps_enabled": false,
     "user_config_loaded": false,
     "session_persisted": false,
-    "agent_enhancer_endpoint": "https://liberated.site/mcp",
+    "agent_enhancer_endpoint": "https://liberated.site/mcp?profile=core",
+    "agent_enhancer_backend": "0.6.5",
     "owned_automation_source": "codex-agent-benchmark"
+  },
+  "prior_validation": {
+    "backend": "0.6.4",
+    "endpoint": "https://liberated.site/mcp",
+    "result": "failed",
+    "report": "results/validation-0.6.4.json",
+    "reason_for_new_preregistration": "The original six-tool progressive facade produced 10.466% median low-risk input-token overhead, 28.431% median low-risk latency overhead, and no reduction in eight harmful overlap events. Backend 0.6.5 adds an explicitly instructed three-tool core facade and stronger selection guidance. No fixture, task prompt, evaluator, metric, exclusion, sample size, or threshold changed."
   },
   "fixed_controls": [
     "Codex CLI version",
@@ -90,7 +98,8 @@
     "Changed the disposable Windows sandbox from workspace-write to danger-full-access after policy declined the public fixture interpreter before execution.",
     "Specified the exact workflow guard planner search intent without a category filter and prohibited capability requests after a pilot search missed the existing module.",
     "Disabled Codex Apps in both conditions and reject unexpected MCP servers after the control pilot attempted a separately installed Agent Enhancer app.",
-    "Added a combined protocol hash and require at least one observed collaboration-tool event in every parallel scenario."
+    "Added a combined protocol hash and require at least one observed collaboration-tool event in every parallel scenario.",
+    "After the completed 0.6.4 validation failed, preregistered a new sample against backend 0.6.5 and its three-tool core profile. The previous report is public and is not pooled with this sample."
   ],
   "exclusions": [
     "five harness-validation pairs per scenario",

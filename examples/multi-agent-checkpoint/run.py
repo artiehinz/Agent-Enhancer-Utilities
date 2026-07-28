@@ -20,7 +20,7 @@ from common.mcp_client import McpClient, McpError  # noqa: E402
 
 MCP_URL = os.environ.get(
     "AGENT_ENHANCER_MCP_URL",
-    "https://liberated.site/mcp?source=github-example-checkpoint",
+    "https://liberated.site/mcp?source=github-example-checkpoint&profile=core",
 )
 
 

@@ -195,7 +195,10 @@ def _codex_command(
         command.extend(
             [
                 "-c",
-                'mcp_servers.agent_enhancer.url="https://liberated.site/mcp"',
+                (
+                    "mcp_servers.agent_enhancer.url="
+                    f'"{plan["host"]["agent_enhancer_endpoint"]}"'
+                ),
                 "-c",
                 "mcp_servers.agent_enhancer.required=true",
                 "-c",

@@ -89,7 +89,18 @@ and limitations. The ambiguous-success fixture commits a write, drops the
 response, and demonstrates that the guarded condition reconciles through a
 stable marker without replaying the mutation.
 
-A later measured-agent tier must keep the host, model version, reasoning
-setting, prompts, workspace, tools, timeouts, and failure injection fixed.
-Publish that tier separately rather than combining its claims with the
-deterministic fixture.
+The first real-agent validation is preserved in
+[`validation-0.6.4.json`](../examples/sidecar-agent-benchmark/results/validation-0.6.4.json).
+Across 25 pairs, the six-tool sidecar profile reduced none of the eight
+harmful overlap events. It preserved aggregate verified completion and made
+zero sidecar calls on the low-risk task, but connecting it still added 10.466%
+median input-token overhead and 28.431% median latency overhead on that task.
+The validation therefore failed three of five preregistered gates. This is a
+negative product result, not evidence of user benefit.
+
+Backend `0.6.5` responds to that result with a three-tool core profile and
+stronger server-side selection guidance. A new preregistration keeps the
+model, prompts, evaluator, fixtures, metrics, exclusions, sample size, and
+thresholds fixed; only the deployed product surface, including its core
+profile and server instructions, changed. The two samples will not be pooled.
+No publication run or favorable claim begins unless the new validation passes.

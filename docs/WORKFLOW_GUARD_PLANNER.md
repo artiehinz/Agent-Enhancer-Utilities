@@ -11,7 +11,8 @@ records, or prove that an external action occurred.
 The contract has 17 required fields. The skill includes
 [`scripts/plan_workflow.py`](../skills/guard-external-plugin-workflows/scripts/plan_workflow.py)
 as a local dry-run reference. The hosted module is discoverable as
-`workflow-guard-planner` through `https://liberated.site/mcp`.
+`workflow-guard-planner` through
+`https://liberated.site/mcp?profile=core`.
 
 ## Goals
 

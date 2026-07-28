@@ -84,7 +84,7 @@ extensions:
   - type: streamable_http
     name: agent-enhancer
     description: "Free no-auth reliability planning, checkpoint, recovery, and evidence utilities."
-    uri: "https://liberated.site/mcp?source=goose-recipe"
+    uri: "https://liberated.site/mcp?source=goose-recipe&profile=core"
     timeout: 120
 
 activities:

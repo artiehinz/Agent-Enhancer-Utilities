@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Deploy backend `0.6.5` with a three-tool core MCP profile that can still
+  discover and invoke all 24 modules.
+- Publish the failed backend `0.6.4` metered validation summary instead of
+  turning it into a favorable claim.
+- Pre-register a fresh validation against the smaller core profile without
+  changing the prompts, fixtures, evaluator, metrics, exclusions, or gates.
+
 ## 1.6.0 - 2026-07-28
 
 - Publish the vendor-neutral Reliability Sidecar Contract v1 and closed schema

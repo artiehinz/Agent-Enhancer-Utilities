@@ -66,6 +66,11 @@ class AgentBenchmarkTests(unittest.TestCase):
 
     def test_preregistered_schedule_has_both_conditions_per_pair(self) -> None:
         plan = load_plan()
+        self.assertEqual(
+            plan["host"]["agent_enhancer_endpoint"],
+            "https://liberated.site/mcp?profile=core",
+        )
+        self.assertEqual(plan["host"]["agent_enhancer_backend"], "0.6.5")
         schedule = randomized_schedule(plan, "validation", 5)
         self.assertEqual(len(schedule), len(SCENARIOS) * 5 * 2)
         for scenario in SCENARIOS:

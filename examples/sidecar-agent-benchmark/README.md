@@ -15,6 +15,15 @@ The preregistration fixes:
 - five excluded validation pairs and 20 publishable pairs per scenario; and
 - the success thresholds and exclusions.
 
+The first completed validation against backend `0.6.4` and its six-tool
+facade failed. Its sanitized summary is retained in
+[`results/validation-0.6.4.json`](./results/validation-0.6.4.json). Backend
+`0.6.5` introduced a three-tool core profile and stronger server instructions,
+so the current preregistration starts a new sample against
+`https://liberated.site/mcp?profile=core`. The task prompts, fixtures,
+evaluator, metrics, exclusions, sample sizes, and thresholds are unchanged.
+Old and new rows are never pooled.
+
 Every report hashes the preregistration, prompt/runner, blind evaluator,
 fixture, and final-response schema together. A changed protocol cannot resume
 into an older sample. Parallel scenarios also require an observed Codex
@@ -51,8 +60,9 @@ catalog-discovery pilot are retained locally as exclusions; they are not
 publishable outcome rows.
 
 After all validation pairs complete, review only harness or infrastructure
-defects. Freeze any justified changes in a new preregistration before starting
-publication. Do not tune prompts based on which condition won.
+defects. Start publication only if every preregistered gate passes. Freeze any
+later product or harness change in another preregistration. Do not tune prompts
+based on which condition won.
 
 ```powershell
 python -B examples/sidecar-agent-benchmark/run.py --phase publication

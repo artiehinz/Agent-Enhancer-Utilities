@@ -27,11 +27,13 @@ help execute that plan using opaque identifiers and bounded temporary state.
 
 ## Current focus
 
-Backend `0.6.4` is live on the existing production app and public package
+Backend `0.6.5` is live on the existing production app and public package
 `v1.6.0` is released. They retain all 24 modules, 37 Claude tools, 37 ChatGPT
 tools, and all seven skills, and add Reliability Sidecar Contract v1 plus a
-deterministic paired evidence suite. Official MCP Registry `0.6.4` is active
-and marked latest. Real USDC remains disabled.
+deterministic paired evidence suite. The recommended MCP connection now uses a
+three-tool core profile while still reaching all 24 modules. Official MCP
+Registry `0.6.4` remains the latest immutable registry version until the
+`0.6.5` release gate is complete. Real USDC remains disabled.
 
 The next work is commercial validation, not another broad module expansion:
 
@@ -115,15 +117,23 @@ quality or token savings. Model tokens, cost, and agent latency remain
 unavailable until the same preregistered scenarios are run through real,
 metered agent hosts.
 
-The metered Codex tier is now frozen under
+The first metered Codex validation is preserved under
 `examples/sidecar-agent-benchmark/`. It pins Codex CLI `0.144.0-alpha.4`,
 `gpt-5.6-sol` at medium reasoning, identical paired prompts, disposable
 destination state, randomized condition order, condition-blind evaluation,
 real token/tool/latency capture, and a combined protocol hash. Codex Apps are
 disabled in both conditions so the only condition difference is the marked
-production Agent Enhancer MCP. Five pairs per scenario remain local validation;
-the later 20-pair sample is the only publishable metered evidence. Early
-setup and discovery pilots are explicitly excluded.
+production Agent Enhancer MCP.
+
+The backend `0.6.4` sample failed honestly: eight harmful overlap events
+occurred in each condition, while the low-risk connected condition added
+10.466% median input-token overhead and 28.431% median latency overhead despite
+making zero sidecar calls. Backend `0.6.5` therefore introduced an explicitly
+instructed three-tool core profile. A second preregistration changes only that
+deployed product surface, preserves the failed summary, and does not pool old
+rows. Run five new validation pairs per scenario first. Run the later 20-pair
+publication sample only if every preregistered gate passes. Early setup and
+discovery pilots remain explicitly excluded.
 
 Backend `0.6.4` also completed the clean measurement boundary. It preserved
 the mixed pre-marker window as aggregate-only internal evidence, removed its

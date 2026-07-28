@@ -20,9 +20,10 @@
 
 > Release `v1.6.0` adds Reliability Sidecar Contract v1, closed
 > machine-readable schemas, local and remote checkpoint adapters, and a
-> pre-registered paired benchmark. Backend `0.6.4` is live on the existing
-> production app with a clean external-use cutoff. All public modules remain
-> free and real USDC remains disabled.
+> pre-registered paired benchmark. Backend `0.6.5` is live on the existing
+> production app with a three-tool core sidecar profile and a clean
+> external-use cutoff. All public modules remain free and real USDC remains
+> disabled.
 
 Agent Enhancer is a **reliability sidecar**, not a replacement for the agent or
 domain tools you already use. Connect it to an existing workflow and call the
@@ -91,7 +92,8 @@ Agents can also connect without installing a skill:
 
 | Surface | Endpoint | Shape |
 | --- | --- | --- |
-| Progressive MCP | `https://liberated.site/mcp` | Search, describe, invoke, and capability request |
+| Progressive MCP (recommended) | `https://liberated.site/mcp?profile=core` | Search, describe, and invoke all 24 modules through three host-visible tools |
+| Progressive MCP (full control plane) | `https://liberated.site/mcp` | The core tools plus capability-request and catalog-management tools |
 | Claude | `https://liberated.site/mcp/claude` | 37 direct action-specific tools on backend `0.6.0` and later |
 | ChatGPT | `https://liberated.site/mcp/chatgpt` | The same release-dependent direct surface |
 | HTTP/OpenAPI | `https://liberated.site/v1/openapi.json` | 24 generated module contracts on backend `0.6.0` and later |
@@ -126,8 +128,10 @@ goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
 - The [metered Codex tier](./examples/sidecar-agent-benchmark/) freezes the
   same five scenario classes, a condition-blind evaluator, real host token and
   latency capture, five excluded validation pairs, and 20 later publishable
-  pairs. It rejects app/MCP contamination and keeps cost `null` when the host
-  supplies no defensible dollar rate.
+  pairs. Its first validation failed and is published rather than hidden; a
+  newly preregistered sample tests the smaller backend `0.6.5` core profile.
+  It rejects app/MCP contamination and keeps cost `null` when the host supplies
+  no defensible dollar rate.
 
 All examples search, describe, and invoke through the progressive MCP facade
 instead of hard-coding private backend schemas.

@@ -10,13 +10,13 @@ to be run after the `v1.6.0` tag is public.
 
 | Surface | Version or protocol | Evidence | Result |
 | --- | --- | --- | --- |
-| Progressive MCP | MCP `2025-03-26`, backend `0.6.4` | Production acceptance initialized progressive, Claude, and ChatGPT endpoints; invoked all 24 modules and all 37 direct tools on both connector surfaces; verified discovery, origin protection, replay, and the free-beta boundary | Passed |
+| Progressive MCP | MCP `2025-03-26`, backend `0.6.5` | Production acceptance initialized the three-tool core and full progressive profiles plus Claude and ChatGPT endpoints; invoked all 24 modules and all 37 direct tools on both connector surfaces; verified discovery, origin protection, replay, and the free-beta boundary | Passed |
 | Codex plugin package | Codex CLI `0.144.0-alpha.4` | `.codex-plugin/plugin.json` passed the local OpenAI plugin validator; all referenced skills, MCP config, and image assets exist | Package passed |
 | Claude Code plugin | Claude Code `2.1.220` | `claude plugin validate .` accepted the manifest, all seven skills, and companion MCP configuration | Passed |
 | GitHub Copilot CLI plugin | Copilot CLI `1.0.75` | An isolated local install accepted `plugin.json` and reported version `1.5.0` with seven installed skills | Passed |
 | Agent Skills archive | Package `1.6.0` | Repository validator checks all seven frontmatter blocks, host metadata, supporting files, contract artifacts, benchmark results, and deterministic ZIP contents | Passed |
 | Reliability contract and benchmark | Contract `1`, package `1.6.0` | Eleven adapter and fixture tests passed; 200 published run-level records satisfy the preregistered deterministic thresholds | Passed |
-| Metered Codex benchmark harness | Codex CLI `0.144.0-alpha.4`, model `gpt-5.6-sol` | Nine local harness/evaluator tests pass; protocol hash, condition isolation, owned-automation marking, and resumable infrastructure exclusions are implemented | Validation sample in progress; no hosted outcome published |
+| Metered Codex benchmark harness | Codex CLI `0.144.0-alpha.4`, model `gpt-5.6-sol` | Nine local harness/evaluator tests pass; the backend `0.6.4` validation failed its harm and overhead gates and is published; backend `0.6.5` has a new preregistration against the three-tool core profile | New validation sample pending; no favorable outcome claimed |
 | Python examples | Python `3.12.0` | General sidecar, two-contender checkpoint, and deterministic paired benchmark examples passed | Passed |
 | Goose recipe | Goose CLI `1.44.0` | Official recipe validation and parameter rendering passed; live discovery and the checkpoint race completed against production | Passed |
 
@@ -39,10 +39,11 @@ not a claim that an unavailable client was tested. Record successful host
 installs here with the exact host version and date.
 
 Packaged connections use the privacy-safe source tag
-`?source=github-plugin`, and the examples use their own stable source tags.
-The untagged `https://liberated.site/mcp` endpoint is functionally equivalent.
-Source tags measure aggregate activation only; they must not be combined with
-prompt or argument logging.
+`?source=github-plugin&profile=core`, and the examples use their own stable
+source tags with the same profile. The unprofiled
+`https://liberated.site/mcp` endpoint retains the full progressive control
+plane. Source tags measure aggregate activation only; they must not be
+combined with prompt or argument logging.
 
 Current packaging references:
 

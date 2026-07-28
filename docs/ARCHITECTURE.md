@@ -34,9 +34,11 @@ open-source code in this repository.
 
 ## Runtime boundaries
 
-The progressive MCP surface at `https://liberated.site/mcp` exposes compact
-discovery tools. Agents search for a capability, inspect its exact schema and
-safety metadata, and invoke it only when it matches.
+The recommended progressive MCP surface at
+`https://liberated.site/mcp?profile=core` exposes only search, describe, and
+invoke. Those three host-visible tools can still discover and execute all 24
+modules. The unprofiled endpoint retains the additional capability-request
+control-plane tools for clients that need them.
 
 The sidecar receives bounded capability facts or opaque identifiers. The
 domain agent keeps provider credentials, private records, business payloads,

@@ -115,7 +115,7 @@ mcp_config = json.loads((ROOT / ".mcp.json").read_text(encoding="utf-8"))
 server_config = mcp_config.get("mcpServers", {}).get("agent-enhancer-utilities", {})
 if server_config != {
     "type": "http",
-    "url": "https://liberated.site/mcp?source=github-plugin",
+    "url": "https://liberated.site/mcp?source=github-plugin&profile=core",
 }:
     fail(".mcp.json: packaged remote server definition drifted")
 
@@ -125,7 +125,7 @@ gemini_server = (
     .get("agent-enhancer-utilities", {})
 )
 if gemini_server != {
-    "httpUrl": "https://liberated.site/mcp?source=github-plugin"
+    "httpUrl": "https://liberated.site/mcp?source=github-plugin&profile=core"
 }:
     fail("gemini-extension.json: Streamable HTTP definition drifted")
 
@@ -172,6 +172,7 @@ for relative_path in (
     "examples/sidecar-agent-benchmark/benchmark.py",
     "examples/sidecar-agent-benchmark/run.py",
     "examples/sidecar-agent-benchmark/test_benchmark.py",
+    "examples/sidecar-agent-benchmark/results/validation-0.6.4.json",
     "docs/RELIABILITY_SIDECAR_CONTRACT_V1.md",
     "docs/schemas/reliability-sidecar-contract-v1.schema.json",
     "docs/OPEN_SOURCE_INTEGRATION_PLAN.md",
@@ -225,7 +226,7 @@ for required_fragment in (
     'version: "1.0.0"',
     "requirement: user_prompt",
     "type: streamable_http",
-    'uri: "https://liberated.site/mcp?source=goose-recipe"',
+    'uri: "https://liberated.site/mcp?source=goose-recipe&profile=core"',
     "`lab.search_tools`",
     "`lab.describe_tool`",
     "`lab.invoke_tool`",
@@ -404,6 +405,27 @@ if any(
     for row in benchmark_result["published"]["rows"]
 ):
     fail("model usage must remain unavailable in the deterministic benchmark")
+
+agent_validation = json.loads(
+    (
+        ROOT
+        / "examples"
+        / "sidecar-agent-benchmark"
+        / "results"
+        / "validation-0.6.4.json"
+    ).read_text(encoding="utf-8")
+)
+if (
+    agent_validation.get("evidence_class")
+    != "metered-agent-host-validation-summary"
+    or agent_validation.get("evaluation", {}).get("status") != "failed"
+    or agent_validation.get("valid_rows") != 50
+    or agent_validation.get("evaluation", {})
+    .get("observed", {})
+    .get("harm_reduction_percent")
+    != 0.0
+):
+    fail("metered agent validation summary is incomplete or misleading")
 
 submission = json.loads(
     (ROOT / "chatgpt-app-submission.json").read_text(encoding="utf-8")
