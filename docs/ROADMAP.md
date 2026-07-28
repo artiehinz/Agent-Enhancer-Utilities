@@ -104,33 +104,53 @@ the injected failure, tool timeline, tokens, cost, verified result, and
 limitations. Produce that video from captured benchmark evidence rather than
 from an unverified marketing script.
 
-### Future licensing review
+### Planned licensing transition
 
-Keep the current MIT license unchanged while the first integrations and
-distribution reviews are active. Before commercial launch, evaluate whether
-new releases should move to a source-available, attribution-required,
-noncommercial license such as PolyForm Noncommercial 1.0.0, with a separate
-commercial license available from Artie Hinz.
+The repository remains MIT until a deliberate versioned transition, but the
+intended direction is to stop publishing new original product work under MIT.
+MIT permits copying, modification, redistribution, sublicensing, and sale, so
+it cannot protect the project from commercial clones or redistributed forks.
 
-Treat this as a deliberate release decision, not a silent metadata edit:
+For a future major release, prefer
+[PolyForm Strict 1.0.0](https://polyformproject.org/licenses/strict/1.0.0),
+or a counsel-approved source-available equivalent, with a separate written
+commercial license available from Artie Hinz. PolyForm Noncommercial is not
+the preferred default because it still permits noncommercial modification and
+redistribution. PolyForm Strict permits noncommercial use but does not grant
+permission to distribute copies or create modified works.
 
-1. Confirm the intended attribution wording and commercial-use boundary with
-   qualified legal counsel.
-2. Accept that already-published MIT releases remain available under their
-   original terms; apply any new license only to a clearly versioned future
-   release.
-3. Review the effect on Agent Skills, MCP directories, host marketplaces,
-   external integrations, contributors, and commercial adopters.
-4. If changed, replace every MIT reference in the repository manifests,
-   README, archive, contribution policy, and release metadata; include the
-   complete license and required notice in downloadable packages.
-5. Stop describing future noncommercial releases as open source. Use
-   `source-available` and explain that commercial use requires a separate
-   written license.
-6. Keep upstream contributions under each upstream project's license and do
-   not attempt to relicense work already contributed elsewhere.
+Treat this as a release boundary, not a silent metadata edit:
 
-### Open-source integration lane
+1. Confirm the final terms, attribution notice, commercial-license process,
+   jurisdiction, and enforcement expectations with qualified legal counsel.
+2. Accept that already-published MIT versions and copies remain usable under
+   their original terms. Tag the final MIT release and apply the new license
+   only to a clearly identified later major version and its new work.
+3. Keep proprietary backend implementation and future differentiating
+   algorithms out of the public package. Publish only the skills, manifests,
+   clients, fixtures, evidence, and integration material that must be public.
+4. Review whether Agent Skills, MCP directories, ChatGPT or Claude venues,
+   package indexes, and existing integrations accept a source-available
+   package before changing the repository license.
+5. At transition, replace every repository-wide MIT reference in manifests,
+   README, archives, contribution policy, release metadata, and package
+   indexes. Use `source-available`, not `open source`, for the main project.
+6. Maintain a narrow, explicit exception for upstream contributions. A patch,
+   connector definition, example, or independently useful code fragment may
+   be released under the receiving project's MIT, Apache-2.0, or other
+   required license only when each contributed file or patch has a clear SPDX
+   identifier and does not contain proprietary product code.
+7. Keep a `LICENSES` inventory or equivalent mapping so a permissively
+   licensed upstream fragment cannot be mistaken for permission to copy the
+   wider source-available project.
+8. Do not attempt to relicense work already contributed to another project or
+   code for which the project does not own all necessary rights.
+
+A restrictive license controls copying of the protected code; it does not
+prevent someone from independently rebuilding the underlying ideas or methods.
+Keep commercially sensitive implementation details private when practical.
+
+### Upstream open-source contribution lane
 
 Use the public package to contribute working integration artifacts rather than
 generic promotional links:
