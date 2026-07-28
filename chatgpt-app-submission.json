@@ -10,7 +10,7 @@
   "portal_submission": {
     "submission_type": "WITH_MCP",
     "package_name": "agent-enhancer-utilities",
-    "version": "1.5.0",
+    "version": "1.6.0",
     "developer_name": "Agent Enhancer Utilities",
     "developer_identity_note": "Use Agent Enhancer Utilities only if that exact business identity is verified in the Platform. If submitting under an individually verified identity, replace the developer name with the exact verified individual name shown by the portal.",
     "listing": {

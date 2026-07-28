@@ -18,10 +18,10 @@
   <a href="./LICENSE">MIT license</a>
 </p>
 
-> Release status: `v1.5.0` is the universal seven-skill package. It adds
-> versioned host manifests, a canonical `skills/` layout, and two runnable
-> sidecar examples. Backend `0.6.2` remains the matching production release,
-> and all public modules remain free.
+> Release candidate: `v1.6.0` adds Reliability Sidecar Contract v1, closed
+> machine-readable schemas, local and remote checkpoint adapters, and a
+> pre-registered paired benchmark. Backend `0.6.3` is the matching service
+> release. All public modules remain free and real USDC remains disabled.
 
 Agent Enhancer is a **reliability sidecar**, not a replacement for the agent or
 domain tools you already use. Connect it to an existing workflow and call the
@@ -53,7 +53,9 @@ harmful duplicates.
 The sidecar coordinates the workflow; the domain plugin still performs and
 verifies its own reads, writes, sends, and analysis. See the
 [`guard-external-plugin-workflows`](./skills/guard-external-plugin-workflows/SKILL.md)
-skill for the standard lifecycle and guarantee labels.
+skill and the vendor-neutral
+[Reliability Sidecar Contract v1](./docs/RELIABILITY_SIDECAR_CONTRACT_V1.md)
+for the standard lifecycle and guarantee labels.
 
 ## Install
 
@@ -103,6 +105,7 @@ public no-auth MCP endpoint:
 ```sh
 python -B examples/reliability-sidecar/run.py
 python -B examples/multi-agent-checkpoint/run.py
+python -B examples/sidecar-benchmark/test_benchmark.py
 goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
 ```
 
@@ -115,6 +118,9 @@ goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
 - The [Goose recipe](./examples/goose/) adds the no-auth sidecar to a Goose
   task, stops ambiguous retries, and requires destination read-back before
   recording caller verification.
+- The [paired sidecar benchmark](./examples/sidecar-benchmark/) executes five
+  deterministic with/without scenarios, publishes 20 pairs per scenario, and
+  exposes model-token fields as unavailable rather than inferring savings.
 
 All examples search, describe, and invoke through the progressive MCP facade
 instead of hard-coding private backend schemas.
@@ -136,6 +142,8 @@ The service publishes:
   [`/status`](https://liberated.site/status);
 - privacy-safe methodology and usage evidence at
   [`/effectiveness`](https://liberated.site/effectiveness);
+- reproducible run-level sidecar benchmark evidence in
+  [`examples/sidecar-benchmark/results/latest.json`](./examples/sidecar-benchmark/results/latest.json);
 - schemas, limits, side effects, retention, and typed errors in the
   [catalog](https://liberated.site/v1/catalog);
 - privacy, acceptable-use, security, support, and pricing policies from the
@@ -163,6 +171,8 @@ checkpoint contract is in
 [docs/OPAQUE_WORKFLOW_CHECKPOINTS.md](./docs/OPAQUE_WORKFLOW_CHECKPOINTS.md),
 and current live primitive evidence is recorded in
 [docs/SIDECAR_RECIPE_TESTS.md](./docs/SIDECAR_RECIPE_TESTS.md).
+The exact open-source contribution sequence and module map are in
+[docs/OPEN_SOURCE_INTEGRATION_PLAN.md](./docs/OPEN_SOURCE_INTEGRATION_PLAN.md).
 
 ## License
 

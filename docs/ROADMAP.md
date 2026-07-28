@@ -27,10 +27,12 @@ help execute that plan using opaque identifiers and bounded temporary state.
 
 ## Current focus
 
-Backend `0.6.2` is live on the existing production app with 24 modules, 37
-Claude tools, 37 ChatGPT tools, and Official MCP Registry `0.6.2` marked
-latest. Public package `v1.5.0` provides all seven skills, cross-host manifests,
-and two runnable sidecar examples. Real USDC remains disabled.
+Backend `0.6.3` and public package `v1.6.0` are tested release candidates for
+the existing production app. They retain all 24 modules, 37 Claude tools, 37
+ChatGPT tools, and all seven skills, and add Reliability Sidecar Contract v1
+plus a deterministic paired evidence suite. Official MCP Registry `0.6.2`
+remains the latest registry version until the production release is accepted.
+Real USDC remains disabled.
 
 The next work is commercial validation, not another broad module expansion:
 
@@ -104,6 +106,16 @@ the injected failure, tool timeline, tokens, cost, verified result, and
 limitations. Produce that video from captured benchmark evidence rather than
 from an unverified marketing script.
 
+The deterministic first tier is implemented in `v1.6.0`: 50 unpublished
+validation runs were excluded, followed by 200 published run-level records
+covering 20 paired runs for each scenario. The synthetic suite reduced harmful
+duplicate or unresolved events from 160 to 0, maintained or improved verified
+completion, and correctly made zero sidecar calls in the low-risk abstention
+scenario. These results validate the state machine and fixtures, not model
+quality or token savings. Model tokens, cost, and agent latency remain
+unavailable until the same preregistered scenarios are run through real,
+metered agent hosts.
+
 ### Planned licensing transition
 
 The repository remains MIT until a deliberate versioned transition, but the
@@ -154,6 +166,10 @@ Keep commercially sensitive implementation details private when practical.
 
 Use the public package to contribute working integration artifacts rather than
 generic promotional links:
+
+The exact repository-to-module map, contribution sequence, protocol package,
+promotion gates, and licensing boundary are maintained in
+[OPEN_SOURCE_INTEGRATION_PLAN.md](./OPEN_SOURCE_INTEGRATION_PLAN.md).
 
 1. Keep the existing Docker and curated-list submissions accurate; open no
    additional general awesome-list PRs while they remain under review.

@@ -1,0 +1,54 @@
+{
+  "schema_version": "1",
+  "evidence_class": "deterministic-protocol-fixture",
+  "registered_at": "2026-07-28T00:00:00Z",
+  "seed": 40220260728,
+  "validation_pairs_per_scenario": 5,
+  "published_pairs_per_scenario": 20,
+  "scenarios": [
+    "ambiguous-success-create",
+    "overlapping-workers",
+    "shared-rate-limit",
+    "scheduled-refresh",
+    "low-risk-abstention"
+  ],
+  "fixed_controls": [
+    "scenario implementation",
+    "synthetic destination state",
+    "worker count",
+    "failure injection",
+    "condition inputs"
+  ],
+  "primary_metrics": [
+    "verified",
+    "external_attempts",
+    "duplicate_mutations",
+    "conflicting_actions",
+    "provider_rejections",
+    "unresolved_ambiguous",
+    "manual_interventions"
+  ],
+  "secondary_metrics": [
+    "sidecar_calls",
+    "wall_clock_ms",
+    "model_input_tokens",
+    "model_output_tokens",
+    "model_cost_usd"
+  ],
+  "success_thresholds": {
+    "failure_scenario_harm_reduction_percent": 80,
+    "maximum_verified_completion_drop_percentage_points": 5,
+    "low_risk_sidecar_calls": 0
+  },
+  "exclusions": [
+    "five harness-validation pairs per scenario",
+    "runs that terminate before both conditions execute",
+    "manual edits to generated run rows"
+  ],
+  "limitations": [
+    "No language model is used.",
+    "Model token and cost fields are unavailable and remain null.",
+    "Synthetic fixtures prove protocol behavior, not universal provider behavior.",
+    "Wall-clock measurements describe this local harness only."
+  ]
+}

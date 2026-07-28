@@ -7,7 +7,7 @@ import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE_VERSION = "1.5.0"
+PACKAGE_VERSION = "1.6.0"
 SKILL_NAMES = (
     "coordinate-parallel-agents",
     "test-http-failure-paths",
@@ -157,6 +157,16 @@ for relative_path in (
     "examples/multi-agent-checkpoint/run.py",
     "examples/goose/README.md",
     "examples/goose/agent-enhancer-reliability-sidecar.yaml",
+    "examples/sidecar-benchmark/README.md",
+    "examples/sidecar-benchmark/preregistered-plan.json",
+    "examples/sidecar-benchmark/adapters.py",
+    "examples/sidecar-benchmark/benchmark.py",
+    "examples/sidecar-benchmark/run.py",
+    "examples/sidecar-benchmark/test_benchmark.py",
+    "examples/sidecar-benchmark/results/latest.json",
+    "docs/RELIABILITY_SIDECAR_CONTRACT_V1.md",
+    "docs/schemas/reliability-sidecar-contract-v1.schema.json",
+    "docs/OPEN_SOURCE_INTEGRATION_PLAN.md",
 ):
     if not (ROOT / relative_path).is_file():
         fail(f"release package: missing {relative_path}")
@@ -165,6 +175,10 @@ for relative_path in (
     "examples/common/mcp_client.py",
     "examples/reliability-sidecar/run.py",
     "examples/multi-agent-checkpoint/run.py",
+    "examples/sidecar-benchmark/adapters.py",
+    "examples/sidecar-benchmark/benchmark.py",
+    "examples/sidecar-benchmark/run.py",
+    "examples/sidecar-benchmark/test_benchmark.py",
     "scripts/smoke_live_mcp.py",
 ):
     source = (ROOT / relative_path).read_text(encoding="utf-8")
@@ -310,6 +324,51 @@ if planner_tests.returncode:
         + planner_tests.stdout
         + planner_tests.stderr
     )
+
+benchmark_tests = subprocess.run(
+    [
+        sys.executable,
+        "-B",
+        str(
+            ROOT
+            / "examples"
+            / "sidecar-benchmark"
+            / "test_benchmark.py"
+        ),
+    ],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+if benchmark_tests.returncode:
+    fail(
+        "reliability sidecar benchmark tests failed:\n"
+        + benchmark_tests.stdout
+        + benchmark_tests.stderr
+    )
+
+benchmark_result = json.loads(
+    (
+        ROOT
+        / "examples"
+        / "sidecar-benchmark"
+        / "results"
+        / "latest.json"
+    ).read_text(encoding="utf-8")
+)
+if (
+    benchmark_result.get("evidence_class")
+    != "deterministic-protocol-fixture"
+    or benchmark_result.get("evaluation", {}).get("status") != "passed"
+    or len(benchmark_result.get("published", {}).get("rows", [])) != 200
+    or len(benchmark_result.get("published", {}).get("aggregates", [])) != 10
+):
+    fail("reliability sidecar benchmark evidence is incomplete")
+if any(
+    row[13] is not None or row[14] is not None or row[15] is not None
+    for row in benchmark_result["published"]["rows"]
+):
+    fail("model usage must remain unavailable in the deterministic benchmark")
 
 submission = json.loads(
     (ROOT / "chatgpt-app-submission.json").read_text(encoding="utf-8")

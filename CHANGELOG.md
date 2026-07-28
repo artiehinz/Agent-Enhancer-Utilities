@@ -1,7 +1,13 @@
 # Changelog
 
-## Unreleased
+## 1.6.0 - 2026-07-28
 
+- Publish the vendor-neutral Reliability Sidecar Contract v1 and closed schema
+  definitions for capability facts, plans, checkpoints, evidence, and reports.
+- Add local and optional remote checkpoint adapters.
+- Add a pre-registered deterministic paired benchmark with five scenarios,
+  five excluded validation pairs, 20 published pairs per scenario, sanitized
+  run-level evidence, and explicit non-claims for unavailable model usage.
 - Add an upstream-schema-validated Goose reliability-sidecar recipe using the
   free, no-auth progressive MCP endpoint.
 

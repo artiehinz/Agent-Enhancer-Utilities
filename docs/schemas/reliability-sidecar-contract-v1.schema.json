@@ -1,0 +1,506 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://liberated.site/schemas/reliability-sidecar-contract-v1.schema.json",
+  "title": "Reliability Sidecar Contract v1 bundle",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "capability_facts",
+    "guard_plan",
+    "checkpoint",
+    "evidence",
+    "report"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "1"
+    },
+    "capability_facts": {
+      "$ref": "#/$defs/CapabilityFactsV1"
+    },
+    "guard_plan": {
+      "$ref": "#/$defs/GuardPlanV1"
+    },
+    "checkpoint": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CheckpointV1"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "maxItems": 16,
+      "items": {
+        "$ref": "#/$defs/EvidenceV1"
+      }
+    },
+    "report": {
+      "$ref": "#/$defs/ReliabilityReportV1"
+    }
+  },
+  "$defs": {
+    "OpaqueOperationId": {
+      "type": "string",
+      "pattern": "^op_[a-f0-9]{32,64}$"
+    },
+    "OpaqueHolderId": {
+      "type": "string",
+      "pattern": "^holder_[a-f0-9]{32,64}$"
+    },
+    "GuaranteeLabel": {
+      "type": "string",
+      "enum": [
+        "provider-idempotent",
+        "duplicate-resistant",
+        "concurrency-safe",
+        "rate/concurrency-bounded",
+        "best-effort"
+      ]
+    },
+    "CapabilityFactsV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "operation_class",
+        "item_operation_class",
+        "duplicate_harm",
+        "parallel_workers",
+        "scheduled",
+        "retry_possible",
+        "provider_idempotency",
+        "destination_search",
+        "stable_marker",
+        "conditional_write",
+        "read_after_write",
+        "delivery_status",
+        "compensation",
+        "shared_rate_limit",
+        "maximum_concurrency",
+        "freshness_required"
+      ],
+      "properties": {
+        "contract_version": {
+          "const": "1"
+        },
+        "operation_class": {
+          "type": "string",
+          "enum": [
+            "read",
+            "create",
+            "update",
+            "send",
+            "delete",
+            "refresh",
+            "batch"
+          ]
+        },
+        "item_operation_class": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "read",
+                "create",
+                "update",
+                "send",
+                "delete",
+                "refresh"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "duplicate_harm": {
+          "type": "string",
+          "enum": [
+            "none",
+            "low",
+            "material",
+            "irreversible"
+          ]
+        },
+        "parallel_workers": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "scheduled": {
+          "type": "boolean"
+        },
+        "retry_possible": {
+          "type": "boolean"
+        },
+        "provider_idempotency": {
+          "type": "string",
+          "enum": [
+            "none",
+            "request_key",
+            "atomic_unique_constraint"
+          ]
+        },
+        "destination_search": {
+          "type": "string",
+          "enum": [
+            "none",
+            "eventual",
+            "strong"
+          ]
+        },
+        "stable_marker": {
+          "type": "boolean"
+        },
+        "conditional_write": {
+          "type": "boolean"
+        },
+        "read_after_write": {
+          "type": "boolean"
+        },
+        "delivery_status": {
+          "type": "boolean"
+        },
+        "compensation": {
+          "type": "string",
+          "enum": [
+            "none",
+            "reversible",
+            "manual"
+          ]
+        },
+        "shared_rate_limit": {
+          "type": "boolean"
+        },
+        "maximum_concurrency": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "freshness_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "GuardPlanV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "decision",
+        "profile",
+        "additional_profiles",
+        "guarantee_label",
+        "stages",
+        "timeout_recovery",
+        "residual_risks",
+        "unsupported_claims"
+      ],
+      "properties": {
+        "contract_version": {
+          "const": "1"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "sidecar",
+            "no-sidecar"
+          ]
+        },
+        "profile": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": [
+                "create-once",
+                "update-safely",
+                "send-at-most-once",
+                "refresh-if-stale",
+                "fan-out-bounded",
+                "scheduled-run"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "additional_profiles": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 5,
+          "items": {
+            "type": "string"
+          }
+        },
+        "guarantee_label": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/GuaranteeLabel"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "stages": {
+          "type": "array",
+          "maxItems": 24,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "order",
+              "actor",
+              "action"
+            ],
+            "properties": {
+              "order": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 24
+              },
+              "actor": {
+                "type": "string",
+                "enum": [
+                  "caller",
+                  "sidecar",
+                  "domain-tool"
+                ]
+              },
+              "action": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64,
+                "pattern": "^[a-z0-9_-]+$"
+              }
+            }
+          }
+        },
+        "timeout_recovery": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 80
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "residual_risks": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "unsupported_claims": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        }
+      }
+    },
+    "CheckpointV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "operation_id",
+        "stage",
+        "generation",
+        "holder_id",
+        "updated_at",
+        "external_proof"
+      ],
+      "properties": {
+        "contract_version": {
+          "const": "1"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/OpaqueOperationId"
+        },
+        "stage": {
+          "type": "string",
+          "enum": [
+            "planned",
+            "claimed",
+            "external_attempt_started",
+            "external_result_uncertain",
+            "caller_verified",
+            "failed",
+            "compensated"
+          ]
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "holder_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/OpaqueHolderId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "external_proof": {
+          "const": false
+        }
+      }
+    },
+    "EvidenceV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "evidence_type",
+        "fingerprint",
+        "scope",
+        "observed_at"
+      ],
+      "properties": {
+        "contract_version": {
+          "const": "1"
+        },
+        "evidence_type": {
+          "type": "string",
+          "enum": [
+            "provider_receipt",
+            "stable_marker_readback",
+            "durable_result_readback",
+            "delivery_status",
+            "version_readback",
+            "caller_assertion",
+            "sidecar_admission"
+          ]
+        },
+        "fingerprint": {
+          "type": "string",
+          "pattern": "^(sha256|hmac-sha256):[a-f0-9]{64}$"
+        },
+        "scope": {
+          "type": "string",
+          "enum": [
+            "caller-observed",
+            "provider-backed",
+            "sidecar-state-only"
+          ]
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ReliabilityReportV1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version",
+        "operation_id",
+        "outcome",
+        "guarantee_label",
+        "external_proof",
+        "evidence_scope",
+        "evidence",
+        "checkpoint",
+        "residual_risks",
+        "recovery_or_review"
+      ],
+      "properties": {
+        "contract_version": {
+          "const": "1"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/OpaqueOperationId"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "skipped",
+            "blocked",
+            "uncertain",
+            "failed",
+            "compensated"
+          ]
+        },
+        "guarantee_label": {
+          "$ref": "#/$defs/GuaranteeLabel"
+        },
+        "external_proof": {
+          "type": "boolean"
+        },
+        "evidence_scope": {
+          "type": "string",
+          "enum": [
+            "none",
+            "caller-observed",
+            "provider-backed",
+            "sidecar-state-only",
+            "mixed"
+          ]
+        },
+        "evidence": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "$ref": "#/$defs/EvidenceV1"
+          }
+        },
+        "checkpoint": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CheckpointV1"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "residual_risks": {
+          "type": "array",
+          "maxItems": 16,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          }
+        },
+        "recovery_or_review": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        }
+      }
+    }
+  }
+}
