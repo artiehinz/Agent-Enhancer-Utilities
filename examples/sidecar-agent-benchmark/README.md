@@ -18,11 +18,17 @@ The preregistration fixes:
 The first completed validation against backend `0.6.4` and its six-tool
 facade failed. Its sanitized summary is retained in
 [`results/validation-0.6.4.json`](./results/validation-0.6.4.json). Backend
-`0.6.5` introduced a three-tool core profile and stronger server instructions,
-so the current preregistration starts a new sample against
-`https://liberated.site/mcp?profile=core`. The task prompts, fixtures,
-evaluator, metrics, exclusions, sample sizes, and thresholds are unchanged.
-Old and new rows are never pooled.
+`0.6.5` introduced a three-tool core profile and stronger server instructions.
+Its completed summary is retained in
+[`results/validation-0.6.5-core.json`](./results/validation-0.6.5-core.json).
+The task prompts, fixtures, evaluator, metrics, exclusions, sample sizes, and
+thresholds were unchanged, and old and new rows were never pooled.
+
+The core validation passed harm reduction, verified completion, and
+abstention, but failed input-token and latency overhead. Do not run the
+publication command below against this preregistration. A future iteration
+must first reduce connection-only metadata cost and freeze a new
+preregistration.
 
 Every report hashes the preregistration, prompt/runner, blind evaluator,
 fixture, and final-response schema together. A changed protocol cannot resume

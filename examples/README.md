@@ -14,9 +14,9 @@ standard library:
   deterministic with/without benchmark with sanitized run-level evidence.
 - [`sidecar-agent-benchmark`](./sidecar-agent-benchmark/) is the preregistered,
   metered Codex tier that measures real token use, tool calls, latency,
-  multi-agent behavior, and machine-verified outcomes. Its first validation
-  failed and remains published; the next validation tests the smaller core
-  profile without pooling samples.
+  multi-agent behavior, and machine-verified outcomes. Both completed
+  validations remain published. The core-profile sample demonstrated
+  duplicate prevention but still failed the connection-overhead gates.
 
 The Python examples discover and describe a module before invoking it. They
 fail closed if the expected free module is unavailable or its result no longer
@@ -25,4 +25,4 @@ progressive discovery tools and keeps the destination action in Goose.
 The deterministic benchmark is intentionally model-free and makes no
 token-saving or agent-quality claim. The metered tier publishes a sanitized
 summary of every completed validation and will run the later 20-pair sample
-only after a validation passes all preregistered gates.
+only after a future validation passes all preregistered gates.

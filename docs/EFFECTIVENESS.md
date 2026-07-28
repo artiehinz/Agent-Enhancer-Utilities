@@ -98,9 +98,22 @@ median input-token overhead and 28.431% median latency overhead on that task.
 The validation therefore failed three of five preregistered gates. This is a
 negative product result, not evidence of user benefit.
 
-Backend `0.6.5` responds to that result with a three-tool core profile and
-stronger server-side selection guidance. A new preregistration keeps the
-model, prompts, evaluator, fixtures, metrics, exclusions, sample size, and
-thresholds fixed; only the deployed product surface, including its core
-profile and server instructions, changed. The two samples will not be pooled.
-No publication run or favorable claim begins unless the new validation passes.
+Backend `0.6.5` responded with a three-tool core profile and stronger
+server-side selection guidance. Its completed
+[`validation-0.6.5-core.json`](../examples/sidecar-agent-benchmark/results/validation-0.6.5-core.json)
+sample kept the model, prompts, evaluator, fixtures, metrics, exclusions,
+sample size, and thresholds fixed.
+
+That product change produced a real but incomplete improvement:
+
+- harmful events fell from six unguarded to zero guarded;
+- verified completion rose from 80% unguarded to 90% guarded;
+- low-risk sidecar calls remained zero;
+- low-risk median input-token overhead was 10.779%; and
+- low-risk median latency overhead was 27.341%.
+
+The validation therefore passed the harm, completion, and abstention gates but
+failed both overhead gates. The two validation samples are not pooled. No
+200-run publication sample or broad effectiveness claim is justified yet.
+The next product iteration must reduce host-visible MCP metadata while
+preserving access to all modules and the observed overlap protection.

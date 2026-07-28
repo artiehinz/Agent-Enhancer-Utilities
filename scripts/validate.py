@@ -173,6 +173,7 @@ for relative_path in (
     "examples/sidecar-agent-benchmark/run.py",
     "examples/sidecar-agent-benchmark/test_benchmark.py",
     "examples/sidecar-agent-benchmark/results/validation-0.6.4.json",
+    "examples/sidecar-agent-benchmark/results/validation-0.6.5-core.json",
     "docs/RELIABILITY_SIDECAR_CONTRACT_V1.md",
     "docs/schemas/reliability-sidecar-contract-v1.schema.json",
     "docs/OPEN_SOURCE_INTEGRATION_PLAN.md",
@@ -426,6 +427,33 @@ if (
     != 0.0
 ):
     fail("metered agent validation summary is incomplete or misleading")
+
+core_agent_validation = json.loads(
+    (
+        ROOT
+        / "examples"
+        / "sidecar-agent-benchmark"
+        / "results"
+        / "validation-0.6.5-core.json"
+    ).read_text(encoding="utf-8")
+)
+core_observed = core_agent_validation.get("evaluation", {}).get(
+    "observed",
+    {},
+)
+if (
+    core_agent_validation.get("evidence_class")
+    != "metered-agent-host-validation-summary"
+    or core_agent_validation.get("evaluation", {}).get("status")
+    != "failed"
+    or core_agent_validation.get("valid_rows") != 50
+    or core_agent_validation.get("setup_and_infrastructure_exclusions")
+    != 0
+    or core_observed.get("harm_reduction_percent") != 100.0
+    or core_observed.get("low_risk_median_input_token_overhead_percent")
+    != 10.779
+):
+    fail("core-profile validation summary is incomplete or misleading")
 
 submission = json.loads(
     (ROOT / "chatgpt-app-submission.json").read_text(encoding="utf-8")

@@ -128,10 +128,12 @@ goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
 - The [metered Codex tier](./examples/sidecar-agent-benchmark/) freezes the
   same five scenario classes, a condition-blind evaluator, real host token and
   latency capture, five excluded validation pairs, and 20 later publishable
-  pairs. Its first validation failed and is published rather than hidden; a
-  newly preregistered sample tests the smaller backend `0.6.5` core profile.
-  It rejects app/MCP contamination and keeps cost `null` when the host supplies
-  no defensible dollar rate.
+  pairs. Both completed validations are published rather than hidden. Backend
+  `0.6.5` reduced harmful events from six to zero and improved verified
+  completion from 80% to 90%, but failed both connection-only overhead gates,
+  so the publication sample remains blocked. The harness rejects app/MCP
+  contamination and keeps cost `null` when the host supplies no defensible
+  dollar rate.
 
 All examples search, describe, and invoke through the progressive MCP facade
 instead of hard-coding private backend schemas.

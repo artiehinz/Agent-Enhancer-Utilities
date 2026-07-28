@@ -129,11 +129,21 @@ The backend `0.6.4` sample failed honestly: eight harmful overlap events
 occurred in each condition, while the low-risk connected condition added
 10.466% median input-token overhead and 28.431% median latency overhead despite
 making zero sidecar calls. Backend `0.6.5` therefore introduced an explicitly
-instructed three-tool core profile. A second preregistration changes only that
-deployed product surface, preserves the failed summary, and does not pool old
-rows. Run five new validation pairs per scenario first. Run the later 20-pair
-publication sample only if every preregistered gate passes. Early setup and
-discovery pilots remain explicitly excluded.
+instructed three-tool core profile.
+
+The completed `0.6.5` validation eliminated six observed unguarded overlap
+events, improved verified completion from 80% to 90%, and kept low-risk
+sidecar calls at zero. It still failed overall because connection-only
+input-token overhead was 10.779% and latency overhead was 27.341%. Preserve
+both failed summaries and do not pool their rows.
+
+The next iteration should minimize host-visible MCP metadata, ideally through
+one compact progressive router that can still search, describe, and invoke all
+24 modules. Measure its no-call schema and instruction cost before freezing a
+third preregistration. Preserve the same safety policy and condition-blind
+outcome evaluator. Run the later 20-pair publication sample only after every
+fixed validation gate passes. Early setup and discovery pilots remain
+explicitly excluded.
 
 Backend `0.6.4` also completed the clean measurement boundary. It preserved
 the mixed pre-marker window as aggregate-only internal evidence, removed its

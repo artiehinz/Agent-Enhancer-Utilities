@@ -6,8 +6,11 @@
   discover and invoke all 24 modules.
 - Publish the failed backend `0.6.4` metered validation summary instead of
   turning it into a favorable claim.
-- Pre-register a fresh validation against the smaller core profile without
-  changing the prompts, fixtures, evaluator, metrics, exclusions, or gates.
+- Publish the backend `0.6.5` core-profile validation: harmful events fell
+  from six to zero and verified completion rose from 80% to 90%, but
+  connection-only token and latency overhead still failed the fixed gates.
+- Keep the 200-run publication phase blocked while a smaller host-visible MCP
+  surface is designed and preregistered.
 
 ## 1.6.0 - 2026-07-28
 
