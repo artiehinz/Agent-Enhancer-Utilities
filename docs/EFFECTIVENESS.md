@@ -31,6 +31,13 @@ agents, and low-volume per-module samples. Internal monitoring must be
 cryptographically marked and removed from the baseline before observed
 reliability is displayed.
 
+Backend `0.6.4` established the clean public baseline at
+`2026-07-28T19:07:18.657Z`. The prior mixed automation window is retained
+internally as aggregate counts only; its raw discovery and module observations
+were removed and are excluded from public evidence. A full marked production
+acceptance afterward invoked every direct tool on both connector surfaces and
+left the public observation count at zero.
+
 Planned outcome evidence is a one-use, receipt-linked rating with fixed
 categories and no free text. It must be abuse-resistant and optional before it
 can be treated as product-effectiveness evidence.

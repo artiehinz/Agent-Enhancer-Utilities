@@ -10,14 +10,14 @@ to be run after the `v1.6.0` tag is public.
 
 | Surface | Version or protocol | Evidence | Result |
 | --- | --- | --- | --- |
-| Progressive MCP | MCP `2025-03-26`, backend `0.6.2` | Both runnable examples initialized `https://liberated.site/mcp`, searched, described, and invoked the expected free modules; production `0.6.3` acceptance remains a release step | Passed on current production |
+| Progressive MCP | MCP `2025-03-26`, backend `0.6.4` | Production acceptance initialized progressive, Claude, and ChatGPT endpoints; invoked all 24 modules and all 37 direct tools on both connector surfaces; verified discovery, origin protection, replay, and the free-beta boundary | Passed |
 | Codex plugin package | Codex CLI `0.144.0-alpha.4` | `.codex-plugin/plugin.json` passed the local OpenAI plugin validator; all referenced skills, MCP config, and image assets exist | Package passed |
 | Claude Code plugin | Claude Code `2.1.220` | `claude plugin validate .` accepted the manifest, all seven skills, and companion MCP configuration | Passed |
 | GitHub Copilot CLI plugin | Copilot CLI `1.0.75` | An isolated local install accepted `plugin.json` and reported version `1.5.0` with seven installed skills | Passed |
 | Agent Skills archive | Package `1.6.0` | Repository validator checks all seven frontmatter blocks, host metadata, supporting files, contract artifacts, benchmark results, and deterministic ZIP contents | Passed |
 | Reliability contract and benchmark | Contract `1`, package `1.6.0` | Eleven adapter and fixture tests passed; 200 published run-level records satisfy the preregistered deterministic thresholds | Passed |
-| Python examples | Python `3.12.0` | General sidecar and two-contender checkpoint examples completed against production | Passed |
-| Goose recipe | Goose CLI `1.44.0` | Official recipe validation and parameter rendering passed; live discovery and the checkpoint race completed against backend `0.6.2` | Passed |
+| Python examples | Python `3.12.0` | General sidecar, two-contender checkpoint, and deterministic paired benchmark examples passed | Passed |
+| Goose recipe | Goose CLI `1.44.0` | Official recipe validation and parameter rendering passed; live discovery and the checkpoint race completed against production | Passed |
 
 The live checkpoint check admitted exactly one of two concurrent contenders,
 recorded one synthetic domain action, reached `caller_verified`, and continued

@@ -79,7 +79,7 @@ should select the smallest bundle that solves the demonstrated problem.
 | --- | --- | --- | --- |
 | [docker/mcp-registry #4537](https://github.com/docker/mcp-registry/pull/4537) | Remote MCP registry definition | Connects to all 24 modules through the six progressive MCP tools | Keep the listing, icon, endpoint, version, and links current. Comment only after a material change or maintainer request. |
 | [OpenHands/extensions #418](https://github.com/OpenHands/extensions/pull/418) | No-auth remote MCP catalog connector | Connects OpenHands to all 24 modules; no backend code is copied | This is active integration slot 1. Monitor CI and review. Keep the patch metadata-only. |
-| [agno-agi/agno #9178](https://github.com/agno-agi/agno/pull/9178) | Deterministic recovery cookbook | Uses `workflow-guard-planner` and `workflow-checkpoint` | This is active integration slot 2. Ensure the PR explicitly closes or resolves issue #9179 so the triage gate clears. |
+| [agno-agi/agno #9178](https://github.com/agno-agi/agno/pull/9178) | Deterministic recovery cookbook | Uses `workflow-guard-planner` and `workflow-checkpoint` | This is active integration slot 2. The body now closes issue #9179 and the triage check passes; leave the stale maintainer-owned label untouched and wait for review. |
 | [punkpeye/awesome-mcp-servers #10889](https://github.com/punkpeye/awesome-mcp-servers/pull/10889) | Curated server listing | Lists the complete service; description covers all bundles | Wait for a maintainer answer about the verified Glama Connector score and badge path. Do not send another comment without new evidence. |
 | [punkpeye/awesome-mcp-devtools #242](https://github.com/punkpeye/awesome-mcp-devtools/pull/242) | Focused testing-tool listing | Emphasizes Failure rehearsal, MCP contracts, and x402 diagnostics; the endpoint still exposes all 24 modules | Monitor only. Do not duplicate this entry in more generic awesome lists. |
 | Official MCP Registry | Published server metadata | Connects clients to all 24 modules | Continue version publication and endpoint smoke tests for each backend release. |
@@ -142,7 +142,7 @@ abstention with negligible overhead.
 
 ### Phase B: finish the two active integrations
 
-1. Clear the Agno issue-link gate and respond to review.
+1. Respond to Agno review; the issue-link requirement is complete.
 2. Monitor OpenHands catalog CI and respond to review.
 3. Rebase only when upstream drift requires it.
 4. Make one follow-up after a meaningful update; never post periodic bump
@@ -262,8 +262,8 @@ Do not describe automated smoke tests as beta-user usage.
 
 ## Immediate order of work
 
-1. Complete the ambiguous-success fixture and paired benchmark harness.
-2. Add `Closes #9179` or the maintainer-required equivalent to Agno PR #9178.
+1. Run the published deterministic fixture suite in a metered agent host.
+2. Respond to review on Agno PR #9178; `Closes #9179` is present.
 3. Monitor and maintain OpenHands PR #418.
 4. Monitor the Docker and two curated-list submissions without opening more
    listing PRs.

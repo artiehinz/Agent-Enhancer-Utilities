@@ -8,6 +8,8 @@
 - Add a pre-registered deterministic paired benchmark with five scenarios,
   five excluded validation pairs, 20 published pairs per scenario, sanitized
   run-level evidence, and explicit non-claims for unavailable model usage.
+- Deploy backend `0.6.4` with a database-backed clean public-metrics cutoff;
+  marked full production acceptance writes zero public observations.
 - Add an upstream-schema-validated Goose reliability-sidecar recipe using the
   free, no-auth progressive MCP endpoint.
 
