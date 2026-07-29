@@ -203,15 +203,17 @@ def _codex_command(
                 "mcp_servers.agent_enhancer.required=true",
                 "-c",
                 (
-                    "mcp_servers.agent_enhancer.env_http_headers."
-                    '"x-agent-internal-metrics"='
+                    "mcp_servers.agent_enhancer.env_http_headers="
+                    "{x-agent-internal-metrics="
                     f'"{INTERNAL_TOKEN_ENV}"'
+                    "}"
                 ),
                 "-c",
                 (
-                    "mcp_servers.agent_enhancer.http_headers."
-                    '"x-agent-discovery-source"='
+                    "mcp_servers.agent_enhancer.http_headers="
+                    "{x-agent-discovery-source="
                     f'"{DISCOVERY_SOURCE}"'
+                    "}"
                 ),
             ]
         )
@@ -292,6 +294,40 @@ def _tool_metrics(items: list[dict[str, Any]]) -> dict[str, Any]:
         if item.get("type") == "mcp_tool_call"
         and item.get("server") == "agent_enhancer"
     ]
+    invocation_calls = [
+        item
+        for item in mcp_calls
+        if item.get("tool") == "lab.invoke_tool"
+        or (
+            item.get("tool") == "lab.sidecar"
+            and isinstance(item.get("arguments"), dict)
+            and item["arguments"].get("op") == "invoke"
+        )
+    ]
+    def marker_acknowledged(item: dict[str, Any]) -> bool:
+        result = item.get("result")
+        if not isinstance(result, dict):
+            return False
+        structured = (
+            result.get("structured_content")
+            or result.get("structuredContent")
+        )
+        if not isinstance(structured, dict):
+            return False
+        if structured.get("owned_automation_excluded") is True:
+            return True
+        execution = structured.get("execution")
+        return bool(
+            isinstance(execution, dict)
+            and execution.get("owned_automation_excluded") is True
+        )
+
+    call_marker_acknowledgements = sum(
+        int(marker_acknowledged(item)) for item in mcp_calls
+    )
+    invocation_marker_acknowledgements = sum(
+        int(marker_acknowledged(item)) for item in invocation_calls
+    )
     fingerprints = [
         json.dumps(
             {
@@ -316,6 +352,16 @@ def _tool_metrics(items: list[dict[str, Any]]) -> dict[str, Any]:
             }
         ),
         "sidecar_calls": len(mcp_calls),
+        "sidecar_invoke_calls": len(invocation_calls),
+        "owned_automation_call_acknowledgements": (
+            call_marker_acknowledgements
+        ),
+        "owned_automation_marker_acknowledgements": (
+            invocation_marker_acknowledgements
+        ),
+        "unmarked_sidecar_invocations": (
+            len(invocation_calls) - invocation_marker_acknowledgements
+        ),
         "repeated_sidecar_calls": sum(
             count - 1
             for count in Counter(fingerprints).values()
@@ -342,6 +388,89 @@ def _tool_metrics(items: list[dict[str, Any]]) -> dict[str, Any]:
                 if item.get("tool")
             }
         ),
+    }
+
+
+def verify_owned_automation_marker(
+    plan: dict[str, Any],
+) -> dict[str, int]:
+    """Prove that Codex transports the marker and production accepts it."""
+    if not os.environ.get(INTERNAL_TOKEN_ENV):
+        raise RuntimeError(
+            f"{INTERNAL_TOKEN_ENV} must mark owned production traffic"
+        )
+    compact = "profile=compact" in str(
+        plan["host"]["agent_enhancer_endpoint"]
+    )
+    tool_instruction = (
+        "Call agent_enhancer lab.sidecar exactly once with arguments "
+        '{"op":"search","intent":"workflow guard planner"}'
+        if compact
+        else "Call agent_enhancer lab.search_tools exactly once with "
+        'arguments {"intent":"workflow guard planner"}'
+    )
+    prompt = (
+        tool_instruction
+        + ". Do not call another tool. Return completed=true, answer=null, "
+        'verification="marker preflight", and '
+        "manual_intervention_required=false."
+    )
+    try:
+        with tempfile.TemporaryDirectory(
+            prefix="agent-sidecar-marker-preflight-"
+        ) as temporary:
+            workspace = Path(temporary)
+            completed = subprocess.run(
+                [
+                    *_codex_command(workspace, "with-sidecar", plan),
+                    prompt,
+                ],
+                cwd=workspace,
+                env=os.environ.copy(),
+                stdin=subprocess.DEVNULL,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                timeout=int(plan["host"]["timeout_seconds"]),
+                check=False,
+            )
+    except subprocess.TimeoutExpired as error:
+        raise RuntimeError(
+            "owned-automation marker preflight timed out; "
+            "no benchmark runs were started"
+        ) from error
+    events, invalid_jsonl = _parse_jsonl(completed.stdout)
+    items = _completed_items(events)
+    metrics = _tool_metrics(items)
+    event_errors = [
+        event
+        for event in events
+        if event.get("type") in {"error", "turn.failed"}
+    ]
+    if (
+        completed.returncode != 0
+        or invalid_jsonl
+        or event_errors
+        or int(metrics["sidecar_calls"]) != 1
+        or int(metrics["sidecar_invoke_calls"]) != 0
+        or int(
+            metrics["owned_automation_call_acknowledgements"]
+        )
+        != 1
+    ):
+        raise RuntimeError(
+            "owned-automation marker preflight failed through Codex; "
+            "no benchmark runs were started"
+        )
+    usage = _usage(events)
+    return {
+        "sidecar_calls": int(metrics["sidecar_calls"]),
+        "owned_automation_call_acknowledgements": int(
+            metrics["owned_automation_call_acknowledgements"]
+        ),
+        "model_input_tokens": usage["model_input_tokens"],
+        "model_output_tokens": usage["model_output_tokens"],
     }
 
 
@@ -425,6 +554,7 @@ def run_one(
         or bool(event_errors)
         or policy_declines > 0
         or int(tool_metrics["unexpected_mcp_calls"]) > 0
+        or int(tool_metrics["unmarked_sidecar_invocations"]) > 0
         or not final_response
     )
     if runner_failed:

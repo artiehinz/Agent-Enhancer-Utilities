@@ -20,10 +20,10 @@
 
 > Release `v1.6.0` adds Reliability Sidecar Contract v1, closed
 > machine-readable schemas, local and remote checkpoint adapters, and a
-> pre-registered paired benchmark. Backend `0.6.5` is live on the existing
-> production app with a three-tool core sidecar profile and a clean
-> external-use cutoff. All public modules remain free and real USDC remains
-> disabled.
+> pre-registered paired benchmark. Backend `0.6.9` is live on the existing
+> production app with three-tool core and one-tool compact sidecar profiles,
+> a fail-closed owned-automation marker, and a clean external-use cutoff. All
+> public modules remain free and real USDC remains disabled.
 
 Agent Enhancer is a **reliability sidecar**, not a replacement for the agent or
 domain tools you already use. Connect it to an existing workflow and call the

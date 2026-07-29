@@ -262,9 +262,12 @@ Do not describe automated smoke tests as beta-user usage.
 
 ## Immediate order of work
 
-1. Reduce connection-only MCP metadata overhead while preserving the
-   `0.6.5` validation's observed duplicate prevention. Freeze a new
-   preregistration and do not run publication until all validation gates pass.
+1. Replace persistent connection overhead with conditional activation while
+   preserving the `0.6.5` validation's observed duplicate prevention. The
+   `0.6.8` compact probe still exceeded both 5% overhead references, so do not
+   freeze a third always-connected preregistration. Prototype the current
+   service through the skills and HTTP contracts, then preregister only if
+   low-risk work incurs no connection.
 2. Respond to review on Agno PR #9178; `Closes #9179` is present.
 3. Monitor and maintain OpenHands PR #418.
 4. Monitor the Docker and two curated-list submissions without opening more

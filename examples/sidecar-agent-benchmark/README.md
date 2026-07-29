@@ -53,6 +53,30 @@ forbids web access and work outside that directory.
 Set `AGENT_ENHANCER_INTERNAL_METRICS_TOKEN` in the process environment from a
 local secret store. Never put its value in this repository.
 
+Before any measured run starts, the harness makes one small catalog search
+through Codex and requires production to return
+`owned_automation_excluded=true`. A missing, stale, or dropped marker fails
+the run before the benchmark schedule begins. Every later sidecar invocation
+is checked again under `execution`.
+
+The earlier dotted-key command-line override quoted the HTTP header name
+itself, so Codex rejected that header while continuing the MCP session. The
+current harness uses one TOML inline map for each header collection and tests
+the exact generated arguments.
+
+Before freezing another confirmatory plan, the non-publishable compact
+engineering probe runs only the five low-risk pairs:
+
+```powershell
+python -B examples/sidecar-agent-benchmark/probe_compact.py
+```
+
+Its ignored local report cannot support a product claim. It answers only
+whether the one-tool compact connection is likely to justify another full
+preregistration. The completed probe did not: all ten rows were valid and made
+zero sidecar calls, but median input-token overhead was 10.561% and median
+latency overhead was 38.523%, above the same 5% references.
+
 ```powershell
 python -B examples/sidecar-agent-benchmark/run.py --phase validation
 ```

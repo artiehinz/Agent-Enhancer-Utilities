@@ -10,13 +10,13 @@ to be run after the `v1.6.0` tag is public.
 
 | Surface | Version or protocol | Evidence | Result |
 | --- | --- | --- | --- |
-| Progressive MCP | MCP `2025-03-26`, backend `0.6.5` | Production acceptance initialized the three-tool core and full progressive profiles plus Claude and ChatGPT endpoints; invoked all 24 modules and all 37 direct tools on both connector surfaces; verified discovery, origin protection, replay, and the free-beta boundary | Passed |
+| Progressive MCP | MCP `2025-03-26`, backend `0.6.9` | Production acceptance initialized the one-tool compact, three-tool core, and full progressive profiles plus Claude and ChatGPT endpoints; invoked all 24 modules and all 37 direct tools on both connector surfaces; verified lightweight marker acknowledgement, invocation acknowledgement, origin protection, replay, and the free-beta boundary | Passed |
 | Codex plugin package | Codex CLI `0.144.0-alpha.4` | `.codex-plugin/plugin.json` passed the local OpenAI plugin validator; all referenced skills, MCP config, and image assets exist | Package passed |
 | Claude Code plugin | Claude Code `2.1.220` | `claude plugin validate .` accepted the manifest, all seven skills, and companion MCP configuration | Passed |
 | GitHub Copilot CLI plugin | Copilot CLI `1.0.75` | An isolated local install accepted `plugin.json` and reported version `1.5.0` with seven installed skills | Passed |
 | Agent Skills archive | Package `1.6.0` | Repository validator checks all seven frontmatter blocks, host metadata, supporting files, contract artifacts, benchmark results, and deterministic ZIP contents | Passed |
 | Reliability contract and benchmark | Contract `1`, package `1.6.0` | Eleven adapter and fixture tests passed; 200 published run-level records satisfy the preregistered deterministic thresholds | Passed |
-| Metered Codex benchmark harness | Codex CLI `0.144.0-alpha.4`, model `gpt-5.6-sol` | Nine local harness/evaluator tests pass; both completed validation summaries are public. Backend `0.6.5` passed harm, completion, and abstention gates but failed token and latency overhead gates | Validation failed overall; 200-run publication is blocked |
+| Metered Codex benchmark harness | Codex CLI `0.144.0-alpha.4`, model `gpt-5.6-sol` | Ten local harness/evaluator tests pass; both completed validation summaries are public. Backend `0.6.5` passed harm, completion, and abstention gates but failed token and latency overhead gates. New runs fail closed unless production acknowledges the owned-automation marker | Validation failed overall; 200-run publication is blocked |
 | Python examples | Python `3.12.0` | General sidecar, two-contender checkpoint, and deterministic paired benchmark examples passed | Passed |
 | Goose recipe | Goose CLI `1.44.0` | Official recipe validation and parameter rendering passed; live discovery and the checkpoint race completed against production | Passed |
 

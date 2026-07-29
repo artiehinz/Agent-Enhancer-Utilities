@@ -21,6 +21,7 @@ from benchmark import (
     protocol_sha256,
     randomized_schedule,
     run_one,
+    verify_owned_automation_marker,
 )
 
 
@@ -84,6 +85,7 @@ def _load_report(
         and int(row.get("host_event_errors", 0)) == 0
         and int(row.get("host_policy_declines", 0)) == 0
         and int(row.get("unexpected_mcp_calls", 0)) == 0
+        and int(row.get("unmarked_sidecar_invocations", 0)) == 0
         and not bool(row.get("host_timed_out", False))
     ]
     invalid_rows = [
@@ -168,6 +170,13 @@ def main() -> int:
             f"set {INTERNAL_TOKEN_ENV} so owned production MCP calls are "
             "excluded from public usage"
         )
+    marker_preflight = verify_owned_automation_marker(plan)
+    print(
+        "owned-automation marker preflight: accepted "
+        f"({marker_preflight['model_input_tokens']} input tokens, "
+        f"{marker_preflight['model_output_tokens']} output tokens)",
+        flush=True,
+    )
 
     plan_sha256 = hashlib.sha256(
         (HERE / "preregistered-plan.json").read_bytes()
@@ -248,6 +257,7 @@ def main() -> int:
             or int(row["host_event_errors"]) != 0
             or int(row["host_policy_declines"]) != 0
             or int(row["unexpected_mcp_calls"]) != 0
+            or int(row["unmarked_sidecar_invocations"]) != 0
             or bool(row["host_timed_out"])
         ):
             infrastructure_exclusions.append(row)

@@ -117,3 +117,20 @@ failed both overhead gates. The two validation samples are not pooled. No
 200-run publication sample or broad effectiveness claim is justified yet.
 The next product iteration must reduce host-visible MCP metadata while
 preserving access to all modules and the observed overlap protection.
+
+The 136 module observations recorded during the validation window are treated
+as mixed owned automation, not external beta usage. The original dotted-key
+override quoted the HTTP header name, so Codex rejected the marker while
+continuing the MCP session. Backend `0.6.7` advances the public cutoff while
+retaining the privacy-bounded historical rows and auditing their aggregate
+counts. Future runs start only after Codex receives
+`owned_automation_excluded=true` on a small catalog search, and every sidecar
+invocation is independently checked for
+`execution.owned_automation_excluded=true`.
+
+An explicitly exploratory five-pair compact-profile probe then produced ten
+valid low-risk rows and zero sidecar calls. Median input-token overhead was
+10.561% and median latency overhead was 38.523%, against the same 5%
+references. This is not confirmatory evidence. It shows that shrinking the
+persistent MCP schema alone does not justify another always-connected
+validation; the next candidate must avoid connecting on low-risk work.

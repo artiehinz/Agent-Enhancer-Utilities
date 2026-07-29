@@ -14,6 +14,8 @@ import unittest
 from benchmark import (
     CONDITIONS,
     SCENARIOS,
+    _codex_command,
+    _tool_metrics,
     evaluate,
     load_plan,
     protocol_sha256,
@@ -81,6 +83,31 @@ class AgentBenchmarkTests(unittest.TestCase):
                     if selected == scenario and selected_pair == pair
                 }
                 self.assertEqual(conditions, set(CONDITIONS))
+
+    def test_codex_headers_use_inline_maps_not_quoted_dotted_keys(
+        self,
+    ) -> None:
+        plan = load_plan()
+        with tempfile.TemporaryDirectory() as temporary:
+            command = _codex_command(
+                Path(temporary),
+                "with-sidecar",
+                plan,
+            )
+        self.assertIn(
+            "mcp_servers.agent_enhancer.env_http_headers="
+            "{x-agent-internal-metrics="
+            '"AGENT_ENHANCER_INTERNAL_METRICS_TOKEN"}',
+            command,
+        )
+        self.assertIn(
+            "mcp_servers.agent_enhancer.http_headers="
+            '{x-agent-discovery-source="codex-agent-benchmark"}',
+            command,
+        )
+        self.assertFalse(
+            any('.env_http_headers."' in argument for argument in command)
+        )
 
     def test_ambiguous_success_requires_read_back_and_no_replay(self) -> None:
         workspace = FixtureWorkspace("ambiguous-success-create")
@@ -287,6 +314,41 @@ class AgentBenchmarkTests(unittest.TestCase):
             ],
             4.0,
         )
+
+    def test_tool_metrics_require_production_marker_acknowledgement(
+        self,
+    ) -> None:
+        acknowledged = {
+            "type": "mcp_tool_call",
+            "server": "agent_enhancer",
+            "tool": "lab.sidecar",
+            "arguments": {
+                "op": "invoke",
+                "slug": "workflow-guard-planner",
+            },
+            "result": {
+                "structured_content": {
+                    "execution": {
+                        "owned_automation_excluded": True,
+                    }
+                }
+            },
+        }
+        missing = {
+            **acknowledged,
+            "result": {"structured_content": {"execution": {}}},
+        }
+        metrics = _tool_metrics([acknowledged, missing])
+        self.assertEqual(metrics["sidecar_invoke_calls"], 2)
+        self.assertEqual(
+            metrics["owned_automation_call_acknowledgements"],
+            1,
+        )
+        self.assertEqual(
+            metrics["owned_automation_marker_acknowledgements"],
+            1,
+        )
+        self.assertEqual(metrics["unmarked_sidecar_invocations"], 1)
 
 
 if __name__ == "__main__":

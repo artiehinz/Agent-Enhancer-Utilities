@@ -27,13 +27,14 @@ help execute that plan using opaque identifiers and bounded temporary state.
 
 ## Current focus
 
-Backend `0.6.5` is live on the existing production app and public package
+Backend `0.6.9` is live on the existing production app and public package
 `v1.6.0` is released. They retain all 24 modules, 37 Claude tools, 37 ChatGPT
 tools, and all seven skills, and add Reliability Sidecar Contract v1 plus a
 deterministic paired evidence suite. The recommended MCP connection now uses a
-three-tool core profile while still reaching all 24 modules. Official MCP
+three-tool core profile while an experimental one-tool compact profile still
+reaches all 24 modules. Official MCP
 Registry `0.6.4` remains the latest immutable registry version until the
-`0.6.5` release gate is complete. Real USDC remains disabled.
+next registry release gate is complete. Real USDC remains disabled.
 
 The next work is commercial validation, not another broad module expansion:
 
@@ -137,13 +138,19 @@ sidecar calls at zero. It still failed overall because connection-only
 input-token overhead was 10.779% and latency overhead was 27.341%. Preserve
 both failed summaries and do not pool their rows.
 
-The next iteration should minimize host-visible MCP metadata, ideally through
-one compact progressive router that can still search, describe, and invoke all
-24 modules. Measure its no-call schema and instruction cost before freezing a
-third preregistration. Preserve the same safety policy and condition-blind
-outcome evaluator. Run the later 20-pair publication sample only after every
-fixed validation gate passes. Early setup and discovery pilots remain
-explicitly excluded.
+The compact engineering probe then ran five additional low-risk pairs through
+backend `0.6.8`. All ten rows were valid, made zero sidecar calls, and used the
+one-tool compact profile. Median input-token overhead was still 10.561% and
+median latency overhead was 38.523%, above the same 5% references. This probe
+is explicitly exploratory and cannot confirm a product claim, but it is enough
+to reject a third always-connected validation.
+
+The next iteration should test conditional activation through the existing
+skills and HTTP contracts so low-risk work does not connect the MCP at all.
+Freeze a new preregistration only after that selector and activation boundary
+are fixed without reference to favorable outcomes. Preserve the same safety
+policy and condition-blind outcome evaluator. Run a later publication sample
+only after every fixed validation gate passes.
 
 Backend `0.6.4` also completed the clean measurement boundary. It preserved
 the mixed pre-marker window as aggregate-only internal evidence, removed its
@@ -151,6 +158,18 @@ raw discovery and module observations, recorded the cutoff in the operator
 audit trail, and began a database-backed external baseline at
 `2026-07-28T19:07:18.657Z`. A marked full production acceptance covering both
 37-tool direct connectors left public observations at zero.
+
+The next metered validations later contributed 136 observations to that
+window because their dotted-key Codex override quoted the HTTP header name,
+causing Codex to reject it while continuing the MCP session. Those
+observations match owned benchmark timing and module use and are not
+represented as beta-user traffic. Backend `0.6.7`
+archives the indistinguishable mixed window without deleting its
+privacy-bounded rows, advances the public cutoff, and returns only a boolean
+`owned_automation_excluded` acknowledgement. The harness now performs a real
+Codex preflight and rejects every unacknowledged sidecar invocation. Backend
+`0.6.8` exposes the same acknowledgement on a small catalog search so that
+preflight does not invoke the full planner result.
 
 ### Planned licensing transition
 
