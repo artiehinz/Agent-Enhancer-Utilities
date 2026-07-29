@@ -242,9 +242,13 @@ promotion gates, and licensing boundary are maintained in
 3. Maintain the focused
    [goose recipe PR #10780](https://github.com/aaif-goose/goose/pull/10780).
    Goose CLI `1.44.0` accepts the recipe and the live MCP smoke passes. The
-   current failed `security-scan` check is an upstream workflow failure: its
+   recipe now uses Goose's owner-qualified `agent-enhancer__lab.*` tool names;
+   the related review thread is resolved. The remaining failed
+   `security-scan` check is an upstream workflow failure: its
    `pull_request_target` job refuses its own fork checkout before scanning any
-   recipe content.
+   recipe content. A minimal base-workflow fix is available in
+   [commit `aa44e4d`](https://github.com/artiehinz/goose/commit/aa44e4d3495571bb16ce6c0cd21dace4fef74ca8)
+   and is linked from the PR for maintainers.
 4. Maintain the focused
    [Agno cookbook PR #9178](https://github.com/agno-agi/agno/pull/9178),
    which demonstrates failed-generation recovery, competing-worker fencing,
@@ -256,34 +260,41 @@ promotion gates, and licensing boundary are maintained in
    Its `recover-ambiguous-external-writes` skill has no hosted dependency; all
    skill validation and generated documentation checks pass.
 6. Maintain the
-   [mcp-odoo draft PR #61](https://github.com/erpipe-org/mcp-odoo/pull/61),
+   [mcp-odoo PR #61](https://github.com/erpipe-org/mcp-odoo/pull/61),
    which fences an approved external write after an uncertain result and
    proves that a same-token replay cannot repeat the mutation. The focused
-   suite, Ruff, mypy, and the portable full suite pass; one unrelated Windows
-   symlink test is platform-limited.
+   suite, Ruff, mypy, and the portable full suite pass after rebasing onto
+   upstream `v1.3.0`; one unrelated Windows symlink test is platform-limited.
+   The PR is now ready for review rather than draft.
 7. Continue the issue-first contributions already opened for
    [MCPJam Inspector #3555](https://github.com/MCPJam/inspector/issues/3555),
    [Kiln #112](https://github.com/codeofaxel/Kiln/issues/112), and
-   [mcp-use #2054](https://github.com/mcp-use/mcp-use/issues/2054). These
-   propose, respectively, a model-free ambiguous-success inspector fixture,
-   durable idempotency for queued physical prints, and a local multi-server
-   recovery example.
+   [mcp-use #2054](https://github.com/mcp-use/mcp-use/issues/2054). The first
+   two await placement decisions. The mcp-use proposal is now labeled
+   `duplicate`; locate and coordinate through the canonical issue before
+   changing code.
 8. Coordinate through existing discussions instead of opening duplicates:
-   [mcp-agent #640](https://github.com/lastmile-ai/mcp-agent/issues/640) now
-   contains the proposed checkpoint/reconciliation sequence, and
+   [mcp-agent #640](https://github.com/lastmile-ai/mcp-agent/issues/640)
+   closed without selecting a contribution location, and
    [LangChain MCP Adapters #170](https://github.com/langchain-ai/langchain-mcp-adapters/issues/170)
-   now distinguishes safe reconnect from unsafe mutation replay.
-9. Track the concrete unsafe default-retry gap in
-   [Codex SDK for Elixir #2](https://github.com/nshkrdotcom/codex_sdk/issues/2).
-   Its MCP client currently retries every failed `tools/call` three times by
-   default, including outcomes where a mutating write may already have
-   committed.
-10. Wait for maintainer interest on the vendor-neutral
+   now distinguishes safe reconnect from unsafe mutation replay, but another
+   contributor has already volunteered for the work. Do not open either PR.
+9. Maintain
+   [Codex SDK for Elixir PR #3](https://github.com/nshkrdotcom/codex_sdk/pull/3),
+   which closes issue #2 by making `tools/call` retries opt-in and adding a
+   commit-then-drop regression fixture. The affected format checks, 117 tests,
+   and strict Credo analysis pass.
+10. Maintain
+   [ADK-Rust PR #506](https://github.com/zavora-ai/adk-rust/pull/506), opened
+   through issue #504. It preserves automatic discovery reconnects while
+   requiring explicit `with_tool_call_retries()` for MCP tool-call replay.
+   The affected formatter, 87 MCP tests, and strict Clippy gate pass.
+11. Wait for maintainer interest on the vendor-neutral
    [Microsoft MCP for Beginners proposal #949](https://github.com/microsoft/mcp-for-beginners/issues/949)
    and
    [Agent Framework Samples proposal #115](https://github.com/microsoft/Agent-Framework-Samples/issues/115);
    do not open either implementation PR first.
-11. Coordinate neutral x402 retry fixtures through
+12. Coordinate neutral x402 retry fixtures through
    [issue #831](https://github.com/x402-foundation/x402/issues/831).
    Challenge drift is reproducible without wallets or settlement, but
    overlapping fixes already exist, so wait for maintainer direction instead
