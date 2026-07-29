@@ -152,6 +152,13 @@ are fixed without reference to favorable outcomes. Preserve the same safety
 policy and condition-blind outcome evaluator. Run a later publication sample
 only after every fixed validation gate passes.
 
+The first on-demand prototype is implemented under
+`examples/on-demand-sidecar/`. Its deterministic tests prove zero remote calls
+for a low-risk contract, one existing-service planner call for a risk-bearing
+contract, and fail-closed local/hosted plan drift. This is architecture
+evidence only. The next step is to freeze how a real agent discovers and
+activates the adapter before measuring it.
+
 Backend `0.6.4` also completed the clean measurement boundary. It preserved
 the mixed pre-marker window as aggregate-only internal evidence, removed its
 raw discovery and module observations, recorded the cutoff in the operator

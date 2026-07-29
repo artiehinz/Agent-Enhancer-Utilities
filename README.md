@@ -110,6 +110,7 @@ python -B examples/reliability-sidecar/run.py
 python -B examples/multi-agent-checkpoint/run.py
 python -B examples/sidecar-benchmark/test_benchmark.py
 python -B examples/sidecar-agent-benchmark/test_benchmark.py
+python -B examples/on-demand-sidecar/run.py both
 goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
 ```
 
@@ -134,9 +135,14 @@ goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
   so the publication sample remains blocked. The harness rejects app/MCP
   contamination and keeps cost `null` when the host supplies no defensible
   dollar rate.
+- The [on-demand sidecar prototype](./examples/on-demand-sidecar/) makes no
+  remote call for a locally classified low-risk contract and calls the
+  existing hosted planner once for risk-bearing work. Local/hosted plan drift
+  fails closed; measured agent validation is still pending.
 
-All examples search, describe, and invoke through the progressive MCP facade
-instead of hard-coding private backend schemas.
+Remote MCP examples search, describe, and invoke through the progressive
+facade. The on-demand prototype uses the public generated HTTP contract only
+after local selection. No example copies private backend code or schemas.
 
 ## Directory listings
 

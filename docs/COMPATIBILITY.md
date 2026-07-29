@@ -18,6 +18,7 @@ to be run after the `v1.6.0` tag is public.
 | Reliability contract and benchmark | Contract `1`, package `1.6.0` | Eleven adapter and fixture tests passed; 200 published run-level records satisfy the preregistered deterministic thresholds | Passed |
 | Metered Codex benchmark harness | Codex CLI `0.144.0-alpha.4`, model `gpt-5.6-sol` | Ten local harness/evaluator tests pass; both completed validation summaries are public. Backend `0.6.5` passed harm, completion, and abstention gates but failed token and latency overhead gates. New runs fail closed unless production acknowledges the owned-automation marker | Validation failed overall; 200-run publication is blocked |
 | Python examples | Python `3.12.0` | General sidecar, two-contender checkpoint, and deterministic paired benchmark examples passed | Passed |
+| On-demand sidecar prototype | Python `3.12.0`, backend `0.6.9` | Local selector tests prove zero remote calls for low-risk work, one existing-service call for risk-bearing work, and fail-closed local/hosted plan drift | Prototype passed; measured agent validation pending |
 | Goose recipe | Goose CLI `1.44.0` | Official recipe validation and parameter rendering passed; live discovery and the checkpoint race completed against production | Passed |
 
 The live checkpoint check admitted exactly one of two concurrent contenders,

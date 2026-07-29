@@ -265,9 +265,10 @@ Do not describe automated smoke tests as beta-user usage.
 1. Replace persistent connection overhead with conditional activation while
    preserving the `0.6.5` validation's observed duplicate prevention. The
    `0.6.8` compact probe still exceeded both 5% overhead references, so do not
-   freeze a third always-connected preregistration. Prototype the current
-   service through the skills and HTTP contracts, then preregister only if
-   low-risk work incurs no connection.
+   freeze a third always-connected preregistration. The on-demand HTTP
+   prototype now proves zero remote calls for local low-risk abstention. Freeze
+   its agent selector and activation boundary next, then preregister the
+   measured comparison.
 2. Respond to review on Agno PR #9178; `Closes #9179` is present.
 3. Monitor and maintain OpenHands PR #418.
 4. Monitor the Docker and two curated-list submissions without opening more
