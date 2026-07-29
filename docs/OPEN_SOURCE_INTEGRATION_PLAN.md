@@ -1,6 +1,6 @@
 # Open-Source Integration and Sidecar Adoption Plan
 
-Last reviewed: 2026-07-28
+Last reviewed: 2026-07-29
 
 ## Objective
 
@@ -293,29 +293,42 @@ Do not describe automated smoke tests as beta-user usage.
 
 ## Immediate order of work
 
-1. Keep Agno #9178, OpenHands #418, Goose #10780, Awesome Copilot #2474,
-   mcp-odoo #61, Codex SDK #3, and ADK-Rust #506 review-ready. Respond to
-   requested changes, but do not post status-only comments.
-2. Keep Docker #4537 and the two curated-list PRs current. For
-   awesome-mcp-servers #10889, wait for Glama support to supply or explicitly
-   rule out an official Connector badge path.
-3. Wait for placement decisions on MCPJam #3555 and Kiln #112. Resolve the
+1. Wait for decisions on every current pull request. Respond only to specific
+   maintainer feedback; do not post status-only comments or open another PR
+   while the current queue is under review.
+2. Wait for placement decisions on MCPJam #3555 and Kiln #112. Resolve the
    canonical target behind the duplicate mcp-use #2054 issue. Do not duplicate
    the already-volunteered LangChain #170 work or reopen closed mcp-agent #640
    without maintainer direction.
-4. Replace persistent connection overhead with conditional activation while
-   preserving the `0.6.5` validation's observed duplicate prevention. The
-   `0.6.8` compact probe still exceeded both 5% overhead references, so do not
-   freeze a third always-connected preregistration. The on-demand HTTP
-   prototype now proves zero remote calls for local low-risk abstention. Freeze
-   its agent selector and activation boundary next, then preregister the
-   measured comparison.
-5. Build local interoperability probes for Pydantic AI Harness and atrib, then
+3. Complete the frozen skills-first on-demand validation. Retain the result
+   even if it is negative or neutral. Do not begin publication runs unless
+   every fixed validation gate passes.
+4. After design-partner recruitment begins, build local interoperability
+   probes for Pydantic AI Harness and atrib, then
    a paired benchmark adapter for Synapse. Do not open upstream requests until
-   those probes show a specific missing primitive.
-6. Wait for responses on Microsoft issues #949 and #115 and continue x402
+   those probes show a specific missing primitive. For each probe, require a
+   runnable local fixture, a vendor-neutral output mapping, explicit external
+   proof semantics, and a short statement of what the target already solves.
+5. Wait for responses on Microsoft issues #949 and #115 and continue x402
    coordination through #831.
-7. Promote only merged integrations and published evidence.
+6. Promote only merged integrations and published evidence.
+
+The local probes should answer narrow questions before any new contribution:
+
+- Pydantic AI Harness: can `ToolEffectRecord`, including
+  `unknown_after_crash`, map losslessly into `ReliabilityReportV1`, and which
+  fields remain orchestrator-owned?
+- atrib: which signed records prove authorship only, and which independent
+  tool or counterparty attestations can justify `external_proof: true`?
+- Synapse: does its receipt/checkpoint path reduce ambiguous replays under the
+  same paired fixture, and how does its overhead compare with the skills-first
+  sidecar?
+
+Open an upstream issue or PR only if a completed local probe exposes one
+specific missing primitive whose fix is useful without Agent Enhancer. Keep
+the hosted backend implementation private and contribute only portable
+schemas, adapters, examples, or fixtures under the receiving repository's
+license.
 
 ## Existing production deployment policy
 

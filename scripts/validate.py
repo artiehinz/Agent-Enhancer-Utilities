@@ -174,6 +174,17 @@ for relative_path in (
     "examples/sidecar-agent-benchmark/test_benchmark.py",
     "examples/sidecar-agent-benchmark/results/validation-0.6.4.json",
     "examples/sidecar-agent-benchmark/results/validation-0.6.5-core.json",
+    "examples/on-demand-sidecar/README.md",
+    "examples/on-demand-sidecar/run.py",
+    "examples/on-demand-sidecar/test_run.py",
+    "examples/on-demand-agent-benchmark/README.md",
+    "examples/on-demand-agent-benchmark/preregistered-plan.json",
+    "examples/on-demand-agent-benchmark/final-response.schema.json",
+    "examples/on-demand-agent-benchmark/fixture_cli.py",
+    "examples/on-demand-agent-benchmark/evaluator.py",
+    "examples/on-demand-agent-benchmark/benchmark.py",
+    "examples/on-demand-agent-benchmark/run.py",
+    "examples/on-demand-agent-benchmark/test_benchmark.py",
     "docs/RELIABILITY_SIDECAR_CONTRACT_V1.md",
     "docs/schemas/reliability-sidecar-contract-v1.schema.json",
     "docs/OPEN_SOURCE_INTEGRATION_PLAN.md",
@@ -194,6 +205,15 @@ for relative_path in (
     "examples/sidecar-agent-benchmark/benchmark.py",
     "examples/sidecar-agent-benchmark/run.py",
     "examples/sidecar-agent-benchmark/test_benchmark.py",
+    "examples/on-demand-sidecar/run.py",
+    "examples/on-demand-sidecar/test_run.py",
+    "examples/on-demand-agent-benchmark/fixture_cli.py",
+    "examples/on-demand-agent-benchmark/evaluator.py",
+    "examples/on-demand-agent-benchmark/benchmark.py",
+    "examples/on-demand-agent-benchmark/run.py",
+    "examples/on-demand-agent-benchmark/test_benchmark.py",
+    "skills/guard-external-plugin-workflows/scripts/on_demand.py",
+    "skills/guard-external-plugin-workflows/scripts/test_on_demand.py",
     "scripts/smoke_live_mcp.py",
 ):
     source = (ROOT / relative_path).read_text(encoding="utf-8")
@@ -340,6 +360,51 @@ if planner_tests.returncode:
         + planner_tests.stderr
     )
 
+on_demand_tests = subprocess.run(
+    [
+        sys.executable,
+        "-B",
+        str(
+            ROOT
+            / "skills"
+            / "guard-external-plugin-workflows"
+            / "scripts"
+            / "test_on_demand.py"
+        ),
+    ],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+if on_demand_tests.returncode:
+    fail(
+        "on-demand adapter tests failed:\n"
+        + on_demand_tests.stdout
+        + on_demand_tests.stderr
+    )
+
+on_demand_example_tests = subprocess.run(
+    [
+        sys.executable,
+        "-B",
+        str(
+            ROOT
+            / "examples"
+            / "on-demand-sidecar"
+            / "test_run.py"
+        ),
+    ],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+if on_demand_example_tests.returncode:
+    fail(
+        "on-demand sidecar example tests failed:\n"
+        + on_demand_example_tests.stdout
+        + on_demand_example_tests.stderr
+    )
+
 benchmark_tests = subprocess.run(
     [
         sys.executable,
@@ -382,6 +447,28 @@ if agent_benchmark_tests.returncode:
         "metered agent benchmark tests failed:\n"
         + agent_benchmark_tests.stdout
         + agent_benchmark_tests.stderr
+    )
+
+on_demand_agent_benchmark_tests = subprocess.run(
+    [
+        sys.executable,
+        "-B",
+        str(
+            ROOT
+            / "examples"
+            / "on-demand-agent-benchmark"
+            / "test_benchmark.py"
+        ),
+    ],
+    cwd=ROOT,
+    capture_output=True,
+    text=True,
+)
+if on_demand_agent_benchmark_tests.returncode:
+    fail(
+        "on-demand metered agent benchmark tests failed:\n"
+        + on_demand_agent_benchmark_tests.stdout
+        + on_demand_agent_benchmark_tests.stderr
     )
 
 benchmark_result = json.loads(
@@ -574,6 +661,8 @@ for required_entry in (
     "skills/guard-external-plugin-workflows/references/recipes.md",
     "skills/guard-external-plugin-workflows/scripts/plan_workflow.py",
     "skills/guard-external-plugin-workflows/scripts/test_plan_workflow.py",
+    "skills/guard-external-plugin-workflows/scripts/on_demand.py",
+    "skills/guard-external-plugin-workflows/scripts/test_on_demand.py",
 ):
     if required_entry not in archive_entries:
         fail(f"skills archive: missing {required_entry}")
@@ -591,5 +680,29 @@ with zipfile.ZipFile(archive_path) as archive:
                 fail(f"skills archive: missing source file {archive_entry}")
             if archive.read(archive_entry) != portable_source_bytes(source_path):
                 fail(f"skills archive: stale source file {archive_entry}")
+
+on_demand_archive_path = ROOT / "agent-enhancer-on-demand-skill.zip"
+with zipfile.ZipFile(on_demand_archive_path) as archive:
+    on_demand_entries = set(archive.namelist())
+on_demand_prefix = ".agents/skills/guard-external-plugin-workflows/"
+for required_entry in (
+    "SKILL.md",
+    "references/reliability-contract.md",
+    "references/recipes.md",
+    "scripts/on_demand.py",
+    "scripts/plan_workflow.py",
+    "scripts/test_on_demand.py",
+    "scripts/test_plan_workflow.py",
+):
+    if on_demand_prefix + required_entry not in on_demand_entries:
+        fail(f"on-demand skill archive: missing {required_entry}")
+if any(
+    entry.startswith(on_demand_prefix + "agents/")
+    or entry.endswith(".mcp.json")
+    or "__pycache__" in entry
+    or entry.endswith(".pyc")
+    for entry in on_demand_entries
+):
+    fail("on-demand skill archive: MCP metadata or generated cache leaked")
 
 print(f"validated {len(SKILL_NAMES)} skills")

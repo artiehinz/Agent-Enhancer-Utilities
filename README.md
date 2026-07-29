@@ -74,6 +74,19 @@ gh skill preview artiehinz/Agent-Enhancer-Utilities coordinate-parallel-agents
 gh skill install artiehinz/Agent-Enhancer-Utilities coordinate-parallel-agents
 ```
 
+For the lowest-overhead reliability path, install only the workflow guard:
+
+```sh
+gh skill install artiehinz/Agent-Enhancer-Utilities guard-external-plugin-workflows
+```
+
+This skills-first path has no persistent MCP connection. It selects locally,
+abstains without network access for ordinary one-time low-risk work, and calls
+the public HTTP planner only for risk-bearing work. The release also includes
+`agent-enhancer-on-demand-skill.zip`, which expands directly into a Codex
+repository's `.agents/skills/` folder and deliberately omits `.mcp.json` and
+MCP dependency metadata.
+
 The same repository includes versioned package entry points:
 
 | Host | Entry point | Current evidence |
@@ -111,6 +124,7 @@ python -B examples/multi-agent-checkpoint/run.py
 python -B examples/sidecar-benchmark/test_benchmark.py
 python -B examples/sidecar-agent-benchmark/test_benchmark.py
 python -B examples/on-demand-sidecar/run.py both
+python -B examples/on-demand-agent-benchmark/test_benchmark.py
 goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
 ```
 
@@ -135,10 +149,17 @@ goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
   so the publication sample remains blocked. The harness rejects app/MCP
   contamination and keeps cost `null` when the host supplies no defensible
   dollar rate.
-- The [on-demand sidecar prototype](./examples/on-demand-sidecar/) makes no
+- The [skills-first on-demand sidecar](./examples/on-demand-sidecar/) makes no
   remote call for a locally classified low-risk contract and calls the
-  existing hosted planner once for risk-bearing work. Local/hosted plan drift
-  fails closed; measured agent validation is still pending.
+  existing hosted planner once for risk-bearing work. Local/hosted plan drift,
+  raw identifiers, private fields, and unknown tools fail closed. Its new
+  preregistered measured-agent validation remains separate from all persistent
+  MCP results.
+- The [on-demand metered benchmark](./examples/on-demand-agent-benchmark/)
+  freezes five paired Codex scenarios, installs only one repo-scoped skill in
+  the with condition, rejects every MCP call, measures activation and
+  abstention, and blocks publication unless the complete five-pair validation
+  passes every fixed gate.
 
 Remote MCP examples search, describe, and invoke through the progressive
 facade. The on-demand prototype uses the public generated HTTP contract only

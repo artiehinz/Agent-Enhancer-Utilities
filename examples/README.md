@@ -1,7 +1,7 @@
 # Runnable examples
 
-The examples use the free, no-auth progressive MCP endpoint and Python's
-standard library:
+The examples use Python's standard library with either the free no-auth MCP or
+the direct on-demand HTTP contract:
 
 - [`reliability-sidecar`](./reliability-sidecar/) combines the guard planner
   with a mock domain agent and replays a duplicate-sensitive create.
@@ -17,6 +17,11 @@ standard library:
   multi-agent behavior, and machine-verified outcomes. Both completed
   validations remain published. The core-profile sample demonstrated
   duplicate prevention but still failed the connection-overhead gates.
+- [`on-demand-sidecar`](./on-demand-sidecar/) demonstrates local abstention,
+  one hosted planner check for risk-bearing work, and fail-closed plan drift.
+- [`on-demand-agent-benchmark`](./on-demand-agent-benchmark/) is a separate
+  skills-only Codex preregistration. Neither condition exposes MCP; only the
+  with condition receives one repo-scoped skill.
 
 The Python examples discover and describe a module before invoking it. They
 fail closed if the expected free module is unavailable or its result no longer

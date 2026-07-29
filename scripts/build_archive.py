@@ -6,6 +6,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE_PATH = ROOT / "agent-enhancer-utilities-skills.zip"
+ON_DEMAND_ARCHIVE_PATH = ROOT / "agent-enhancer-on-demand-skill.zip"
 SKILL_NAMES = (
     "coordinate-parallel-agents",
     "test-http-failure-paths",
@@ -78,3 +79,47 @@ finally:
     temporary_path.unlink(missing_ok=True)
 
 print(f"built {ARCHIVE_PATH.name} with {len(SKILL_NAMES)} skills")
+
+temporary = tempfile.NamedTemporaryFile(
+    prefix=".agent-enhancer-on-demand-skill-",
+    suffix=".zip",
+    dir=ROOT,
+    delete=False,
+)
+temporary_path = Path(temporary.name)
+temporary.close()
+try:
+    skill_name = "guard-external-plugin-workflows"
+    skill_root = ROOT / "skills" / skill_name
+    with zipfile.ZipFile(
+        temporary_path,
+        mode="w",
+        compression=zipfile.ZIP_DEFLATED,
+        compresslevel=9,
+    ) as archive:
+        for source_path in included_files(skill_root):
+            relative = source_path.relative_to(skill_root)
+            if relative.parts[0] == "agents":
+                continue
+            archive_entry = zipfile.ZipInfo(
+                filename=(
+                    ".agents/skills/"
+                    f"{skill_name}/{relative.as_posix()}"
+                ),
+                date_time=(2020, 1, 1, 0, 0, 0),
+            )
+            archive_entry.compress_type = zipfile.ZIP_DEFLATED
+            archive_entry.create_system = 3
+            archive_entry.external_attr = 0o100644 << 16
+            archive.writestr(
+                archive_entry,
+                portable_source_bytes(source_path),
+                compresslevel=9,
+            )
+    os.replace(temporary_path, ON_DEMAND_ARCHIVE_PATH)
+finally:
+    temporary_path.unlink(missing_ok=True)
+
+print(
+    f"built {ON_DEMAND_ARCHIVE_PATH.name} with the repo-scoped on-demand skill"
+)

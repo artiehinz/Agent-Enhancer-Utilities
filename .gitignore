@@ -2,3 +2,4 @@
 __pycache__/
 *.py[cod]
 /examples/sidecar-agent-benchmark/.local-results/
+/examples/on-demand-agent-benchmark/.local-results/

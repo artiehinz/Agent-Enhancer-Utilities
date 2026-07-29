@@ -1,0 +1,143 @@
+{
+  "schema_version": "3",
+  "evidence_class": "metered-agent-host-on-demand",
+  "registered_at": "2026-07-29T16:04:16Z",
+  "seed": 2907202603,
+  "validation_pairs_per_scenario": 5,
+  "published_pairs_per_scenario": 20,
+  "validation_report_path": "results/validation-latest.json",
+  "scenarios": [
+    "ambiguous-success-create",
+    "overlapping-workers",
+    "shared-rate-limit",
+    "scheduled-refresh",
+    "low-risk-abstention"
+  ],
+  "host": {
+    "executable": "codex",
+    "cli_version": "codex-cli 0.144.0-alpha.4",
+    "authentication": "ChatGPT-managed",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "medium",
+    "requested_subagents_in_parallel_scenarios": 2,
+    "host_subagent_limit_override": null,
+    "timeout_seconds": 360,
+    "sandbox": "danger-full-access",
+    "approval_policy": "never",
+    "codex_apps_enabled": false,
+    "user_config_loaded": false,
+    "session_persisted": false,
+    "agent_enhancer_transport": "skills-first direct HTTP",
+    "agent_enhancer_endpoint": "https://liberated.site/v1/tools/{slug}",
+    "agent_enhancer_backend": "0.6.9",
+    "owned_automation_source": "codex-on-demand-benchmark"
+  },
+  "prior_results": [
+    {
+      "report": "../sidecar-agent-benchmark/results/validation-0.6.4.json",
+      "result": "failed"
+    },
+    {
+      "report": "../sidecar-agent-benchmark/results/validation-0.6.5-core.json",
+      "result": "failed"
+    }
+  ],
+  "reason_for_new_preregistration": "Persistent MCP improved reliability in the 0.6.5 validation but failed the fixed low-risk token and latency overhead gates. This protocol replaces the persistent connection with one repo-scoped skill and a local selector. No prior row is pooled with this sample.",
+  "fixed_controls": [
+    "Codex CLI version",
+    "model and reasoning effort",
+    "maximum subagent count",
+    "task prompt within each pair",
+    "capability contract within each pair",
+    "fresh fixture workspace",
+    "synthetic destination behavior",
+    "failure injection",
+    "timeout and sandbox",
+    "condition-blind evaluator",
+    "structured final-response schema"
+  ],
+  "only_condition_difference": "The with-sidecar workspace contains guard-external-plugin-workflows under .agents/skills with no agents metadata and no MCP configuration. The without-sidecar workspace contains no Agent Enhancer skill or MCP. Both retain the same frozen capability-contract file.",
+  "protocol_hash_files": [
+    "preregistered-plan.json",
+    "benchmark.py",
+    "evaluator.py",
+    "fixture_cli.py",
+    "final-response.schema.json",
+    "../../skills/guard-external-plugin-workflows/SKILL.md",
+    "../../skills/guard-external-plugin-workflows/references/reliability-contract.md",
+    "../../skills/guard-external-plugin-workflows/references/recipes.md",
+    "../../skills/guard-external-plugin-workflows/scripts/on_demand.py",
+    "../../skills/guard-external-plugin-workflows/scripts/plan_workflow.py"
+  ],
+  "primary_metrics": [
+    "verified",
+    "duplicate_mutations",
+    "conflicting_actions",
+    "provider_rejections",
+    "unresolved_ambiguous",
+    "manual_interventions",
+    "correct_activation",
+    "correct_abstention",
+    "false_activation",
+    "missed_activation"
+  ],
+  "secondary_metrics": [
+    "external_attempts",
+    "adapter_calls",
+    "remote_planner_calls",
+    "remote_coordination_calls",
+    "sidecar_calls",
+    "repeated_sidecar_calls",
+    "agent_tool_calls",
+    "collab_tool_calls",
+    "model_input_tokens",
+    "model_cached_input_tokens",
+    "model_output_tokens",
+    "model_reasoning_output_tokens",
+    "wall_clock_ms",
+    "model_cost_usd"
+  ],
+  "success_thresholds": {
+    "failure_scenario_harm_reduction_percent": 80,
+    "maximum_verified_completion_drop_percentage_points": 5,
+    "maximum_low_risk_input_token_overhead_percent": 5,
+    "maximum_low_risk_latency_overhead_percent": 5,
+    "low_risk_sidecar_calls": 0,
+    "low_risk_adapter_calls": 0,
+    "minimum_correct_activation_percent": 100,
+    "minimum_correct_abstention_percent": 100
+  },
+  "evaluation": {
+    "condition_blind": true,
+    "source": "evaluator.py",
+    "machine_state_is_authoritative": true,
+    "agent_self_report_is_used_only_for_the_read_only_answer_and_manual_intervention_flag": true,
+    "harm_and_completion_estimator": "aggregate rate across the four side-effecting scenarios",
+    "low_risk_overhead_estimator": "median paired percent change",
+    "activation_estimator": "one confirmed hosted planner call in every risk-bearing with-sidecar run",
+    "abstention_estimator": "zero adapter and remote calls in every low-risk with-sidecar run"
+  },
+  "publication_gate": "Run 20 publication pairs per scenario only after the complete five-pair validation passes every threshold. Retain and publish a complete failed or neutral validation report.",
+  "exclusions": [
+    "a pair where either host run fails before a structured result because of authentication, rate limiting, process timeout, or runner infrastructure failure",
+    "a run with any MCP call because neither condition permits MCP",
+    "a remote Agent Enhancer call that production does not confirm as owned automation",
+    "manual edits to generated run rows"
+  ],
+  "non_exclusions": [
+    "failure to activate the available skill",
+    "incorrect activation on low-risk work",
+    "agent strategy errors",
+    "negative, neutral, or slower outcomes"
+  ],
+  "limitations": [
+    "The destination and injected failures are synthetic.",
+    "Codex runs with danger-full-access inside a newly created disposable workspace because this Windows build blocks the fixture interpreter under workspace-write.",
+    "One Codex model and one reasoning setting cannot establish universal agent behavior.",
+    "ChatGPT-managed Codex auth exposes token counts but no defensible per-run dollar rate, so model_cost_usd remains null.",
+    "The sidecar is advisory and cannot enforce a transaction inside another MCP.",
+    "Prompt-visible failure semantics may allow the unguarded model to reproduce some reliability techniques on its own.",
+    "Skill metadata itself may create measurable low-risk input overhead even when no adapter runs.",
+    "Neutral and negative outcomes will be retained."
+  ]
+}

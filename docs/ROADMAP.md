@@ -30,24 +30,27 @@ help execute that plan using opaque identifiers and bounded temporary state.
 Backend `0.6.9` is live on the existing production app and public package
 `v1.6.0` is released. They retain all 24 modules, 37 Claude tools, 37 ChatGPT
 tools, and all seven skills, and add Reliability Sidecar Contract v1 plus a
-deterministic paired evidence suite. The recommended MCP connection now uses a
-three-tool core profile while an experimental one-tool compact profile still
-reaches all 24 modules. Official MCP
+deterministic paired evidence suite. Persistent core and compact MCP profiles
+remain supported, but the next recommended path is one repo-scoped skill that
+selects locally and calls direct HTTP only for risk-bearing work. Official MCP
 Registry `0.6.4` remains the latest immutable registry version until the
 next registry release gate is complete. Real USDC remains disabled.
 
-The next work is commercial validation, not another broad module expansion:
+The next work is evidence and commercial validation, not another broad module
+expansion:
 
-1. Recruit five external design partners and run the Sidecar v1 recipes for 14
-   days.
-2. Measure correct selection and abstention, duplicate recovery, successful
+1. Freeze and run the skills-first on-demand validation without pooling it
+   with the failed persistent-MCP samples.
+2. Recruit five external design partners and run the Sidecar v1 recipes for 14
+   days after the validation result is retained.
+3. Measure correct selection and abstention, duplicate recovery, successful
    verification, D7 repeat, and willingness to pay for higher capacity.
-3. Reconcile the first real hosting invoice and owner-support time so
+4. Reconcile the first real hosting invoice and owner-support time so
    profitability has an evidence-backed cost floor.
-4. Keep the shared circuit breaker, action budget, and version fence
+5. Keep the shared circuit breaker, action budget, and version fence
    demand-gated. Build the smallest one only when observed failures show that
    the planner, checkpoint, and existing primitives cannot express the need.
-5. Prepare the paid-capacity configuration and operator checklist, but do not
+6. Prepare the paid-capacity configuration and operator checklist, but do not
    enable settlement until the existing storage, wallet, demand, and approval
    gates are satisfied.
 
@@ -145,19 +148,22 @@ median latency overhead was 38.523%, above the same 5% references. This probe
 is explicitly exploratory and cannot confirm a product claim, but it is enough
 to reject a third always-connected validation.
 
-The next iteration should test conditional activation through the existing
-skills and HTTP contracts so low-risk work does not connect the MCP at all.
-Freeze a new preregistration only after that selector and activation boundary
-are fixed without reference to favorable outcomes. Preserve the same safety
-policy and condition-blind outcome evaluator. Run a later publication sample
-only after every fixed validation gate passes.
+The skills-first adapter is implemented in
+`skills/guard-external-plugin-workflows/scripts/on_demand.py` and exercised by
+`examples/on-demand-sidecar/`. It validates the closed capability contract,
+abstains locally with zero network calls, checks one hosted planner result for
+risk-bearing work, preserves idempotency, and rejects unknown tools, private
+fields, and raw identifiers before network access. A repo-scoped archive
+omitting `.mcp.json` and MCP dependency metadata provides the isolated install
+path while existing persistent packages remain compatible.
 
-The first on-demand prototype is implemented under
-`examples/on-demand-sidecar/`. Its deterministic tests prove zero remote calls
-for a low-risk contract, one existing-service planner call for a risk-bearing
-contract, and fail-closed local/hosted plan drift. This is architecture
-evidence only. The next step is to freeze how a real agent discovers and
-activates the adapter before measuring it.
+The independent protocol under `examples/on-demand-agent-benchmark/` freezes
+the selector, skill files, five paired scenarios, condition-blind evaluator,
+selection metrics, exclusions, sample sizes, and thresholds. The with
+condition installs only that repo skill; neither condition exposes MCP.
+Validation contains five pairs per scenario. Twenty publication pairs remain
+hard-blocked unless every validation gate passes. Complete negative or neutral
+validation results must be retained.
 
 Backend `0.6.4` also completed the clean measurement boundary. It preserved
 the mixed pre-marker window as aggregate-only internal evidence, removed its
@@ -177,6 +183,28 @@ privacy-bounded rows, advances the public cutoff, and returns only a boolean
 Codex preflight and rejects every unacknowledged sidecar invocation. Backend
 `0.6.8` exposes the same acknowledgement on a small catalog search so that
 preflight does not invoke the full planner result.
+
+### Profitability readiness after design partners
+
+Do not enable payments while recruiting or measuring the first five design
+partners. In parallel, prepare four private operator inputs so a later pricing
+decision uses real costs instead of guesses:
+
+1. Export the actual monthly DigitalOcean invoice and domain cost into a
+   private cost ledger. Store invoice documents outside the public repository.
+2. Log owner support, maintenance, incident, and integration time with one
+   explicit hourly rate and an immutable month label.
+3. Calculate the monthly cost floor and break-even calls for candidate free
+   and paid capacity tiers. Keep demand assumptions visibly separate from
+   observed usage.
+4. Draft, but do not publish, one paid-capacity release row plus pause, refund,
+   paid-but-not-delivered, reconciliation, and rollback checklists.
+
+No mainnet payment, paid catalog row, settlement mode, wallet change, or new
+DigitalOcean app is authorized by this preparation. The paid path remains
+blocked until a real buyer and job exist, durable paid storage and custody are
+approved, failure procedures pass, active preflight passes, and the owner
+explicitly ends the USDC hold.
 
 ### Planned licensing transition
 

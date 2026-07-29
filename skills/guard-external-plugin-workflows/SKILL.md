@@ -48,8 +48,12 @@ the field definitions, profile selection, and guarantee matrix.
 For a deterministic read-only dry run, pass the closed reliability contract to
 `scripts/plan_workflow.py`. The script does not call either plugin or create
 coordination state. A valid low-risk one-time contract returns a typed
-`no-sidecar` decision. Treat candidate tools as a plan; still search and
-describe the live Agent Enhancer contracts before invoking them.
+`no-sidecar` decision.
+
+For execution, prefer `scripts/on_demand.py`. It runs the same local selector
+first. Low-risk work returns `local-abstention` with zero network calls.
+Risk-bearing work checks exactly one hosted planner result before any selected
+coordination call. Local and hosted plan drift fails closed.
 
 ## Create opaque identities
 
@@ -91,19 +95,36 @@ Choose the narrowest profile that covers the failure:
 Read [references/recipes.md](references/recipes.md) only for the capability
 shape involved in the current request.
 
-## Discover and invoke sidecar tools
+## Activate tools only when selected
 
-Use the Agent Enhancer Utilities MCP server at `https://liberated.site/mcp`.
+Do not persistently connect MCP for the skills-first path. Build the closed
+contract, then run:
 
-1. Call `lab.search_tools` with the concrete coordination need.
-2. On `NO_MATCH`, do not force a nearby primitive. Offer
-   `lab.request_capability` with a bounded, non-sensitive problem statement.
-3. Call `lab.describe_tool` for each selected candidate.
-4. Check schema, TTL limits, side effects, retention, errors, and
-   `idempotency_required`.
-5. If the user asked only for analysis or design, stop after producing the
-   guard plan. Invoke stateful tools only when executing the authorized
-   workflow.
+```sh
+python scripts/on_demand.py plan --input contract.json
+```
+
+If the result is `local-abstention`, continue without Agent Enhancer. If the
+result selects a sidecar, use only candidate tools present in its stages. Read
+the public contract at `https://liberated.site/v1/tools/{slug}` before the
+first invocation, then call the selected guard:
+
+```sh
+python scripts/on_demand.py invoke \
+  --slug workflow-checkpoint \
+  --input checkpoint.json \
+  --idempotency-key stable_request_key_0001
+```
+
+The adapter allows the planner, checkpoint, and the coordination primitives
+listed below. It rejects free text, credential-like fields, raw identifiers,
+unknown tools, and missing idempotency identities before network access.
+Derive identity fields locally as described above.
+
+If the user asked only for analysis or design, stop after the plan. Invoke
+stateful tools only when executing the authorized workflow. If an unknown fact
+would change the safety boundary, state the assumption or stop. Do not force a
+nearby tool.
 
 Prefer:
 
@@ -125,6 +146,11 @@ Prefer:
 - `freshness-lease` for one renewable refresh owner.
 
 Follow the live tool description over this summary.
+
+The persistent Agent Enhancer MCP at `https://liberated.site/mcp` remains a
+backward-compatible option for hosts that prefer discovery. It is not the
+default for this skill because persistent connection metadata can add overhead
+to unrelated low-risk tasks.
 
 For a harmful create, send, delete, or other duplicate-sensitive external
 effect, prefer a workflow checkpoint over representing completion with a lock,
