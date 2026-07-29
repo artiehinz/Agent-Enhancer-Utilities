@@ -20,8 +20,11 @@ The project should contribute three different kinds of artifacts:
    Agent Enhancer. Our repository may separately document which Agent Enhancer
    modules implement or test the same behavior.
 
-Keep at most two new workflow-integration pull requests active at once.
-Registry and curated-list maintenance do not consume those two slots.
+Do not impose an arbitrary numerical cap on active contributions. Open each
+artifact only after confirming a concrete upstream gap, checking for duplicate
+issues or work, following the repository's contribution path, and validating a
+local equivalent. A useful issue-first proposal is preferable to an unsolicited
+large patch. Generic listings and backlinks are not integrations.
 
 ## What we are promoting
 
@@ -78,46 +81,63 @@ should select the smallest bundle that solves the demonstrated problem.
 | Repository | Contribution | Agent Enhancer scope | Current action |
 | --- | --- | --- | --- |
 | [docker/mcp-registry #4537](https://github.com/docker/mcp-registry/pull/4537) | Remote MCP registry definition | Connects to all 24 modules through the six progressive MCP tools | Current branch is mergeable. The full Go suite, entry validator, remote build path, catalog generation, live initialization, and 24-module discovery passed on 2026-07-28. Wait for review and comment only after a material change or maintainer request. |
-| [OpenHands/extensions #418](https://github.com/OpenHands/extensions/pull/418) | No-auth remote MCP catalog connector | Connects OpenHands to all 24 modules; no backend code is copied | This is active integration slot 1. The generated catalog is in sync and 101 focused schema/catalog tests pass. Keep the patch metadata-only and wait for review. |
-| [agno-agi/agno #9178](https://github.com/agno-agi/agno/pull/9178) | Deterministic recovery cookbook | Uses `workflow-guard-planner` and `workflow-checkpoint` | This is active integration slot 2. Rebased onto current `main`; cookbook pattern, Ruff, mypy, and the live deterministic example pass. The body closes issue #9179. Leave the stale maintainer-owned `missing-issue-link` label untouched and wait for review. |
+| [OpenHands/extensions #418](https://github.com/OpenHands/extensions/pull/418) | No-auth remote MCP catalog connector | Connects OpenHands to all 24 modules; no backend code is copied | The generated catalog is in sync and 101 focused schema/catalog tests pass. Keep the patch metadata-only and wait for review. |
+| [agno-agi/agno #9178](https://github.com/agno-agi/agno/pull/9178) | Deterministic recovery cookbook | Uses `workflow-guard-planner` and `workflow-checkpoint` | Rebased onto current `main`; cookbook pattern, Ruff, mypy, and the live deterministic example pass. The body closes issue #9179. Leave the stale maintainer-owned `missing-issue-link` label untouched and wait for review. |
 | [punkpeye/awesome-mcp-servers #10889](https://github.com/punkpeye/awesome-mcp-servers/pull/10889) | Curated server listing | Lists the complete service; description covers all bundles | Rebased onto current `main`; submission checks pass. Ownership and score are visible on the Glama Connector, but the workflow requires a server-style badge path that returns 404 for connectors. Wait for Glama support's emailed answer before changing or commenting again. |
 | [punkpeye/awesome-mcp-devtools #242](https://github.com/punkpeye/awesome-mcp-devtools/pull/242) | Focused testing-tool listing | Emphasizes Failure rehearsal, MCP contracts, and x402 diagnostics; the endpoint still exposes all 24 modules | Current branch is clean and mergeable. Monitor only. Do not duplicate this entry in more generic awesome lists. |
+| [aaif-goose/goose #10780](https://github.com/aaif-goose/goose/pull/10780) | Reliability-sidecar recipe | Uses `workflow-guard-planner` and `workflow-checkpoint` around another MCP | The recipe passes Goose CLI `1.44.0` validation and a live MCP smoke. Four checks pass. The failed `security-scan` is an upstream `pull_request_target` checkout refusal before recipe content is scanned; do not alter the recipe to work around it. |
+| [github/awesome-copilot #2474](https://github.com/github/awesome-copilot/pull/2474) | Vendor-neutral ambiguous external-write recovery skill | Portable planner, checkpoint, evidence, and abstention concepts; no hosted dependency | All nine applicable checks pass and five unrelated jobs skip. The robot marker in the title is required by that repository for AI-authored contributions. |
+| [erpipe-org/mcp-odoo #61](https://github.com/erpipe-org/mcp-odoo/pull/61) | Draft replay fence for an approved Odoo write whose response is lost | Portable checkpoint and reconciliation concepts implemented inside the Odoo MCP | The regression fixture commits a synthetic external mutation, drops its response, and proves a same-token retry cannot issue a second write. Focused tests, Ruff, mypy, and the portable full suite pass. Keep it draft until maintainers confirm the security-sensitive behavior. |
 | Official MCP Registry | Published server metadata | Connects clients to all 24 modules | Continue version publication and endpoint smoke tests for each backend release. |
 
-### Prepared but intentionally not submitted
+### Open issue-first proposals and design conversations
 
-| Repository | Proposed contribution | Modules | Gate |
+| Repository | Proposed contribution | Modules or portable concepts | Current action |
 | --- | --- | --- | --- |
-| [aaif-goose/goose](https://github.com/aaif-goose/goose) | Reliability-sidecar recipe in which goose asks for the task, plans the guard, checkpoints the attempt, executes through another MCP, and reconciles uncertainty | `workflow-guard-planner`, `workflow-checkpoint` | A one-file contribution is prepared at local commit `94b343f44`. Goose CLI `1.44.0` accepts the recipe and the live MCP smoke passes. The current recipe contribution guide accepts this path; open the PR only after one active workflow slot is free. |
-| [github/awesome-copilot](https://github.com/github/awesome-copilot) | Vendor-neutral `recover-ambiguous-external-writes` skill teaching durable operation identity, uncertain-result reconciliation, safe retry gates, and honest guarantees | Portable planner, checkpoint, evidence, and abstention concepts; no hosted dependency | A two-file contribution is prepared at local commit `d86b63a`. All 394 skills validate and the generated documentation build passes. Open only after a review slot is free, and keep the contribution vendor-neutral. |
-
-### Waiting for maintainer interest
-
-| Repository | Proposed contribution | Modules or portable equivalents | Gate |
-| --- | --- | --- | --- |
+| [MCPJam Inspector #3555](https://github.com/MCPJam/inspector/issues/3555) | Add a local stateful ambiguous-success fixture to the inspector | `workflow-guard-planner`, `workflow-checkpoint`, and `failure-sequence-forge` concepts | Wait for the requested maintainer placement decision, then contribute the smallest local fixture. It must need no hosted service, model, or credentials. |
+| [Kiln #112](https://github.com/codeofaxel/Kiln/issues/112) | Prevent duplicate queued physical prints after an accepted job response is lost | Stable opaque operation identity, durable uniqueness, and read-back | Wait for maintainer direction before changing the AGPL code. The proposed invariant is same key plus same payload returns the existing job id; same key plus conflicting payload fails. |
+| [mcp-use #2054](https://github.com/mcp-use/mcp-use/issues/2054) | Local multi-server example with a synthetic destination and recovery guard | Planner, checkpoint, reconciliation, and evidence | The project requires an issue before a feature. If accepted, implement the model-free local example first and mention the free remote adapter only as optional documentation. |
+| [lastmile-ai/mcp-agent #640](https://github.com/lastmile-ai/mcp-agent/issues/640) | Add a durable external-write recovery example to the existing resilience request | `workflow-guard-planner`, `workflow-checkpoint` | A concrete state sequence and offer to contribute a runnable example were added to the existing issue rather than opening a duplicate. Wait for the preferred examples location. |
+| [langchain-ai/langchain-mcp-adapters #170](https://github.com/langchain-ai/langchain-mcp-adapters/issues/170) | Keep reconnect retries from becoming blind mutating-tool retries | Planner/checkpoint concepts expressed as a `ToolCallInterceptor` example | The existing retry issue now has a deterministic local fixture proposal. Wait for maintainers to choose this repository or the LangChain docs repository before patching. |
+| [nshkrdotcom/codex_sdk #2](https://github.com/nshkrdotcom/codex_sdk/issues/2) | Make MCP `tools/call` retries conservative after ambiguous outcomes | Guard planning, stable identity, and uncertain-result handling | The current client defaults to three retries for any error. Offer a focused patch that makes retry opt-in or policy-gated and adds a commit-then-drop regression fixture. |
 | [microsoft/mcp-for-beginners #949](https://github.com/microsoft/mcp-for-beginners/issues/949) | Vendor-neutral lesson and ambiguous-success exercise | Teach the portable equivalents of `workflow-guard-planner` and `workflow-checkpoint`; optionally use `failure-sequence-forge` for the exercise | Do not open a PR until a maintainer confirms scope and placement. The lesson must run locally without Agent Enhancer. |
 | [microsoft/Agent-Framework-Samples #115](https://github.com/microsoft/Agent-Framework-Samples/issues/115) | Multi-agent handoff with two competing workers, one synthetic write, a lost response, reconciliation, and evidence | `workflow-guard-planner`, `workflow-checkpoint`; local `ReliabilityBackend` required, remote adapter optional | Do not open a PR until maintainers select language and placement. |
-| [x402-foundation/x402 #831](https://github.com/x402-foundation/x402/issues/831) | Neutral conformance fixtures and retry guidance for payment requirements that change during retry | Fixtures correspond to `x402-requirement-drift-diff`, `x402-quote-fingerprint-guard`, and `x402-error-rosetta-stone`; `failure-sequence-forge` can author the local rehearsal | Wait until one active integration slot is free and coordinate with maintainers to avoid overlapping fixes. Upstream tests must not require the hosted MCP. |
+| [x402-foundation/x402 #831](https://github.com/x402-foundation/x402/issues/831) | Neutral conformance fixtures and retry guidance for payment requirements that change during retry | Fixtures correspond to `x402-requirement-drift-diff`, `x402-quote-fingerprint-guard`, and `x402-error-rosetta-stone`; `failure-sequence-forge` can author the local rehearsal | Coordinate with maintainers to avoid overlapping fixes. Upstream tests must not require the hosted MCP or real settlement. |
 
-### Next candidates after an active slot opens
+### Additional framework and smaller-repository candidates
 
-Approach these one at a time, with an issue or discussion before implementation:
+Approach these only with the specific contribution below:
 
-1. **[lastmile-ai/mcp-agent](https://github.com/lastmile-ai/mcp-agent)**:
-   contribute a durable orchestrator-workers example showing the boundary
-   between framework durability and a possibly committed external MCP write.
-   Use a local adapter in tests and an optional Agent Enhancer adapter using
-   `workflow-guard-planner` and `workflow-checkpoint`. Its existing workflow,
-   Temporal, tracing, and token-accounting features also make it a strong host
-   for the paired benchmark.
-2. **[pydantic/pydantic-ai-harness](https://github.com/pydantic/pydantic-ai-harness)**:
-   request a reusable reliability capability only after benchmark evidence is
-   public. It should combine planning, checkpointing, honest evidence labels,
-   and correct abstention, with local tests and an optional remote adapter.
-3. **[langchain-ai/langchain-mcp-adapters](https://github.com/langchain-ai/langchain-mcp-adapters)**:
-   propose a multi-server recovery example rather than a product listing.
-   Demonstrate one domain MCP plus one reliability MCP, an uncertain mutation,
-   destination read-back, and no blind replay.
+1. **[pydantic/pydantic-ai-harness](https://github.com/pydantic/pydantic-ai-harness)**:
+   do not open a duplicate capability request. Its existing `StepPersistence`
+   already records `started`, `completed`, and `failed` tool effects,
+   idempotency keys, and `unknown_after_crash`, and explicitly makes external
+   deduplication the orchestrator's responsibility. First build a local
+   interoperability mapping from `ToolEffectRecord` to
+   `ReliabilityReportV1`; propose upstream work only if that exercise exposes
+   a missing public primitive.
+2. **[creatornader/atrib](https://github.com/creatornader/atrib)**:
+   build a local evidence adapter that consumes signed action records and
+   session checkpoints. Set `external_proof: true` only when tool-side or
+   counterparty evidence verifies the destination result; an agent signature
+   alone proves authorship, not external truth. Verify locally before asking
+   for an upstream framework adapter.
+3. **[anulum/synapse-channel](https://github.com/anulum/synapse-channel)**:
+   run a paired benchmark against its existing claims, checkpoints, receipts,
+   replay recovery, and coding-fleet benchmark. Publish a neutral mapping from
+   Synapse receipts to `ReliabilityReportV1`. Connect over its public protocol
+   and do not copy AGPL implementation code.
+4. **[EtanHey/cmuxlayer](https://github.com/EtanHey/cmuxlayer)**:
+   use as an independent comparison for ambiguous terminal writes and
+   multi-agent recovery. It already observes terminal state before replaying
+   uncertain launcher writes. The repository requires a contributor voucher,
+   so prepare the benchmark locally and approach it only after a maintainer
+   vouches for the contribution.
+5. **GitHub Agentic Workflows**:
+   compare our fixture vocabulary with its current Safe Outputs and MCP Scripts
+   retry specifications, which already distinguish non-idempotent operations
+   and require caller-controlled side-effect checks. Contribute only a
+   demonstrable missing conformance case, not another parallel specification.
 
 Do not target AutoGen for a new feature contribution; its repository directs
 new feature work to Microsoft Agent Framework. Do not open more generic
@@ -141,19 +161,19 @@ Exit gate: at least one repeated fixture shows a material reliability or
 net-cost benefit, and the one-time low-risk fixture demonstrates correct
 abstention with negligible overhead.
 
-### Phase B: finish the two active integrations
+### Phase B: maintain open integrations
 
-1. Wait for review on the rebased Agno contribution; respond promptly to
-   maintainer feedback.
-2. Wait for review on the tested OpenHands connector; respond promptly to
-   maintainer feedback.
+1. Wait for review on Agno, OpenHands, Goose, Awesome Copilot, and the
+   mcp-odoo draft; respond promptly to maintainer feedback.
+2. Keep Docker and both curated-list submissions current without posting
+   status-only comments.
 3. Rebase only when upstream drift requires it.
 4. Make one follow-up only after a meaningful update; never post periodic bump
    comments.
 5. If a project declines a hosted dependency, offer the local contract adapter
    and keep the remote adapter optional.
-6. Keep the prepared goose recipe and Awesome Copilot skill local while both
-   workflow slots are occupied.
+6. Treat the Goose security scan as an upstream workflow failure unless a
+   maintainer identifies a content problem.
 
 Exit gate: each PR is merged or has received a final maintainer decision.
 
@@ -181,17 +201,18 @@ the ambiguous-success invariant.
 Exit gate: maintainers accept the fixtures, guidance, or a narrower
 maintainer-requested change.
 
-### Phase E: framework expansion
+### Phase E: framework and small-project expansion
 
-1. Select `mcp-agent` first because it is MCP-native and already supports
-   durable workflows, tracing, and token accounting.
-2. Use the paired benchmark to show what framework durability solves and what
-   still requires destination reconciliation.
-3. Approach Pydantic AI Harness only after the contract and benefit evidence
-   are stable.
-4. Approach LangChain MCP Adapters only with a compact multi-server example
-   that fills a documented gap.
-5. Keep no more than two active workflow PRs across all frameworks.
+1. Follow the existing mcp-agent, mcp-use, LangChain, MCPJam, Kiln, and Codex
+   SDK discussions; implement only the maintainer-selected scope.
+2. Use paired fixtures to show what framework durability solves and what still
+   requires destination reconciliation.
+3. Test Pydantic AI Harness interoperability before proposing any new
+   capability.
+4. Build atrib, Synapse, and cmuxlayer integrations locally first, respecting
+   their Apache, AGPL, and contributor-vouch boundaries.
+5. Open each resulting contribution only when it is independently useful,
+   tested, and non-duplicative.
 
 Exit gate: two independent frameworks can run the same conformance fixture
 through the local contract adapter, and at least one can optionally use the
@@ -267,30 +288,28 @@ Do not describe automated smoke tests as beta-user usage.
 
 ## Immediate order of work
 
-1. Keep Agno PR #9178 and OpenHands PR #418 review-ready. Respond to requested
-   changes, but do not post status-only comments.
-2. Keep Docker PR #4537 and the two curated-list PRs current. For
+1. Keep Agno #9178, OpenHands #418, Goose #10780, Awesome Copilot #2474, and
+   mcp-odoo #61 review-ready. Respond to requested changes, but do not post
+   status-only comments.
+2. Keep Docker #4537 and the two curated-list PRs current. For
    awesome-mcp-servers #10889, wait for Glama support to supply or explicitly
    rule out an official Connector badge path.
-3. When one workflow slot opens, rebase and revalidate the prepared goose
-   recipe, create a fork, push local commit `94b343f44`, and open one focused
-   recipe PR.
-4. When the next review slot opens, rebase and revalidate the prepared
-   Awesome Copilot skill, create a fork, push local commit `d86b63a`, and open
-   one focused skill PR.
-5. Then replace persistent connection overhead with conditional activation while
+3. Wait for placement decisions on MCPJam #3555, Kiln #112, mcp-use #2054,
+   mcp-agent #640, LangChain #170, and Codex SDK #2. Prepare the smallest
+   requested patch when a maintainer responds.
+4. Replace persistent connection overhead with conditional activation while
    preserving the `0.6.5` validation's observed duplicate prevention. The
    `0.6.8` compact probe still exceeded both 5% overhead references, so do not
    freeze a third always-connected preregistration. The on-demand HTTP
    prototype now proves zero remote calls for local low-risk abstention. Freeze
    its agent selector and activation boundary next, then preregister the
    measured comparison.
-6. Publish Reliability Sidecar Contract v1 and its conformance fixtures.
-7. Wait for responses on Microsoft issues #949 and #115.
-8. After the prepared PR queue moves, coordinate x402 fixtures through issue
-   #831.
-9. Approach `lastmile-ai/mcp-agent` only after another slot opens.
-10. Promote only merged integrations and published evidence.
+5. Build local interoperability probes for Pydantic AI Harness and atrib, then
+   a paired benchmark adapter for Synapse. Do not open upstream requests until
+   those probes show a specific missing primitive.
+6. Wait for responses on Microsoft issues #949 and #115 and continue x402
+   coordination through #831.
+7. Promote only merged integrations and published evidence.
 
 ## Existing production deployment policy
 

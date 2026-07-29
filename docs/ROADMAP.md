@@ -239,33 +239,62 @@ promotion gates, and licensing boundary are maintained in
    [OpenHands Extensions PR #418](https://github.com/OpenHands/extensions/pull/418),
    which adds only the no-auth remote MCP definition and generated catalog
    index. Its generated catalog and 101 focused schema/catalog tests pass.
-3. Keep the validated [goose recipe](../examples/goose/) in this repository
-   and at prepared upstream commit `94b343f44`. Goose CLI `1.44.0` accepts it.
-   Open the focused recipe PR after one active workflow slot is free.
+3. Maintain the focused
+   [goose recipe PR #10780](https://github.com/aaif-goose/goose/pull/10780).
+   Goose CLI `1.44.0` accepts the recipe and the live MCP smoke passes. The
+   current failed `security-scan` check is an upstream workflow failure: its
+   `pull_request_target` job refuses its own fork checkout before scanning any
+   recipe content.
 4. Maintain the focused
    [Agno cookbook PR #9178](https://github.com/agno-agi/agno/pull/9178),
    which demonstrates failed-generation recovery, competing-worker fencing,
    lost-response marker read-back, and an honest duplicate-resistant
    guarantee with a synthetic destination. Its current rebased branch passes
    cookbook pattern, Ruff, mypy, and live deterministic execution checks.
-5. Keep the prepared vendor-neutral Awesome Copilot
-   `recover-ambiguous-external-writes` skill at local commit `d86b63a`. Its
-   skill validation and generated documentation build pass. Open it only after
-   a review slot is free.
-6. Wait for maintainer interest on the vendor-neutral
+5. Maintain the vendor-neutral
+   [Awesome Copilot skill PR #2474](https://github.com/github/awesome-copilot/pull/2474).
+   Its `recover-ambiguous-external-writes` skill has no hosted dependency; all
+   skill validation and generated documentation checks pass.
+6. Maintain the
+   [mcp-odoo draft PR #61](https://github.com/erpipe-org/mcp-odoo/pull/61),
+   which fences an approved external write after an uncertain result and
+   proves that a same-token replay cannot repeat the mutation. The focused
+   suite, Ruff, mypy, and the portable full suite pass; one unrelated Windows
+   symlink test is platform-limited.
+7. Continue the issue-first contributions already opened for
+   [MCPJam Inspector #3555](https://github.com/MCPJam/inspector/issues/3555),
+   [Kiln #112](https://github.com/codeofaxel/Kiln/issues/112), and
+   [mcp-use #2054](https://github.com/mcp-use/mcp-use/issues/2054). These
+   propose, respectively, a model-free ambiguous-success inspector fixture,
+   durable idempotency for queued physical prints, and a local multi-server
+   recovery example.
+8. Coordinate through existing discussions instead of opening duplicates:
+   [mcp-agent #640](https://github.com/lastmile-ai/mcp-agent/issues/640) now
+   contains the proposed checkpoint/reconciliation sequence, and
+   [LangChain MCP Adapters #170](https://github.com/langchain-ai/langchain-mcp-adapters/issues/170)
+   now distinguishes safe reconnect from unsafe mutation replay.
+9. Track the concrete unsafe default-retry gap in
+   [Codex SDK for Elixir #2](https://github.com/nshkrdotcom/codex_sdk/issues/2).
+   Its MCP client currently retries every failed `tools/call` three times by
+   default, including outcomes where a mutating write may already have
+   committed.
+10. Wait for maintainer interest on the vendor-neutral
    [Microsoft MCP for Beginners proposal #949](https://github.com/microsoft/mcp-for-beginners/issues/949)
    and
    [Agent Framework Samples proposal #115](https://github.com/microsoft/Agent-Framework-Samples/issues/115);
    do not open either implementation PR first.
-7. Coordinate neutral x402 retry fixtures through
+11. Coordinate neutral x402 retry fixtures through
    [issue #831](https://github.com/x402-foundation/x402/issues/831).
    Challenge drift is reproducible without wallets or settlement, but
    overlapping fixes already exist, so wait for maintainer direction instead
    of opening a duplicate PR.
 
-Keep at most two new integration PRs active at once. Every upstream artifact
-must have a runnable local equivalent, a source-tagged endpoint, exact test
-instructions, and a maintainer-appropriate contribution path.
+There is no arbitrary numerical cap on active contributions. Open a new
+upstream artifact only when it is independently useful, tested, non-duplicative,
+and follows that repository's contribution path. Every code or workflow PR
+must have a runnable local equivalent, exact test instructions, and no
+proprietary backend implementation. Do not turn this into a broad listing or
+backlink campaign.
 
 ## Product boundary
 
