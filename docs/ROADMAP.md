@@ -546,6 +546,61 @@ Exit criteria:
 - Checkpoints and receipts are not marketed as external truth or durable audit
   infrastructure.
 
+## Phase 2.5 — MCP 2026-07-28 dual-era migration
+
+Status: planned for backend `0.7.0` and public package `v1.7.0`.
+
+The reliability-sidecar pattern is applicable to MCP `2026-07-28`, but the
+hosted Agent Enhancer server does not yet claim support or conformance.
+Current immutable compatibility evidence covers MCP `2025-03-26`, backend
+`0.6.9`, and public package `v1.6.0`. Do not rewrite those historical claims.
+Reserve `v1.7.0` for the dual-era protocol release; publish the completed
+skills-first evidence adapter as a `v1.6.x` patch if it must be released
+earlier. Use the
+[official protocol change summary](https://modelcontextprotocol.io/specification/2026-07-28/changelog)
+as the normative migration checklist.
+
+The migration must preserve the current legacy endpoints while adding a
+stateless modern request path:
+
+1. Preserve the legacy initialization/session behavior and its immutable
+   evidence for existing clients.
+2. Accept and validate modern per-request `_meta` protocol version, client
+   capabilities, and client identity, and return server identity in result
+   metadata.
+3. Implement mandatory `server/discover` with supported versions,
+   capabilities, and server identity.
+4. Return `UnsupportedProtocolVersionError` with code `-32022` for unsupported
+   modern versions.
+5. Do not require initialization or protocol sessions for modern requests.
+6. Add required `resultType` to modern results and `ttlMs` plus `cacheScope`
+   to cacheable list/read results.
+7. Validate legacy `MCP-Protocol-Version` where it remains applicable and
+   modern `Mcp-Method` and `Mcp-Name` request headers. Reject header and
+   request-metadata mismatches with the protocol-defined error.
+8. Keep `tools/list` deterministic across all supported eras and profiles.
+9. Exercise all 37 direct tools and the compact, core, and full progressive
+   profiles through both modern and legacy paths.
+10. Run the official
+    [MCP conformance framework](https://github.com/modelcontextprotocol/conformance)
+    against the dated `2026-07-28` server surface, including its wire-schema
+    checks.
+11. Prove existing legacy clients continue to initialize, discover, and
+    invoke after the modern path is enabled.
+12. Publish `MCP_2026_07_28_ACCEPTANCE.md`, update `COMPATIBILITY.md`, retain
+    the complete conformance output and hashes, and issue a new immutable MCP
+    Registry release.
+
+The acceptance release may state that Agent Enhancer Utilities `v1.7.0`
+supports MCP `2026-07-28` only after all modern and legacy gates pass. Before
+that point, documentation may describe pattern applicability but must not
+claim hosted-server support.
+
+The Microsoft MCP for Beginners lesson remains unchanged during review. Its
+optional community reference already says it is not evidence of Agent
+Enhancer protocol compatibility. After the acceptance release exists, propose
+only a small follow-up that links the new immutable evidence.
+
 ## Phase 3 — Build and validate integration recipe packs
 
 Priority: now — validate the released Sidecar with five external design

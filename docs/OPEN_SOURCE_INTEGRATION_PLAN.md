@@ -101,7 +101,7 @@ should select the smallest bundle that solves the demonstrated problem.
 | [mcp-use #2054](https://github.com/mcp-use/mcp-use/issues/2054) | Local multi-server example with a synthetic destination and recovery guard | Planner, checkpoint, reconciliation, and evidence | The issue is labeled `duplicate`. Find the canonical issue and coordinate there; do not open a PR from this duplicate. |
 | [lastmile-ai/mcp-agent #640](https://github.com/lastmile-ai/mcp-agent/issues/640) | Add a durable external-write recovery example to the existing resilience request | `workflow-guard-planner`, `workflow-checkpoint` | The issue closed without a maintainer-selected examples location. Retain the local concept and do not open a PR unless the project reopens or redirects it. |
 | [langchain-ai/langchain-mcp-adapters #170](https://github.com/langchain-ai/langchain-mcp-adapters/issues/170) | Keep reconnect retries from becoming blind mutating-tool retries | Planner/checkpoint concepts expressed as a `ToolCallInterceptor` example | The existing retry issue contains the deterministic fixture proposal, but another contributor already volunteered. Do not duplicate their work; monitor for an explicit request. |
-| [microsoft/mcp-for-beginners #949](https://github.com/microsoft/mcp-for-beginners/issues/949) | Vendor-neutral lesson and ambiguous-success exercise | Teach the portable equivalents of `workflow-guard-planner` and `workflow-checkpoint`; optionally use `failure-sequence-forge` for the exercise | Do not open a PR until a maintainer confirms scope and placement. The lesson must run locally without Agent Enhancer. |
+| [microsoft/mcp-for-beginners #959](https://github.com/microsoft/mcp-for-beginners/pull/959) | Vendor-neutral lesson and ambiguous-success exercise | Teaches the portable equivalents of `workflow-guard-planner` and `workflow-checkpoint` through a local SQLite exercise | The PR is open, mergeable, review-ready, and has a successful Microsoft CLA check. Leave it unchanged during review. Its optional Agent Enhancer reference explicitly does not claim hosted MCP `2026-07-28` compatibility. After backend `0.7.0` and package `v1.7.0` pass dual-era conformance, propose only a small evidence-link follow-up. |
 | [microsoft/Agent-Framework-Samples #115](https://github.com/microsoft/Agent-Framework-Samples/issues/115) | Multi-agent handoff with two competing workers, one synthetic write, a lost response, reconciliation, and evidence | `workflow-guard-planner`, `workflow-checkpoint`; local `ReliabilityBackend` required, remote adapter optional | Do not open a PR until maintainers select language and placement. |
 | [x402-foundation/x402 #831](https://github.com/x402-foundation/x402/issues/831) | Neutral conformance fixtures and retry guidance for payment requirements that change during retry | Fixtures correspond to `x402-requirement-drift-diff`, `x402-quote-fingerprint-guard`, and `x402-error-rosetta-stone`; `failure-sequence-forge` can author the local rehearsal | Coordinate with maintainers to avoid overlapping fixes. Upstream tests must not require the hosted MCP or real settlement. |
 
@@ -182,7 +182,8 @@ Exit gate: each PR is merged or has received a final maintainer decision.
 
 ### Phase C: educational adoption
 
-1. Wait for responses on the two Microsoft proposals.
+1. Wait for review of Microsoft MCP for Beginners PR #959 and for a response
+   on Agent Framework Samples issue #115.
 2. If accepted, implement the vendor-neutral local exercise first.
 3. Mention Agent Enhancer only as an optional free reference implementation.
 4. Publish the same runnable fixture in this repository if the upstream
@@ -309,8 +310,9 @@ Do not describe automated smoke tests as beta-user usage.
    those probes show a specific missing primitive. For each probe, require a
    runnable local fixture, a vendor-neutral output mapping, explicit external
    proof semantics, and a short statement of what the target already solves.
-5. Wait for responses on Microsoft issues #949 and #115 and continue x402
-   coordination through #831.
+5. Wait for review of Microsoft PR #959 and a response on issue #115, leave
+   the lesson unchanged until MCP `2026-07-28` acceptance evidence exists,
+   and continue x402 coordination through #831.
 6. Promote only merged integrations and published evidence.
 
 The local probes should answer narrow questions before any new contribution:
