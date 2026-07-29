@@ -238,22 +238,26 @@ promotion gates, and licensing boundary are maintained in
 2. Maintain the focused
    [OpenHands Extensions PR #418](https://github.com/OpenHands/extensions/pull/418),
    which adds only the no-auth remote MCP definition and generated catalog
-   index. Its schema/catalog tests and live initialization pass; fork workflows
-   still require maintainer approval.
-3. Keep the validated [Goose recipe](../examples/goose/) in this repository,
-   but do not submit it while Goose maintainers are pausing new external
-   recipes and MCP servers.
+   index. Its generated catalog and 101 focused schema/catalog tests pass.
+3. Keep the validated [goose recipe](../examples/goose/) in this repository
+   and at prepared upstream commit `94b343f44`. Goose CLI `1.44.0` accepts it.
+   Open the focused recipe PR after one active workflow slot is free.
 4. Maintain the focused
    [Agno cookbook PR #9178](https://github.com/agno-agi/agno/pull/9178),
    which demonstrates failed-generation recovery, competing-worker fencing,
    lost-response marker read-back, and an honest duplicate-resistant
-   guarantee with a synthetic destination.
-5. Wait for maintainer interest on the vendor-neutral
+   guarantee with a synthetic destination. Its current rebased branch passes
+   cookbook pattern, Ruff, mypy, and live deterministic execution checks.
+5. Keep the prepared vendor-neutral Awesome Copilot
+   `recover-ambiguous-external-writes` skill at local commit `d86b63a`. Its
+   skill validation and generated documentation build pass. Open it only after
+   a review slot is free.
+6. Wait for maintainer interest on the vendor-neutral
    [Microsoft MCP for Beginners proposal #949](https://github.com/microsoft/mcp-for-beginners/issues/949)
    and
    [Agent Framework Samples proposal #115](https://github.com/microsoft/Agent-Framework-Samples/issues/115);
    do not open either implementation PR first.
-6. Coordinate neutral x402 retry fixtures through
+7. Coordinate neutral x402 retry fixtures through
    [issue #831](https://github.com/x402-foundation/x402/issues/831).
    Challenge drift is reproducible without wallets or settlement, but
    overlapping fixes already exist, so wait for maintainer direction instead

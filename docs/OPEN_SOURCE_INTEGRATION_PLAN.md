@@ -77,18 +77,19 @@ should select the smallest bundle that solves the demonstrated problem.
 
 | Repository | Contribution | Agent Enhancer scope | Current action |
 | --- | --- | --- | --- |
-| [docker/mcp-registry #4537](https://github.com/docker/mcp-registry/pull/4537) | Remote MCP registry definition | Connects to all 24 modules through the six progressive MCP tools | Keep the listing, icon, endpoint, version, and links current. Comment only after a material change or maintainer request. |
-| [OpenHands/extensions #418](https://github.com/OpenHands/extensions/pull/418) | No-auth remote MCP catalog connector | Connects OpenHands to all 24 modules; no backend code is copied | This is active integration slot 1. Monitor CI and review. Keep the patch metadata-only. |
-| [agno-agi/agno #9178](https://github.com/agno-agi/agno/pull/9178) | Deterministic recovery cookbook | Uses `workflow-guard-planner` and `workflow-checkpoint` | This is active integration slot 2. The body now closes issue #9179 and the triage check passes; leave the stale maintainer-owned label untouched and wait for review. |
-| [punkpeye/awesome-mcp-servers #10889](https://github.com/punkpeye/awesome-mcp-servers/pull/10889) | Curated server listing | Lists the complete service; description covers all bundles | Wait for a maintainer answer about the verified Glama Connector score and badge path. Do not send another comment without new evidence. |
-| [punkpeye/awesome-mcp-devtools #242](https://github.com/punkpeye/awesome-mcp-devtools/pull/242) | Focused testing-tool listing | Emphasizes Failure rehearsal, MCP contracts, and x402 diagnostics; the endpoint still exposes all 24 modules | Monitor only. Do not duplicate this entry in more generic awesome lists. |
+| [docker/mcp-registry #4537](https://github.com/docker/mcp-registry/pull/4537) | Remote MCP registry definition | Connects to all 24 modules through the six progressive MCP tools | Current branch is mergeable. The full Go suite, entry validator, remote build path, catalog generation, live initialization, and 24-module discovery passed on 2026-07-28. Wait for review and comment only after a material change or maintainer request. |
+| [OpenHands/extensions #418](https://github.com/OpenHands/extensions/pull/418) | No-auth remote MCP catalog connector | Connects OpenHands to all 24 modules; no backend code is copied | This is active integration slot 1. The generated catalog is in sync and 101 focused schema/catalog tests pass. Keep the patch metadata-only and wait for review. |
+| [agno-agi/agno #9178](https://github.com/agno-agi/agno/pull/9178) | Deterministic recovery cookbook | Uses `workflow-guard-planner` and `workflow-checkpoint` | This is active integration slot 2. Rebased onto current `main`; cookbook pattern, Ruff, mypy, and the live deterministic example pass. The body closes issue #9179. Leave the stale maintainer-owned `missing-issue-link` label untouched and wait for review. |
+| [punkpeye/awesome-mcp-servers #10889](https://github.com/punkpeye/awesome-mcp-servers/pull/10889) | Curated server listing | Lists the complete service; description covers all bundles | Rebased onto current `main`; submission checks pass. Ownership and score are visible on the Glama Connector, but the workflow requires a server-style badge path that returns 404 for connectors. Wait for Glama support's emailed answer before changing or commenting again. |
+| [punkpeye/awesome-mcp-devtools #242](https://github.com/punkpeye/awesome-mcp-devtools/pull/242) | Focused testing-tool listing | Emphasizes Failure rehearsal, MCP contracts, and x402 diagnostics; the endpoint still exposes all 24 modules | Current branch is clean and mergeable. Monitor only. Do not duplicate this entry in more generic awesome lists. |
 | Official MCP Registry | Published server metadata | Connects clients to all 24 modules | Continue version publication and endpoint smoke tests for each backend release. |
 
 ### Prepared but intentionally not submitted
 
 | Repository | Proposed contribution | Modules | Gate |
 | --- | --- | --- | --- |
-| [aaif-goose/goose](https://github.com/aaif-goose/goose) | Reliability-sidecar recipe in which Goose asks for the task, plans the guard, checkpoints the attempt, executes through another MCP, and reconciles uncertainty | `workflow-guard-planner`, `workflow-checkpoint` | Keep the tested recipe in `examples/goose/` while external recipes and MCP additions are paused. Submit only when maintainers reopen that path. |
+| [aaif-goose/goose](https://github.com/aaif-goose/goose) | Reliability-sidecar recipe in which goose asks for the task, plans the guard, checkpoints the attempt, executes through another MCP, and reconciles uncertainty | `workflow-guard-planner`, `workflow-checkpoint` | A one-file contribution is prepared at local commit `94b343f44`. Goose CLI `1.44.0` accepts the recipe and the live MCP smoke passes. The current recipe contribution guide accepts this path; open the PR only after one active workflow slot is free. |
+| [github/awesome-copilot](https://github.com/github/awesome-copilot) | Vendor-neutral `recover-ambiguous-external-writes` skill teaching durable operation identity, uncertain-result reconciliation, safe retry gates, and honest guarantees | Portable planner, checkpoint, evidence, and abstention concepts; no hosted dependency | A two-file contribution is prepared at local commit `d86b63a`. All 394 skills validate and the generated documentation build passes. Open only after a review slot is free, and keep the contribution vendor-neutral. |
 
 ### Waiting for maintainer interest
 
@@ -142,13 +143,17 @@ abstention with negligible overhead.
 
 ### Phase B: finish the two active integrations
 
-1. Respond to Agno review; the issue-link requirement is complete.
-2. Monitor OpenHands catalog CI and respond to review.
+1. Wait for review on the rebased Agno contribution; respond promptly to
+   maintainer feedback.
+2. Wait for review on the tested OpenHands connector; respond promptly to
+   maintainer feedback.
 3. Rebase only when upstream drift requires it.
-4. Make one follow-up after a meaningful update; never post periodic bump
+4. Make one follow-up only after a meaningful update; never post periodic bump
    comments.
 5. If a project declines a hosted dependency, offer the local contract adapter
    and keep the remote adapter optional.
+6. Keep the prepared goose recipe and Awesome Copilot skill local while both
+   workflow slots are occupied.
 
 Exit gate: each PR is merged or has received a final maintainer decision.
 
@@ -262,23 +267,30 @@ Do not describe automated smoke tests as beta-user usage.
 
 ## Immediate order of work
 
-1. Replace persistent connection overhead with conditional activation while
+1. Keep Agno PR #9178 and OpenHands PR #418 review-ready. Respond to requested
+   changes, but do not post status-only comments.
+2. Keep Docker PR #4537 and the two curated-list PRs current. For
+   awesome-mcp-servers #10889, wait for Glama support to supply or explicitly
+   rule out an official Connector badge path.
+3. When one workflow slot opens, rebase and revalidate the prepared goose
+   recipe, create a fork, push local commit `94b343f44`, and open one focused
+   recipe PR.
+4. When the next review slot opens, rebase and revalidate the prepared
+   Awesome Copilot skill, create a fork, push local commit `d86b63a`, and open
+   one focused skill PR.
+5. Then replace persistent connection overhead with conditional activation while
    preserving the `0.6.5` validation's observed duplicate prevention. The
    `0.6.8` compact probe still exceeded both 5% overhead references, so do not
    freeze a third always-connected preregistration. The on-demand HTTP
    prototype now proves zero remote calls for local low-risk abstention. Freeze
    its agent selector and activation boundary next, then preregister the
    measured comparison.
-2. Respond to review on Agno PR #9178; `Closes #9179` is present.
-3. Monitor and maintain OpenHands PR #418.
-4. Monitor the Docker and two curated-list submissions without opening more
-   listing PRs.
-5. Publish Reliability Sidecar Contract v1 and its conformance fixtures.
-6. Wait for responses on Microsoft issues #949 and #115.
-7. When one integration slot opens, coordinate x402 fixtures through issue
+6. Publish Reliability Sidecar Contract v1 and its conformance fixtures.
+7. Wait for responses on Microsoft issues #949 and #115.
+8. After the prepared PR queue moves, coordinate x402 fixtures through issue
    #831.
-8. After the next slot opens, approach `lastmile-ai/mcp-agent`.
-9. Promote only merged integrations and published evidence.
+9. Approach `lastmile-ai/mcp-agent` only after another slot opens.
+10. Promote only merged integrations and published evidence.
 
 ## Existing production deployment policy
 
