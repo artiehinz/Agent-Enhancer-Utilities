@@ -86,6 +86,14 @@ class OnDemandTests(unittest.TestCase):
         self.assertEqual(client.calls, 1)
         self.assertEqual(client.requests[0][0], "workflow-guard-planner")
 
+    def test_hosted_planner_request_accepts_contract_version_one(self) -> None:
+        validated = MODULE.validate_tool_request(
+            "workflow-guard-planner",
+            HIGH_RISK,
+            None,
+        )
+        self.assertEqual(validated["contract_version"], "1")
+
     def test_planner_drift_fails_closed(self) -> None:
         class DriftedClient(FakeClient):
             def invoke(self, slug, tool_input, idempotency_key=None):

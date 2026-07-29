@@ -317,7 +317,7 @@ def collect_findings(
     if contract["destination_search"] == "eventual":
         residual.append("destination_search_is_eventually_consistent")
     if any(stage["action"] == "acquire_lock" for stage in stages):
-        residual.append("lock_expires_without_release")
+        residual.append("lock_has_bounded_ttl")
     if any(stage["action"] == "mark_seen_after_verification" for stage in stages):
         residual.append("seen_stamp_is_advisory")
     if operation == "update" and not contract["conditional_write"]:

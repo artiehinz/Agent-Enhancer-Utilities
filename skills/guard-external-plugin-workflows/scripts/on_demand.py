@@ -233,7 +233,9 @@ def _is_opaque(value: str) -> bool:
 
 
 def _validate_control_string(field: str, value: str) -> None:
-    if field == "failure_code":
+    if field == "contract_version":
+        valid = value == "1"
+    elif field == "failure_code":
         valid = FAILURE_CODE_PATTERN.fullmatch(value)
     else:
         valid = CONTROL_TOKEN_PATTERN.fullmatch(value)

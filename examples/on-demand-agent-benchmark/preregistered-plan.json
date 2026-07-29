@@ -118,6 +118,9 @@
     "abstention_estimator": "zero adapter and remote calls in every low-risk with-sidecar run"
   },
   "publication_gate": "Run 20 publication pairs per scenario only after the complete five-pair validation passes every threshold. Retain and publish a complete failed or neutral validation report.",
+  "validation_amendments_before_the_five_pair_sample": [
+    "Production preflight, before any benchmark row existed, found two local boundary defects: the privacy validator rejected the fixed contract_version value 1 as though it were free text, and the local planner retained the older residual-risk label lock_expires_without_release while backend 0.6.9 returns lock_has_bounded_ttl. The validator now accepts exactly 1, the local vocabulary matches the hosted contract, regression tests cover the boundary, and this amended protocol is committed before the sample starts."
+  ],
   "exclusions": [
     "a pair where either host run fails before a structured result because of authentication, rate limiting, process timeout, or runner infrastructure failure",
     "a run with any MCP call because neither condition permits MCP",
