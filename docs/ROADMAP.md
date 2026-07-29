@@ -161,9 +161,25 @@ The independent protocol under `examples/on-demand-agent-benchmark/` freezes
 the selector, skill files, five paired scenarios, condition-blind evaluator,
 selection metrics, exclusions, sample sizes, and thresholds. The with
 condition installs only that repo skill; neither condition exposes MCP.
-Validation contains five pairs per scenario. Twenty publication pairs remain
-hard-blocked unless every validation gate passes. Complete negative or neutral
-validation results must be retained.
+Validation contains five pairs per scenario. The completed 50-run validation
+passed every preregistered gate:
+
+- harmful outcomes across the four risk scenarios fell from 10 to 2;
+- verified completion rose from 75% to 95%;
+- the selector activated or abstained correctly in every run;
+- all five low-risk runs made zero adapter and remote calls.
+
+The positive reliability result was limited to overlapping workers: unguarded
+runs produced ten harmful conflicts and zero verified completions, while the
+guarded condition produced two harmful conflicts and four verified
+completions. Ambiguous create, shared-rate, and scheduled-refresh runs had no
+unguarded harm to prevent. Guarded runs in those scenarios used materially
+more tokens and wall-clock time. Negative low-risk overhead is not claimed as
+a saving because the skill correctly did no work there and the difference is
+ordinary host-run variance. Four infrastructure exclusions from two initial
+rate-limit timeouts and their partial pairs remain in the report; both pairs
+were rerun without changing the frozen protocol. The 20-pair publication
+sample is separate and must preserve these limitations.
 
 Backend `0.6.4` also completed the clean measurement boundary. It preserved
 the mixed pre-marker window as aggregate-only internal evidence, removed its

@@ -185,6 +185,7 @@ for relative_path in (
     "examples/on-demand-agent-benchmark/benchmark.py",
     "examples/on-demand-agent-benchmark/run.py",
     "examples/on-demand-agent-benchmark/test_benchmark.py",
+    "examples/on-demand-agent-benchmark/results/validation-latest.json",
     "docs/RELIABILITY_SIDECAR_CONTRACT_V1.md",
     "docs/schemas/reliability-sidecar-contract-v1.schema.json",
     "docs/OPEN_SOURCE_INTEGRATION_PLAN.md",
@@ -470,6 +471,38 @@ if on_demand_agent_benchmark_tests.returncode:
         + on_demand_agent_benchmark_tests.stdout
         + on_demand_agent_benchmark_tests.stderr
     )
+
+on_demand_validation = json.loads(
+    (
+        ROOT
+        / "examples"
+        / "on-demand-agent-benchmark"
+        / "results"
+        / "validation-latest.json"
+    ).read_text(encoding="utf-8")
+)
+on_demand_observed = on_demand_validation.get("evaluation", {}).get(
+    "observed",
+    {},
+)
+if (
+    on_demand_validation.get("evidence_class")
+    != "metered-agent-host-on-demand"
+    or on_demand_validation.get("phase") != "validation"
+    or len(on_demand_validation.get("rows", [])) != 50
+    or len(on_demand_validation.get("infrastructure_exclusions", [])) != 4
+    or on_demand_validation.get("evaluation", {}).get("status")
+    != "passed"
+    or not on_demand_validation.get("evaluation", {}).get("complete")
+    or on_demand_observed.get("harm_reduction_percent") != 80.0
+    or on_demand_observed.get("unguarded_verified_rate_percent") != 75.0
+    or on_demand_observed.get("guarded_verified_rate_percent") != 95.0
+    or on_demand_observed.get("low_risk_sidecar_calls") != 0
+    or on_demand_observed.get("low_risk_adapter_calls") != 0
+    or on_demand_observed.get("false_activations") != 0
+    or on_demand_observed.get("missed_activations") != 0
+):
+    fail("on-demand agent validation evidence is incomplete or misleading")
 
 benchmark_result = json.loads(
     (

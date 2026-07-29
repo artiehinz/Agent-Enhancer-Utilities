@@ -159,7 +159,14 @@ goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
   freezes five paired Codex scenarios, installs only one repo-scoped skill in
   the with condition, rejects every MCP call, measures activation and
   abstention, and blocks publication unless the complete five-pair validation
-  passes every fixed gate.
+  passes every fixed gate. The frozen 50-run validation passed: harmful events
+  fell from 10 to 2 and verified completion across the four risk scenarios
+  rose from 75% to 95%. That benefit came entirely from overlapping workers.
+  Ambiguous create, shared-rate, and scheduled-refresh controls already
+  completed without harm, while the guarded runs used substantially more
+  tokens and time. The low-risk skill correctly abstained in all five runs
+  with zero adapter or network calls. Treat this as evidence for a narrow
+  concurrency guard, not a general speed or cost claim.
 
 Remote MCP examples search, describe, and invoke through the progressive
 facade. The on-demand prototype uses the public generated HTTP contract only
