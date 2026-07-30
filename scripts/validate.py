@@ -39,6 +39,40 @@ def fail(message: str) -> None:
 
 
 readme = (ROOT / "README.md").read_text(encoding="utf-8")
+effectiveness_graph_path = ROOT / "assets" / "effectiveness-results.svg"
+if not effectiveness_graph_path.is_file():
+    fail("README evidence: missing assets/effectiveness-results.svg")
+if "./assets/effectiveness-results.svg" not in readme:
+    fail("README evidence: effectiveness graph is not embedded")
+
+publication = json.loads(
+    (
+        ROOT
+        / "examples"
+        / "on-demand-agent-benchmark"
+        / "results"
+        / "publication-latest.json"
+    ).read_text(encoding="utf-8")
+)
+observed = publication["evaluation"]["observed"]
+expected_pairs = publication["evaluation"]["expected_pairs_per_scenario"]
+effectiveness_graph = effectiveness_graph_path.read_text(encoding="utf-8")
+for claim in (
+    (
+        "harmful events fell from "
+        f"{observed['unguarded_harmful_events']} without Agent Enhancer to "
+        f"{observed['guarded_harmful_events']} with it"
+    ),
+    (
+        "increased from "
+        f"{observed['unguarded_verified_rate_percent']:g} percent to "
+        f"{observed['guarded_verified_rate_percent']:g} percent"
+    ),
+    f"All {expected_pairs} low-risk runs correctly abstained",
+):
+    if claim not in effectiveness_graph:
+        fail(f"README evidence: graph claim drifted: {claim}")
+
 for name in SKILL_NAMES:
     legacy_folder = ROOT / name
     if legacy_folder.is_dir() and any(
@@ -249,12 +283,14 @@ for required_fragment in (
     "requirement: user_prompt",
     "type: streamable_http",
     'uri: "https://liberated.site/mcp?source=goose-recipe&profile=core"',
-    "`lab.search_tools`",
-    "`lab.describe_tool`",
-    "`lab.invoke_tool`",
+    "`agent-enhancer__lab.search_tools`",
+    "`agent-enhancer__lab.describe_tool`",
+    "`agent-enhancer__lab.invoke_tool`",
     "`workflow-guard-planner`",
     "`workflow-checkpoint`",
     "`external_proof: false`",
+    "supply it separately through goose CLI or launch metadata",
+    "Never treat Agent Enhancer as the missing domain tool.",
 ):
     if required_fragment not in goose_recipe:
         fail(f"goose recipe: missing {required_fragment}")

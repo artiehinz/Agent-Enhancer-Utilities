@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="360" viewBox="0 0 960 360" role="img" aria-labelledby="title description">
+  <title id="title">Agent Enhancer effectiveness results</title>
+  <desc id="description">Across 200 preregistered Codex runs, harmful events fell from 26 without Agent Enhancer to 2 with it, and verified completion increased from 82.5 percent to 98.75 percent. All 20 low-risk runs correctly abstained.</desc>
+  <defs>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#13231e"/>
+      <stop offset="1" stop-color="#0d1a17"/>
+    </linearGradient>
+    <linearGradient id="guarded" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#48c78e"/>
+      <stop offset="1" stop-color="#7ef0b8"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="1" y="1" width="958" height="358" rx="22" fill="#07110f" stroke="#28443a" stroke-width="2"/>
+  <text x="40" y="48" fill="#7ef0b8" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700" letter-spacing="2">EVIDENCE · 200 PREREGISTERED CODEX RUNS</text>
+  <text x="40" y="82" fill="#eef8f2" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="25" font-weight="700">Measured reliability gains in controlled workflows</text>
+
+  <g transform="translate(40 112)">
+    <rect width="420" height="170" rx="14" fill="url(#panel)" stroke="#28443a"/>
+    <text x="22" y="31" fill="#eef8f2" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="700">Harmful events</text>
+    <text x="398" y="31" fill="#7ef0b8" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">92.3% FEWER</text>
+
+    <text x="22" y="64" fill="#a8beb4" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13">Without</text>
+    <rect x="98" y="51" width="270" height="18" rx="9" fill="#d4a86b"/>
+    <text x="386" y="65" fill="#eef8f2" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700">26</text>
+
+    <text x="22" y="101" fill="#a8beb4" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13">With</text>
+    <rect x="98" y="88" width="21" height="18" rx="9" fill="url(#guarded)"/>
+    <text x="137" y="102" fill="#eef8f2" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700">2</text>
+
+    <text x="22" y="143" fill="#a8beb4" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12">Lower is better · four risk scenarios</text>
+  </g>
+
+  <g transform="translate(500 112)">
+    <rect width="420" height="170" rx="14" fill="url(#panel)" stroke="#28443a"/>
+    <text x="22" y="31" fill="#eef8f2" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="700">Verified completion</text>
+    <text x="398" y="31" fill="#7ef0b8" text-anchor="end" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">+16.25 POINTS</text>
+
+    <text x="22" y="64" fill="#a8beb4" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13">Without</text>
+    <rect x="98" y="51" width="223" height="18" rx="9" fill="#d4a86b"/>
+    <text x="338" y="65" fill="#eef8f2" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700">82.5%</text>
+
+    <text x="22" y="101" fill="#a8beb4" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="13">With</text>
+    <rect x="98" y="88" width="267" height="18" rx="9" fill="url(#guarded)"/>
+    <text x="382" y="102" fill="#eef8f2" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="14" font-weight="700">98.75%</text>
+
+    <text x="22" y="143" fill="#a8beb4" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12">Higher is better · four risk scenarios</text>
+  </g>
+
+  <rect x="40" y="306" width="458" height="30" rx="15" fill="#113d2b"/>
+  <text x="269" y="326" fill="#7ef0b8" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="13" font-weight="700">20/20 LOW-RISK RUNS ABSTAINED · 0 REMOTE CALLS</text>
+  <text x="920" y="326" fill="#a8beb4" text-anchor="end" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="12">Controlled scenarios · guarded work used more tokens and time</text>
+</svg>

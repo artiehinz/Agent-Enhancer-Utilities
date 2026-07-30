@@ -30,6 +30,16 @@ domain tools you already use. Connect it to an existing workflow and call the
 smallest relevant utility only when coordination or failure handling will
 materially help.
 
+<p align="center">
+  <a href="./docs/EFFECTIVENESS.md">
+    <img src="./assets/effectiveness-results.svg" width="900" alt="Across 200 preregistered Codex runs, harmful events fell from 26 to 2 and verified completion rose from 82.5% to 98.75% with Agent Enhancer. All 20 low-risk runs correctly abstained.">
+  </a>
+</p>
+
+<p align="center">
+  <sub>Controlled scenarios, not a universal claim. Guarded risk-bearing runs used more tokens and time. <a href="./docs/EFFECTIVENESS.md">Methodology, raw results, and limitations.</a></sub>
+</p>
+
 ## Skills
 
 | Skill | Use it for |
@@ -185,7 +195,7 @@ after local selection. No example copies private backend code or schemas.
 These listings point to the live service. The implementation is not published
 in this skills repository.
 
-## Trust and effectiveness
+## Trust
 
 The service publishes:
 
