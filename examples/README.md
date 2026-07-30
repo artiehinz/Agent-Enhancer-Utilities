@@ -8,7 +8,7 @@ the direct on-demand HTTP contract:
 - [`multi-agent-checkpoint`](./multi-agent-checkpoint/) races two workers for
   one expiring checkpoint and verifies that only the owner crosses the
   simulated action boundary.
-- [`goose`](./goose/) is a validated Goose recipe that adds the same
+- [`goose`](./goose/) is a validated goose recipe that adds the same
   reliability-sidecar lifecycle to an authorized workspace or domain task.
 - [`sidecar-benchmark`](./sidecar-benchmark/) is a pre-registered,
   deterministic with/without benchmark with sanitized run-level evidence.
@@ -26,8 +26,8 @@ the direct on-demand HTTP contract:
 
 The Python examples discover and describe a module before invoking it. They
 fail closed if the expected free module is unavailable or its result no longer
-matches the documented safety contract. The Goose recipe uses the same
-progressive discovery tools and keeps the destination action in Goose.
+matches the documented safety contract. The goose recipe uses the same
+progressive discovery tools and keeps the destination action in goose.
 The deterministic benchmark is intentionally model-free and makes no
 token-saving or agent-quality claim. The persistent-MCP metered tier preserves
 its failed validations. The separate skills-first metered tier publishes its

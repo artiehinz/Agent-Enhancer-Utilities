@@ -298,14 +298,22 @@ promotion gates, and licensing boundary are maintained in
    index. Its generated catalog and 101 focused schema/catalog tests pass.
 3. Maintain the focused
    [goose recipe PR #10780](https://github.com/aaif-goose/goose/pull/10780).
-   Goose CLI `1.44.0` accepts the recipe and the live MCP smoke passes. The
-   recipe now uses Goose's owner-qualified `agent-enhancer__lab.*` tool names;
-   the related review thread is resolved. The remaining failed
+   goose CLI `1.44.0` accepted the prior schema-identical recipe and the live
+   MCP smoke passes. The recipe now uses goose's owner-qualified
+   `agent-enhancer__lab.*` tool names and requires any separate domain
+   extension through CLI or launch metadata before an external action. All
+   three content review threads are resolved. The remaining failed
    `security-scan` check is an upstream workflow failure: its
    `pull_request_target` job refuses its own fork checkout before scanning any
-   recipe content. A minimal base-workflow fix is available in
-   [commit `aa44e4d`](https://github.com/artiehinz/goose/commit/aa44e4d3495571bb16ce6c0cd21dace4fef74ca8)
-   and is linked from the PR for maintainers.
+   recipe content. That refusal protects repository secrets from the scanner's
+   network-capable developer tooling. The safe repair is proposed in
+   [workflow PR #10825](https://github.com/aaif-goose/goose/pull/10825): run
+   the privileged AI scan only for origin branches, keep the fork gate failed
+   until a write-capable reviewer approves the exact current head with no
+   active authorized change request, and preserve both the required
+   `security-scan` job and legacy scanner status from an always-running final
+   gate over the applicable path. A maintainer then reruns the failed fork
+   boundary.
 4. Maintain the focused
    [Agno cookbook PR #9178](https://github.com/agno-agi/agno/pull/9178),
    which demonstrates failed-generation recovery, competing-worker fencing,
@@ -319,10 +327,9 @@ promotion gates, and licensing boundary are maintained in
 6. Maintain the
    [mcp-odoo PR #61](https://github.com/erpipe-org/mcp-odoo/pull/61),
    which fences an approved external write after an uncertain result and
-   proves that a same-token replay cannot repeat the mutation. The focused
-   suite, Ruff, mypy, and the portable full suite pass after rebasing onto
-   upstream `v1.3.0`; one unrelated Windows symlink test is platform-limited.
-   The PR is now ready for review rather than draft.
+   proves that concurrent or sequential same-token replays cannot repeat the
+   mutation. The atomic claim fix is approved, the branch is clean, and all
+   applicable CI jobs pass. Wait for maintainer merge.
 7. Continue the issue-first contributions already opened for
    [MCPJam Inspector #3555](https://github.com/MCPJam/inspector/issues/3555),
    [Kiln #112](https://github.com/codeofaxel/Kiln/issues/112), and
@@ -341,16 +348,17 @@ promotion gates, and licensing boundary are maintained in
    which closes issue #2 by making `tools/call` retries opt-in and adding a
    commit-then-drop regression fixture. The affected format checks, 117 tests,
    and strict Credo analysis pass.
-10. Maintain
-   [ADK-Rust PR #506](https://github.com/zavora-ai/adk-rust/pull/506), opened
-   through issue #504. It preserves automatic discovery reconnects while
-   requiring explicit `with_tool_call_retries()` for MCP tool-call replay.
-   The affected formatter, 87 MCP tests, and strict Clippy gate pass.
-11. Wait for maintainer interest on the vendor-neutral
-   [Microsoft MCP for Beginners proposal #949](https://github.com/microsoft/mcp-for-beginners/issues/949)
-   and
+10. Record the merged
+   [ADK-Rust PR #513](https://github.com/zavora-ai/adk-rust/pull/513), which the
+   maintainer transferred from attributed fork
+   [PR #506](https://github.com/zavora-ai/adk-rust/pull/506) so CI could run.
+   It preserves automatic discovery reconnects while requiring explicit
+   `with_tool_call_retries()` for MCP tool-call replay. Issue #504 is complete.
+11. Maintain the vendor-neutral
+   [Microsoft MCP for Beginners PR #959](https://github.com/microsoft/mcp-for-beginners/pull/959)
+   and wait for maintainer direction on
    [Agent Framework Samples proposal #115](https://github.com/microsoft/Agent-Framework-Samples/issues/115);
-   do not open either implementation PR first.
+   do not open the latter implementation PR first.
 12. Coordinate neutral x402 retry fixtures through
    [issue #831](https://github.com/x402-foundation/x402/issues/831).
    Challenge drift is reproducible without wallets or settlement, but

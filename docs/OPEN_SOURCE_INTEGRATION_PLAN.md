@@ -83,13 +83,13 @@ should select the smallest bundle that solves the demonstrated problem.
 | [docker/mcp-registry #4537](https://github.com/docker/mcp-registry/pull/4537) | Remote MCP registry definition | Connects to all 24 modules through the six progressive MCP tools | Current branch is mergeable. The full Go suite, entry validator, remote build path, catalog generation, live initialization, and 24-module discovery passed on 2026-07-28. Wait for review and comment only after a material change or maintainer request. |
 | [OpenHands/extensions #418](https://github.com/OpenHands/extensions/pull/418) | No-auth remote MCP catalog connector | Connects OpenHands to all 24 modules; no backend code is copied | The generated catalog is in sync and 101 focused schema/catalog tests pass. Keep the patch metadata-only and wait for review. |
 | [agno-agi/agno #9178](https://github.com/agno-agi/agno/pull/9178) | Deterministic recovery cookbook | Uses `workflow-guard-planner` and `workflow-checkpoint` | Rebased onto current `main`; cookbook pattern, Ruff, mypy, and the live deterministic example pass. The body closes issue #9179. Leave the stale maintainer-owned `missing-issue-link` label untouched and wait for review. |
-| [punkpeye/awesome-mcp-servers #10889](https://github.com/punkpeye/awesome-mcp-servers/pull/10889) | Curated server listing | Lists the complete service; description covers all bundles | Rebased onto current `main`; submission checks pass. Ownership and score are visible on the Glama Connector, but the workflow requires a server-style badge path that returns 404 for connectors. Wait for Glama support's emailed answer before changing or commenting again. |
+| [punkpeye/awesome-mcp-servers #10889](https://github.com/punkpeye/awesome-mcp-servers/pull/10889) | Curated server listing | Lists the complete service; description covers all bundles | Rebased onto current `main`; submission checks pass. Ownership and score are visible on the healthy Glama Connector, but the required server-style listing and badge still return 404 as of 2026-07-30. The 2026-07-29 maintainer nudge repeats that unavailable badge requirement. Wait for Glama support or a maintainer-provided Connector badge path rather than adding a broken badge. |
 | [punkpeye/awesome-mcp-devtools #242](https://github.com/punkpeye/awesome-mcp-devtools/pull/242) | Focused testing-tool listing | Emphasizes Failure rehearsal, MCP contracts, and x402 diagnostics; the endpoint still exposes all 24 modules | Current branch is clean and mergeable. Monitor only. Do not duplicate this entry in more generic awesome lists. |
-| [aaif-goose/goose #10780](https://github.com/aaif-goose/goose/pull/10780) | Reliability-sidecar recipe | Uses `workflow-guard-planner` and `workflow-checkpoint` around another MCP | The recipe passes Goose CLI `1.44.0` validation and a live MCP smoke. Owner-qualified `agent-enhancer__lab.*` tool names now match Goose exposure and the review thread is resolved. The remaining failed `security-scan` is an upstream `pull_request_target` checkout refusal before recipe content is scanned; maintainers can use the linked minimal base-workflow fix in `aa44e4d`. |
+| [aaif-goose/goose #10780](https://github.com/aaif-goose/goose/pull/10780) | Reliability-sidecar recipe | Uses `workflow-guard-planner` and `workflow-checkpoint` around another MCP | Commit `06123ec` adds the reviewer-requested domain-extension preflight: tasks that need GitHub, Gmail, Slack, or another domain tool must supply it through goose CLI or launch metadata, and the recipe stops if action/read-back capability is absent. All three review threads are resolved; the branch is mergeable. The remaining failed `security-scan` is the base workflow's correct refusal to load fork instructions into a secret-bearing `pull_request_target` job. [Workflow PR #10825](https://github.com/aaif-goose/goose/pull/10825) keeps the privileged scan origin-only, makes the fork boundary require a write-capable review of the exact current head with no active authorized change request, and preserves both the required `security-scan` job and legacy scanner status from an always-running final gate; after approval, a maintainer reruns the failed gate. Retrigger #10780 only after that base fix merges. |
 | [github/awesome-copilot #2474](https://github.com/github/awesome-copilot/pull/2474) | Vendor-neutral ambiguous external-write recovery skill | Portable planner, checkpoint, evidence, and abstention concepts; no hosted dependency | All nine applicable checks pass and five unrelated jobs skip. The robot marker in the title is required by that repository for AI-authored contributions. |
-| [erpipe-org/mcp-odoo #61](https://github.com/erpipe-org/mcp-odoo/pull/61) | Replay fence for an approved Odoo write whose response is lost | Portable checkpoint and reconciliation concepts implemented inside the Odoo MCP | The regression fixture commits a synthetic external mutation, drops its response, and proves a same-token retry cannot issue a second write. The branch is rebased onto `v1.3.0`; focused tests, Ruff, mypy, and the portable full suite pass. The PR is ready for review rather than draft. |
+| [erpipe-org/mcp-odoo #61](https://github.com/erpipe-org/mcp-odoo/pull/61) | Replay fence for an approved Odoo write whose response is lost | Portable checkpoint and reconciliation concepts implemented inside the Odoo MCP | The concurrency blocker is fixed with an atomic approval claim and deterministic two-worker regression. The PR is approved, clean, and all five applicable CI jobs pass; wait for maintainer merge. |
 | [nshkrdotcom/codex_sdk #3](https://github.com/nshkrdotcom/codex_sdk/pull/3) | Conservative MCP tool-call retry default | Guard planning, stable identity, and uncertain-result handling | `tools/call` retries now default to zero while explicit retries remain available for replay-safe operations. A synthetic mutation commits before a dropped response and proves only one call is sent by default. Format checks, 117 affected tests, and strict Credo pass. |
-| [zavora-ai/adk-rust #506](https://github.com/zavora-ai/adk-rust/pull/506) | Explicit opt-in for MCP tool replay after reconnect | Planner/checkpoint ambiguity boundary expressed in client behavior | Automatic reconnect remains for discovery and resources; `ConnectionRefresher` and `McpToolset` require `with_tool_call_retries()` before replaying a possibly mutating tool. Format checks, 87 MCP tests, and strict Clippy pass. |
+| [zavora-ai/adk-rust #513](https://github.com/zavora-ai/adk-rust/pull/513) (from [#506](https://github.com/zavora-ai/adk-rust/pull/506)) | Explicit opt-in for MCP tool replay after reconnect | Planner/checkpoint ambiguity boundary expressed in client behavior | Merged on 2026-07-29. The maintainer moved the contribution from fork PR #506 to origin PR #513 so CI could run, explicitly attributed the work, added the default-off regression, and closed issue #504 as completed. No further action. |
 | Official MCP Registry | Published server metadata | Connects clients to all 24 modules | Continue version publication and endpoint smoke tests for each backend release. |
 
 ### Open issue-first proposals and design conversations
@@ -164,8 +164,8 @@ abstention with negligible overhead.
 
 ### Phase B: maintain open integrations
 
-1. Wait for review on Agno, OpenHands, Goose, Awesome Copilot, mcp-odoo,
-   Codex SDK, and ADK-Rust; respond promptly to maintainer feedback.
+1. Wait for review on Agno, OpenHands, goose, Awesome Copilot, mcp-odoo,
+   and Codex SDK; respond promptly to maintainer feedback. ADK-Rust is merged.
 2. Keep Docker and both curated-list submissions current without posting
    status-only comments.
 3. Rebase only when upstream drift requires it.
@@ -173,10 +173,14 @@ abstention with negligible overhead.
    comments.
 5. If a project declines a hosted dependency, offer the local contract adapter
    and keep the remote adapter optional.
-6. Treat the remaining Goose security scan as an upstream workflow failure.
-   The content review about unqualified tool names was valid and is fixed; do
-   not conflate that resolved feedback with the independent base-workflow
-   checkout refusal.
+6. Track goose workflow PR #10825 for the remaining security scan. The valid
+   content reviews about unqualified tool names and missing domain extensions
+   are fixed. Never bypass checkout protection or feed fork-controlled recipe
+   instructions to the secret-bearing scanner. The final `security-scan`
+   job and legacy commit-status contexts must always reflect the applicable
+   origin scan or fork boundary. After that repair lands, retrigger the recipe
+   PR, obtain write-access approval of that exact head, and have a maintainer
+   rerun the failed fork boundary.
 
 Exit gate: each PR is merged or has received a final maintainer decision.
 
