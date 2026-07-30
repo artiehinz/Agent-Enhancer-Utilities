@@ -21,13 +21,15 @@ the direct on-demand HTTP contract:
   one hosted planner check for risk-bearing work, and fail-closed plan drift.
 - [`on-demand-agent-benchmark`](./on-demand-agent-benchmark/) is a separate
   skills-only Codex preregistration. Neither condition exposes MCP; only the
-  with condition receives one repo-scoped skill.
+  with condition receives one repo-scoped skill. Its complete publication
+  report contains 20 pairs per scenario and passes the frozen gates.
 
 The Python examples discover and describe a module before invoking it. They
 fail closed if the expected free module is unavailable or its result no longer
 matches the documented safety contract. The Goose recipe uses the same
 progressive discovery tools and keeps the destination action in Goose.
 The deterministic benchmark is intentionally model-free and makes no
-token-saving or agent-quality claim. The metered tier publishes a sanitized
-summary of every completed validation and will run the later 20-pair sample
-only after a future validation passes all preregistered gates.
+token-saving or agent-quality claim. The persistent-MCP metered tier preserves
+its failed validations. The separate skills-first metered tier publishes its
+passed validation and complete 20-pair-per-scenario publication sample without
+pooling any of those rows.

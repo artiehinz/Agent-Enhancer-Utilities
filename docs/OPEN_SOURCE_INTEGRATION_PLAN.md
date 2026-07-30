@@ -301,9 +301,10 @@ Do not describe automated smoke tests as beta-user usage.
    canonical target behind the duplicate mcp-use #2054 issue. Do not duplicate
    the already-volunteered LangChain #170 work or reopen closed mcp-agent #640
    without maintainer direction.
-3. Complete the frozen skills-first on-demand validation. Retain the result
-   even if it is negative or neutral. Do not begin publication runs unless
-   every fixed validation gate passes.
+3. Retain the completed skills-first validation and 200-run publication
+   sample as separate evidence. Both passed their frozen gates; neither is
+   pooled with the failed persistent-MCP validations. Use the published case
+   study when an upstream maintainer asks for measured evidence.
 4. After design-partner recruitment begins, build local interoperability
    probes for Pydantic AI Harness and atrib, then
    a paired benchmark adapter for Synapse. Do not open upstream requests until

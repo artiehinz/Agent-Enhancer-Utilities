@@ -134,3 +134,45 @@ valid low-risk rows and zero sidecar calls. Median input-token overhead was
 references. This is not confirmatory evidence. It shows that shrinking the
 persistent MCP schema alone does not justify another always-connected
 validation; the next candidate must avoid connecting on low-risk work.
+
+## Skills-first publication evidence
+
+The independent
+[`on-demand-agent-benchmark`](../examples/on-demand-agent-benchmark/)
+removes persistent MCP from both conditions. Only the guarded condition
+receives one repo-scoped skill, which selects locally and calls direct HTTP
+only for risk-bearing work. Its five-pair validation passed before the
+publication sample began.
+
+The complete
+[`publication-latest.json`](../examples/on-demand-agent-benchmark/results/publication-latest.json)
+contains 200 valid runs, 20 pairs per scenario, with randomized condition
+order and condition-blind machine-state evaluation. Across the four risk
+scenarios:
+
+- harmful counters fell from 26 unguarded to 2 guarded, a 92.308% reduction;
+- verified completion rose from 82.5% to 98.75%;
+- correct activation was 100%; and
+- all 20 low-risk guarded runs correctly abstained with zero adapter and
+  remote calls.
+
+The result is not a general speed or cost claim. Overlapping-worker protection
+produced the strongest benefit, and scheduled refresh produced a smaller
+benefit. Ambiguous-create and shared-rate controls were already 20/20 without
+the sidecar. Every risk-bearing guarded scenario used substantially more
+tokens and wall-clock time.
+
+Low-risk median input tokens and latency were lower in the guarded condition,
+but the skill made no adapter or remote call. Those differences are treated as
+host variance, not Agent Enhancer savings. Model cost remains unavailable
+because ChatGPT-managed Codex authentication did not expose a defensible
+per-run dollar rate.
+
+Three initial guarded shared-rate attempts timed out. Their failed rows and
+one discarded partial counterpart remain as four infrastructure exclusions;
+all three pairs were rerun under the unchanged frozen protocol. The report
+therefore preserves negative, neutral, excluded, and successful evidence.
+
+See the
+[publication case study](./ON_DEMAND_BENCHMARK_CASE_STUDY.md)
+for the scenario-level interpretation and product decision.

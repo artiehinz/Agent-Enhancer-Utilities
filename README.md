@@ -159,14 +159,18 @@ goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
   freezes five paired Codex scenarios, installs only one repo-scoped skill in
   the with condition, rejects every MCP call, measures activation and
   abstention, and blocks publication unless the complete five-pair validation
-  passes every fixed gate. The frozen 50-run validation passed: harmful events
-  fell from 10 to 2 and verified completion across the four risk scenarios
-  rose from 75% to 95%. That benefit came entirely from overlapping workers.
-  Ambiguous create, shared-rate, and scheduled-refresh controls already
-  completed without harm, while the guarded runs used substantially more
-  tokens and time. The low-risk skill correctly abstained in all five runs
-  with zero adapter or network calls. Treat this as evidence for a narrow
-  concurrency guard, not a general speed or cost claim.
+  passes every fixed gate. The separate 200-run publication sample passed its
+  preregistered gates: harmful counters across the four risk scenarios fell
+  from 26 to 2 and verified completion rose from 82.5% to 98.75%. The strongest
+  result remained overlapping workers, where verified completion improved
+  from 8/20 to 19/20. Scheduled refresh improved from 18/20 to 20/20; ambiguous
+  create and shared-rate runs were already 20/20 without the sidecar. Guarded
+  risk-bearing runs used substantially more tokens and time. All 20 low-risk
+  skill runs correctly abstained with zero adapter or remote calls; their lower
+  observed token and latency totals are treated as host variance, not product
+  savings. See the
+  [case study](./docs/ON_DEMAND_BENCHMARK_CASE_STUDY.md) and
+  [run-level report](./examples/on-demand-agent-benchmark/results/publication-latest.json).
 
 Remote MCP examples search, describe, and invoke through the progressive
 facade. The on-demand prototype uses the public generated HTTP contract only
@@ -191,6 +195,8 @@ The service publishes:
   [`/effectiveness`](https://liberated.site/effectiveness);
 - reproducible run-level sidecar benchmark evidence in
   [`examples/sidecar-benchmark/results/latest.json`](./examples/sidecar-benchmark/results/latest.json);
+- preregistered metered Codex evidence in
+  [`examples/on-demand-agent-benchmark/results/publication-latest.json`](./examples/on-demand-agent-benchmark/results/publication-latest.json);
 - schemas, limits, side effects, retention, and typed errors in the
   [catalog](https://liberated.site/v1/catalog);
 - privacy, acceptable-use, security, support, and pricing policies from the

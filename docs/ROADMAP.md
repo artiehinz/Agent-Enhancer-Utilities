@@ -36,11 +36,11 @@ selects locally and calls direct HTTP only for risk-bearing work. Official MCP
 Registry `0.6.4` remains the latest immutable registry version until the
 next registry release gate is complete. Real USDC remains disabled.
 
-The next work is evidence and commercial validation, not another broad module
+The next work is external commercial validation, not another broad module
 expansion:
 
-1. Freeze and run the skills-first on-demand validation without pooling it
-   with the failed persistent-MCP samples.
+1. Retain the completed skills-first validation and publication evidence
+   without pooling it with the failed persistent-MCP samples.
 2. Recruit five external design partners and run the Sidecar v1 recipes for 14
    days after the validation result is retained.
 3. Measure correct selection and abstention, duplicate recovery, successful
@@ -179,7 +179,20 @@ a saving because the skill correctly did no work there and the difference is
 ordinary host-run variance. Four infrastructure exclusions from two initial
 rate-limit timeouts and their partial pairs remain in the report; both pairs
 were rerun without changing the frozen protocol. The 20-pair publication
-sample is separate and must preserve these limitations.
+sample is separate and preserves these limitations.
+
+The separate publication sample is now complete: 200 valid runs covering 20
+pairs per scenario. It passed every preregistered gate. Across the four risk
+scenarios, harmful counters fell from 26 to 2 and verified completion rose
+from 82.5% to 98.75%. The strongest benefit remained overlapping workers;
+scheduled refresh produced a smaller benefit, while ambiguous create and
+shared-rate controls were already 20/20 without the sidecar. All 20 low-risk
+guarded runs abstained with zero adapter and remote calls. Guarded
+risk-bearing runs used materially more tokens and time, so the result supports
+a narrow reliability claim rather than a general speed or cost claim. Three
+initial guarded shared-rate timeouts and one discarded partial counterpart
+remain as four infrastructure exclusions; all three pairs were rerun under
+the unchanged protocol.
 
 Backend `0.6.4` also completed the clean measurement boundary. It preserved
 the mixed pre-marker window as aggregate-only internal evidence, removed its

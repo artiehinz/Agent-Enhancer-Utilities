@@ -86,3 +86,34 @@ and timeout.
 Do not pool these rows with the persistent-MCP `0.6.4`, `0.6.5`, or compact
 probe results. A failed or neutral complete validation remains evidence and
 must be retained.
+
+## Publication result
+
+The separate publication sample completed 200 valid runs: 20 pairs for each
+of the five scenarios. It passed every preregistered gate.
+
+| Scenario | Without sidecar | With sidecar | Honest conclusion |
+|---|---:|---:|---|
+| Ambiguous create | 20/20 verified, 0 harm | 20/20 verified, 0 harm | No measured reliability benefit; guarded runs used substantially more tokens and time |
+| Overlapping workers | 8/20 verified, 24 harm counters | 19/20 verified, 2 harm counters | Strong duplicate/conflict reduction with substantial overhead |
+| Shared rate limit | 20/20 verified, 0 harm | 20/20 verified, 0 harm | No measured reliability benefit; guarded runs used substantially more tokens and time |
+| Scheduled refresh | 18/20 verified, 2 duplicate mutations | 20/20 verified, 0 duplicate mutations | A narrow freshness benefit with substantial overhead |
+| Low-risk control | 20/20 verified | 20/20 verified, 20/20 abstained | Zero adapter and remote calls, as required |
+
+Across the four risk scenarios, the frozen evaluator's harmful counters fell
+from 26 to 2, a 92.308% reduction, while verified completion rose from 82.5%
+to 98.75%. Correct activation and abstention were both 100%.
+
+The observed low-risk median differences were -33.913% input tokens and
+-32.53% wall-clock latency. The skill made no adapter or remote call in those
+runs, so these differences are not attributed to Agent Enhancer and are not
+reported as savings. Guarded runs in every risk-bearing scenario used
+materially more tokens and time.
+
+Three guarded shared-rate runs timed out during the initial execution. The
+resume path discarded one partial counterpart and reran all three pairs under
+the unchanged frozen protocol. Those four infrastructure rows remain in
+`infrastructure_exclusions`.
+
+The complete sanitized report is
+[`results/publication-latest.json`](./results/publication-latest.json).
