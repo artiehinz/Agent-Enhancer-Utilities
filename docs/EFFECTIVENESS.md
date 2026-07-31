@@ -92,7 +92,7 @@ stable marker without replaying the mutation.
 The first real-agent validation is preserved in
 [`validation-0.6.4.json`](../examples/sidecar-agent-benchmark/results/validation-0.6.4.json).
 Across 25 pairs, the six-tool sidecar profile reduced none of the eight
-harmful overlap events. It preserved aggregate verified completion and made
+harmful overlap events. It preserved aggregate scenario acceptance and made
 zero sidecar calls on the low-risk task, but connecting it still added 10.466%
 median input-token overhead and 28.431% median latency overhead on that task.
 The validation therefore failed three of five preregistered gates. This is a
@@ -107,7 +107,7 @@ sample size, and thresholds fixed.
 That product change produced a real but incomplete improvement:
 
 - harmful events fell from six unguarded to zero guarded;
-- verified completion rose from 80% unguarded to 90% guarded;
+- scenario acceptance rose from 80% unguarded to 90% guarded;
 - low-risk sidecar calls remained zero;
 - low-risk median input-token overhead was 10.779%; and
 - low-risk median latency overhead was 27.341%.
@@ -147,14 +147,27 @@ publication sample began.
 The complete
 [`publication-latest.json`](../examples/on-demand-agent-benchmark/results/publication-latest.json)
 contains 200 valid runs, 20 pairs per scenario, with randomized condition
-order and condition-blind machine-state evaluation. Across the four risk
-scenarios:
+order and condition-blind machine-state evaluation. A reproducible post-hoc
+[run-level reanalysis](../examples/on-demand-agent-benchmark/results/publication-reanalysis.json)
+of those unchanged rows separates confirmed harm, unresolved outcomes, and
+correlated counters. Across the four risk scenarios:
 
-- harmful counters fell from 26 unguarded to 2 guarded, a 92.308% reduction;
-- verified completion rose from 82.5% to 98.75%;
+- runs with confirmed harm fell from 14/80 unguarded to 1/80 guarded, a
+  92.857% reduction;
+- acceptance rose from 66/80 to 79/80;
+- the evaluator ran and a final response was present for all 160 retained
+  risk-scenario rows;
+- unresolved outcomes were 0 in both conditions;
+- the original pooled counter total remains 26 to 2, but 12 unguarded overlap
+  runs and one guarded overlap run each emitted two correlated categories;
 - correct activation was 100%; and
 - all 20 low-risk guarded runs correctly abstained with zero adapter and
   remote calls.
+
+The reanalysis was not preregistered and changes no gate. It adds p50, p90,
+and p95 token and latency distributions plus per-scenario affected-run counts
+so pooled counters are not mistaken for independent incidents. The historical
+`verified` field is described as evaluator acceptance, not verification reach.
 
 The result is not a general speed or cost claim. Overlapping-worker protection
 produced the strongest benefit, and scheduled refresh produced a smaller

@@ -136,7 +136,7 @@ making zero sidecar calls. Backend `0.6.5` therefore introduced an explicitly
 instructed three-tool core profile.
 
 The completed `0.6.5` validation eliminated six observed unguarded overlap
-events, improved verified completion from 80% to 90%, and kept low-risk
+events, improved scenario acceptance from 80% to 90%, and kept low-risk
 sidecar calls at zero. It still failed overall because connection-only
 input-token overhead was 10.779% and latency overhead was 27.341%. Preserve
 both failed summaries and do not pool their rows.
@@ -165,14 +165,14 @@ Validation contains five pairs per scenario. The completed 50-run validation
 passed every preregistered gate:
 
 - harmful outcomes across the four risk scenarios fell from 10 to 2;
-- verified completion rose from 75% to 95%;
+- scenario acceptance rose from 75% to 95%;
 - the selector activated or abstained correctly in every run;
 - all five low-risk runs made zero adapter and remote calls.
 
 The positive reliability result was limited to overlapping workers: unguarded
-runs produced ten harmful conflicts and zero verified completions, while the
-guarded condition produced two harmful conflicts and four verified
-completions. Ambiguous create, shared-rate, and scheduled-refresh runs had no
+runs produced ten harmful conflicts and zero accepted outcomes, while the
+guarded condition produced two harmful conflicts and four accepted
+outcomes. Ambiguous create, shared-rate, and scheduled-refresh runs had no
 unguarded harm to prevent. Guarded runs in those scenarios used materially
 more tokens and wall-clock time. Negative low-risk overhead is not claimed as
 a saving because the skill correctly did no work there and the difference is
@@ -182,9 +182,12 @@ were rerun without changing the frozen protocol. The 20-pair publication
 sample is separate and preserves these limitations.
 
 The separate publication sample is now complete: 200 valid runs covering 20
-pairs per scenario. It passed every preregistered gate. Across the four risk
-scenarios, harmful counters fell from 26 to 2 and verified completion rose
-from 82.5% to 98.75%. The strongest benefit remained overlapping workers;
+pairs per scenario. It passed every preregistered gate. A post-hoc run-level
+reanalysis found confirmed harm in 14/80 unguarded risk runs and 1/80 guarded
+risk runs; scenario acceptance rose from 66/80 to 79/80, while unresolved
+outcomes remained 0/80 in both conditions. The original 26-to-2 pooled
+counters remain secondary because correlated categories can occur in one run.
+The strongest benefit remained overlapping workers;
 scheduled refresh produced a smaller benefit, while ambiguous create and
 shared-rate controls were already 20/20 without the sidecar. All 20 low-risk
 guarded runs abstained with zero adapter and remote calls. Guarded

@@ -24,7 +24,7 @@ each pair.
 4. Two scheduled refresh workers suppressing stale work.
 5. An ordinary one-time low-risk read where the skill must abstain.
 
-The report measures verified completion, harmful outcomes, manual
+The report measures condition-blind scenario acceptance, harmful outcomes, manual
 intervention, activation and abstention accuracy, direct HTTP calls, tokens,
 and wall-clock latency. The fixed gates are in
 [`preregistered-plan.json`](./preregistered-plan.json).
@@ -71,7 +71,7 @@ passed every preregistered gate. The complete sanitized report is
 | Scheduled refresh | 5/5 verified, 0 harm | 5/5 verified, 0 harm | No measured reliability benefit; guarded runs cost more |
 | Low-risk control | 5/5 verified | 5/5 verified, 5/5 abstained | Zero adapter and remote calls, as required |
 
-Across the four risk scenarios, verified completion rose from 75% to 95% and
+Across the four risk scenarios, scenario acceptance rose from 75% to 95% and
 harmful events fell from 10 to 2. All of that harm reduction came from the
 overlapping-worker scenario. The result does not support a general claim that
 Agent Enhancer is faster or cheaper. Median low-risk token and latency
@@ -92,17 +92,31 @@ must be retained.
 The separate publication sample completed 200 valid runs: 20 pairs for each
 of the five scenarios. It passed every preregistered gate.
 
-| Scenario | Without sidecar | With sidecar | Honest conclusion |
-|---|---:|---:|---|
-| Ambiguous create | 20/20 verified, 0 harm | 20/20 verified, 0 harm | No measured reliability benefit; guarded runs used substantially more tokens and time |
-| Overlapping workers | 8/20 verified, 24 harm counters | 19/20 verified, 2 harm counters | Strong duplicate/conflict reduction with substantial overhead |
-| Shared rate limit | 20/20 verified, 0 harm | 20/20 verified, 0 harm | No measured reliability benefit; guarded runs used substantially more tokens and time |
-| Scheduled refresh | 18/20 verified, 2 duplicate mutations | 20/20 verified, 0 duplicate mutations | A narrow freshness benefit with substantial overhead |
-| Low-risk control | 20/20 verified | 20/20 verified, 20/20 abstained | Zero adapter and remote calls, as required |
+| Scenario | Acceptance without → with | Runs with confirmed harm | Unresolved outcomes | Paired token p50 / p90 | Paired latency p50 / p90 |
+|---|---:|---:|---:|---:|---:|
+| Ambiguous create | 20 → 20 / 20 | 0 → 0 / 20 | 0 → 0 | +572% / +777% | +365% / +455% |
+| Overlapping workers | 8 → 19 / 20 | 12 → 1 / 20 | 0 → 0 | +257% / +404% | +202% / +266% |
+| Shared rate limit | 20 → 20 / 20 | 0 → 0 / 20 | 0 → 0 | +284% / +462% | +150% / +192% |
+| Scheduled refresh | 18 → 20 / 20 | 2 → 0 / 20 | 0 → 0 | +240% / +342% | +140% / +281% |
+| Low-risk control | 20 → 20 / 20 | 0 → 0 / 20 | 0 → 0 | -34% / +1% | -33% / -1% |
 
-Across the four risk scenarios, the frozen evaluator's harmful counters fell
-from 26 to 2, a 92.308% reduction, while verified completion rose from 82.5%
-to 98.75%. Correct activation and abstention were both 100%.
+Across the four risk scenarios, runs with at least one confirmed harmful
+mutation, conflict, or rejection fell from 14/80 to 1/80, a 92.857%
+reduction. The legacy `verified` field is now described as evaluator
+acceptance: it rose from 66/80 to 79/80. The condition-blind evaluator ran and
+a final response was present for all 160 retained risk-scenario rows.
+
+The original pooled counters remain 26 to 2, but they are secondary because
+one run can emit correlated categories. Twelve unguarded overlap runs each
+emitted both one duplicate-mutation counter and one conflicting-action
+counter; one guarded run did the same. Unresolved outcomes were 0 in both
+conditions, so none of the original 26 or 2 counters represented an unknown
+result.
+
+This finer breakdown is a post-hoc descriptive reanalysis of unchanged rows,
+not a new preregistered gate. Reproduce it with `python reanalyze.py`; inspect
+[`results/publication-reanalysis.json`](./results/publication-reanalysis.json)
+for p50, p90, and p95 absolute and paired distributions.
 
 The observed low-risk median differences were -33.913% input tokens and
 -32.53% wall-clock latency. The skill made no adapter or remote call in those

@@ -1,0 +1,488 @@
+{
+  "schema_version": "1",
+  "analysis_class": "post-hoc-descriptive-reanalysis",
+  "preregistered": false,
+  "source_report": "publication-latest.json",
+  "source_report_schema_version": "2",
+  "source_report_sha256": "97e473b4e1b8b6e863b30e0aa720ec3d5347cef49b89128f2b0302dc32a632a6",
+  "source_rows_unchanged": true,
+  "risk_summary": {
+    "without_sidecar": {
+      "runs": 80,
+      "evaluator_invoked_rows": 80,
+      "final_response_runs": 80,
+      "acceptance_passed_runs": 66,
+      "acceptance_rate_percent": 82.5,
+      "runs_with_confirmed_harm": 14,
+      "confirmed_harm_run_rate_percent": 17.5,
+      "confirmed_harm_counters": {
+        "duplicate_mutations": 14,
+        "conflicting_actions": 12,
+        "provider_rejections": 0,
+        "pooled_total": 26
+      },
+      "runs_with_multiple_harm_categories": 12,
+      "runs_with_unresolved_outcome": 0,
+      "unresolved_outcomes": 0,
+      "manual_intervention_runs": 12,
+      "model_input_tokens": {
+        "method": "linear_interpolation_r7",
+        "p50": 133885,
+        "p90": 217056,
+        "p95": 234051
+      },
+      "wall_clock_ms": {
+        "method": "linear_interpolation_r7",
+        "p50": 69579,
+        "p90": 101481,
+        "p95": 109894
+      }
+    },
+    "with_sidecar": {
+      "runs": 80,
+      "evaluator_invoked_rows": 80,
+      "final_response_runs": 80,
+      "acceptance_passed_runs": 79,
+      "acceptance_rate_percent": 98.75,
+      "runs_with_confirmed_harm": 1,
+      "confirmed_harm_run_rate_percent": 1.25,
+      "confirmed_harm_counters": {
+        "duplicate_mutations": 1,
+        "conflicting_actions": 1,
+        "provider_rejections": 0,
+        "pooled_total": 2
+      },
+      "runs_with_multiple_harm_categories": 1,
+      "runs_with_unresolved_outcome": 0,
+      "unresolved_outcomes": 0,
+      "manual_intervention_runs": 1,
+      "model_input_tokens": {
+        "method": "linear_interpolation_r7",
+        "p50": 527769,
+        "p90": 823459,
+        "p95": 851007
+      },
+      "wall_clock_ms": {
+        "method": "linear_interpolation_r7",
+        "p50": 179517,
+        "p90": 251601,
+        "p95": 263785
+      }
+    },
+    "affected_run_reduction_percent": 92.857,
+    "pooled_counter_reduction_percent": 92.308
+  },
+  "scenarios": [
+    {
+      "scenario": "ambiguous-success-create",
+      "conditions": {
+        "without-sidecar": {
+          "runs": 20,
+          "evaluator_invoked_rows": 20,
+          "final_response_runs": 20,
+          "acceptance_passed_runs": 20,
+          "acceptance_rate_percent": 100.0,
+          "runs_with_confirmed_harm": 0,
+          "confirmed_harm_run_rate_percent": 0.0,
+          "confirmed_harm_counters": {
+            "duplicate_mutations": 0,
+            "conflicting_actions": 0,
+            "provider_rejections": 0,
+            "pooled_total": 0
+          },
+          "runs_with_multiple_harm_categories": 0,
+          "runs_with_unresolved_outcome": 0,
+          "unresolved_outcomes": 0,
+          "manual_intervention_runs": 0,
+          "model_input_tokens": {
+            "method": "linear_interpolation_r7",
+            "p50": 52630,
+            "p90": 66630,
+            "p95": 70632
+          },
+          "wall_clock_ms": {
+            "method": "linear_interpolation_r7",
+            "p50": 22715,
+            "p90": 26244,
+            "p95": 29563
+          }
+        },
+        "with-sidecar": {
+          "runs": 20,
+          "evaluator_invoked_rows": 20,
+          "final_response_runs": 20,
+          "acceptance_passed_runs": 20,
+          "acceptance_rate_percent": 100.0,
+          "runs_with_confirmed_harm": 0,
+          "confirmed_harm_run_rate_percent": 0.0,
+          "confirmed_harm_counters": {
+            "duplicate_mutations": 0,
+            "conflicting_actions": 0,
+            "provider_rejections": 0,
+            "pooled_total": 0
+          },
+          "runs_with_multiple_harm_categories": 0,
+          "runs_with_unresolved_outcome": 0,
+          "unresolved_outcomes": 0,
+          "manual_intervention_runs": 0,
+          "model_input_tokens": {
+            "method": "linear_interpolation_r7",
+            "p50": 398440,
+            "p90": 472810,
+            "p95": 558793
+          },
+          "wall_clock_ms": {
+            "method": "linear_interpolation_r7",
+            "p50": 98724,
+            "p90": 123407,
+            "p95": 130004
+          }
+        }
+      },
+      "paired_delta_percentiles": {
+        "model_input_tokens": {
+          "method": "linear_interpolation_r7",
+          "p50": 572.14,
+          "p90": 776.846,
+          "p95": 794.86
+        },
+        "wall_clock": {
+          "method": "linear_interpolation_r7",
+          "p50": 365.032,
+          "p90": 455.284,
+          "p95": 480.871
+        }
+      }
+    },
+    {
+      "scenario": "overlapping-workers",
+      "conditions": {
+        "without-sidecar": {
+          "runs": 20,
+          "evaluator_invoked_rows": 20,
+          "final_response_runs": 20,
+          "acceptance_passed_runs": 8,
+          "acceptance_rate_percent": 40.0,
+          "runs_with_confirmed_harm": 12,
+          "confirmed_harm_run_rate_percent": 60.0,
+          "confirmed_harm_counters": {
+            "duplicate_mutations": 12,
+            "conflicting_actions": 12,
+            "provider_rejections": 0,
+            "pooled_total": 24
+          },
+          "runs_with_multiple_harm_categories": 12,
+          "runs_with_unresolved_outcome": 0,
+          "unresolved_outcomes": 0,
+          "manual_intervention_runs": 12,
+          "model_input_tokens": {
+            "method": "linear_interpolation_r7",
+            "p50": 155324,
+            "p90": 213566,
+            "p95": 215646
+          },
+          "wall_clock_ms": {
+            "method": "linear_interpolation_r7",
+            "p50": 69743,
+            "p90": 96472,
+            "p95": 99792
+          }
+        },
+        "with-sidecar": {
+          "runs": 20,
+          "evaluator_invoked_rows": 20,
+          "final_response_runs": 20,
+          "acceptance_passed_runs": 19,
+          "acceptance_rate_percent": 95.0,
+          "runs_with_confirmed_harm": 1,
+          "confirmed_harm_run_rate_percent": 5.0,
+          "confirmed_harm_counters": {
+            "duplicate_mutations": 1,
+            "conflicting_actions": 1,
+            "provider_rejections": 0,
+            "pooled_total": 2
+          },
+          "runs_with_multiple_harm_categories": 1,
+          "runs_with_unresolved_outcome": 0,
+          "unresolved_outcomes": 0,
+          "manual_intervention_runs": 1,
+          "model_input_tokens": {
+            "method": "linear_interpolation_r7",
+            "p50": 600270,
+            "p90": 710262,
+            "p95": 714627
+          },
+          "wall_clock_ms": {
+            "method": "linear_interpolation_r7",
+            "p50": 208755,
+            "p90": 244535,
+            "p95": 263785
+          }
+        }
+      },
+      "paired_delta_percentiles": {
+        "model_input_tokens": {
+          "method": "linear_interpolation_r7",
+          "p50": 257.172,
+          "p90": 404.027,
+          "p95": 410.996
+        },
+        "wall_clock": {
+          "method": "linear_interpolation_r7",
+          "p50": 202.21,
+          "p90": 265.746,
+          "p95": 299.969
+        }
+      }
+    },
+    {
+      "scenario": "shared-rate-limit",
+      "conditions": {
+        "without-sidecar": {
+          "runs": 20,
+          "evaluator_invoked_rows": 20,
+          "final_response_runs": 20,
+          "acceptance_passed_runs": 20,
+          "acceptance_rate_percent": 100.0,
+          "runs_with_confirmed_harm": 0,
+          "confirmed_harm_run_rate_percent": 0.0,
+          "confirmed_harm_counters": {
+            "duplicate_mutations": 0,
+            "conflicting_actions": 0,
+            "provider_rejections": 0,
+            "pooled_total": 0
+          },
+          "runs_with_multiple_harm_categories": 0,
+          "runs_with_unresolved_outcome": 0,
+          "unresolved_outcomes": 0,
+          "manual_intervention_runs": 0,
+          "model_input_tokens": {
+            "method": "linear_interpolation_r7",
+            "p50": 194986,
+            "p90": 234590,
+            "p95": 238961
+          },
+          "wall_clock_ms": {
+            "method": "linear_interpolation_r7",
+            "p50": 92121,
+            "p90": 109411,
+            "p95": 111806
+          }
+        },
+        "with-sidecar": {
+          "runs": 20,
+          "evaluator_invoked_rows": 20,
+          "final_response_runs": 20,
+          "acceptance_passed_runs": 20,
+          "acceptance_rate_percent": 100.0,
+          "runs_with_confirmed_harm": 0,
+          "confirmed_harm_run_rate_percent": 0.0,
+          "confirmed_harm_counters": {
+            "duplicate_mutations": 0,
+            "conflicting_actions": 0,
+            "provider_rejections": 0,
+            "pooled_total": 0
+          },
+          "runs_with_multiple_harm_categories": 0,
+          "runs_with_unresolved_outcome": 0,
+          "unresolved_outcomes": 0,
+          "manual_intervention_runs": 0,
+          "model_input_tokens": {
+            "method": "linear_interpolation_r7",
+            "p50": 801490,
+            "p90": 885686,
+            "p95": 908250
+          },
+          "wall_clock_ms": {
+            "method": "linear_interpolation_r7",
+            "p50": 233061,
+            "p90": 295867,
+            "p95": 306436
+          }
+        }
+      },
+      "paired_delta_percentiles": {
+        "model_input_tokens": {
+          "method": "linear_interpolation_r7",
+          "p50": 283.876,
+          "p90": 462.309,
+          "p95": 487.666
+        },
+        "wall_clock": {
+          "method": "linear_interpolation_r7",
+          "p50": 150.173,
+          "p90": 192.436,
+          "p95": 243.281
+        }
+      }
+    },
+    {
+      "scenario": "scheduled-refresh",
+      "conditions": {
+        "without-sidecar": {
+          "runs": 20,
+          "evaluator_invoked_rows": 20,
+          "final_response_runs": 20,
+          "acceptance_passed_runs": 18,
+          "acceptance_rate_percent": 90.0,
+          "runs_with_confirmed_harm": 2,
+          "confirmed_harm_run_rate_percent": 10.0,
+          "confirmed_harm_counters": {
+            "duplicate_mutations": 2,
+            "conflicting_actions": 0,
+            "provider_rejections": 0,
+            "pooled_total": 2
+          },
+          "runs_with_multiple_harm_categories": 0,
+          "runs_with_unresolved_outcome": 0,
+          "unresolved_outcomes": 0,
+          "manual_intervention_runs": 0,
+          "model_input_tokens": {
+            "method": "linear_interpolation_r7",
+            "p50": 126052,
+            "p90": 190487,
+            "p95": 203647
+          },
+          "wall_clock_ms": {
+            "method": "linear_interpolation_r7",
+            "p50": 66480,
+            "p90": 108872,
+            "p95": 132469
+          }
+        },
+        "with-sidecar": {
+          "runs": 20,
+          "evaluator_invoked_rows": 20,
+          "final_response_runs": 20,
+          "acceptance_passed_runs": 20,
+          "acceptance_rate_percent": 100.0,
+          "runs_with_confirmed_harm": 0,
+          "confirmed_harm_run_rate_percent": 0.0,
+          "confirmed_harm_counters": {
+            "duplicate_mutations": 0,
+            "conflicting_actions": 0,
+            "provider_rejections": 0,
+            "pooled_total": 0
+          },
+          "runs_with_multiple_harm_categories": 0,
+          "runs_with_unresolved_outcome": 0,
+          "unresolved_outcomes": 0,
+          "manual_intervention_runs": 0,
+          "model_input_tokens": {
+            "method": "linear_interpolation_r7",
+            "p50": 398507,
+            "p90": 540917,
+            "p95": 572338
+          },
+          "wall_clock_ms": {
+            "method": "linear_interpolation_r7",
+            "p50": 153825,
+            "p90": 200349,
+            "p95": 209434
+          }
+        }
+      },
+      "paired_delta_percentiles": {
+        "model_input_tokens": {
+          "method": "linear_interpolation_r7",
+          "p50": 240.176,
+          "p90": 341.554,
+          "p95": 365.178
+        },
+        "wall_clock": {
+          "method": "linear_interpolation_r7",
+          "p50": 139.603,
+          "p90": 280.563,
+          "p95": 294.024
+        }
+      }
+    },
+    {
+      "scenario": "low-risk-abstention",
+      "conditions": {
+        "without-sidecar": {
+          "runs": 20,
+          "evaluator_invoked_rows": 20,
+          "final_response_runs": 20,
+          "acceptance_passed_runs": 20,
+          "acceptance_rate_percent": 100.0,
+          "runs_with_confirmed_harm": 0,
+          "confirmed_harm_run_rate_percent": 0.0,
+          "confirmed_harm_counters": {
+            "duplicate_mutations": 0,
+            "conflicting_actions": 0,
+            "provider_rejections": 0,
+            "pooled_total": 0
+          },
+          "runs_with_multiple_harm_categories": 0,
+          "runs_with_unresolved_outcome": 0,
+          "unresolved_outcomes": 0,
+          "manual_intervention_runs": 0,
+          "model_input_tokens": {
+            "method": "linear_interpolation_r7",
+            "p50": 38710,
+            "p90": 51775,
+            "p95": 51834
+          },
+          "wall_clock_ms": {
+            "method": "linear_interpolation_r7",
+            "p50": 14760,
+            "p90": 18697,
+            "p95": 21564
+          }
+        },
+        "with-sidecar": {
+          "runs": 20,
+          "evaluator_invoked_rows": 20,
+          "final_response_runs": 20,
+          "acceptance_passed_runs": 20,
+          "acceptance_rate_percent": 100.0,
+          "runs_with_confirmed_harm": 0,
+          "confirmed_harm_run_rate_percent": 0.0,
+          "confirmed_harm_counters": {
+            "duplicate_mutations": 0,
+            "conflicting_actions": 0,
+            "provider_rejections": 0,
+            "pooled_total": 0
+          },
+          "runs_with_multiple_harm_categories": 0,
+          "runs_with_unresolved_outcome": 0,
+          "unresolved_outcomes": 0,
+          "manual_intervention_runs": 0,
+          "model_input_tokens": {
+            "method": "linear_interpolation_r7",
+            "p50": 25574,
+            "p90": 25600,
+            "p95": 25615
+          },
+          "wall_clock_ms": {
+            "method": "linear_interpolation_r7",
+            "p50": 9282,
+            "p90": 11104,
+            "p95": 12609
+          }
+        }
+      },
+      "paired_delta_percentiles": {
+        "model_input_tokens": {
+          "method": "linear_interpolation_r7",
+          "p50": -33.913,
+          "p90": 1.044,
+          "p95": 1.166
+        },
+        "wall_clock": {
+          "method": "linear_interpolation_r7",
+          "p50": -32.53,
+          "p90": -0.579,
+          "p95": 3.312
+        }
+      }
+    }
+  ],
+  "interpretation": [
+    "The original pooled 26-to-2 result contains confirmed duplicate, conflict, and rejection counters; unresolved outcomes were 0 in both conditions.",
+    "Pooled counters are correlated: one affected run may contribute to more than one category, so affected-run counts are the primary descriptive result.",
+    "The runner invoked the condition-blind evaluator for every retained run. The legacy verified field is an acceptance result, not a measure of how often the evaluator looked.",
+    "This post-hoc reanalysis adds descriptive resolution only. It does not change the frozen rows, preregistered gates, or causal scope of the benchmark."
+  ]
+}

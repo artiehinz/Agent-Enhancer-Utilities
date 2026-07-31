@@ -29,29 +29,40 @@ infrastructure exclusions are public under
 The complete publication sample contains 200 valid runs and passes every
 preregistered gate.
 
-| Scenario | Without sidecar | With sidecar | Decision |
-|---|---:|---:|---|
-| Ambiguous create | 20/20 verified, 0 harm | 20/20 verified, 0 harm | Do not claim a benefit |
-| Overlapping workers | 8/20 verified, 24 harm counters | 19/20 verified, 2 harm counters | Use the sidecar when workers can overlap |
-| Shared rate limit | 20/20 verified, 0 harm | 20/20 verified, 0 harm | Current fixture does not justify the overhead |
-| Scheduled refresh | 18/20 verified, 2 duplicates | 20/20 verified, 0 duplicates | Use when stale duplicate work is consequential |
-| Low-risk control | 20/20 verified | 20/20 verified, 20/20 abstained | Keep selection local and make no remote call |
+| Scenario | Acceptance without → with | Affected runs | Unresolved outcomes | Paired token p50 / p90 | Paired latency p50 / p90 | Decision |
+|---|---:|---:|---:|---:|---:|---|
+| Ambiguous create | 20 → 20 / 20 | 0 → 0 / 20 | 0 → 0 | +572% / +777% | +365% / +455% | Do not claim a benefit |
+| Overlapping workers | 8 → 19 / 20 | 12 → 1 / 20 | 0 → 0 | +257% / +404% | +202% / +266% | Use when workers can overlap |
+| Shared rate limit | 20 → 20 / 20 | 0 → 0 / 20 | 0 → 0 | +284% / +462% | +150% / +192% | The fixture does not justify the overhead |
+| Scheduled refresh | 18 → 20 / 20 | 2 → 0 / 20 | 0 → 0 | +240% / +342% | +140% / +281% | Use when stale duplicate work matters |
+| Low-risk control | 20 → 20 / 20 | 0 → 0 / 20 | 0 → 0 | -34% / +1% | -33% / -1% | Keep selection local; make no remote call |
 
-Across the four risk scenarios, the frozen evaluator recorded 26 harmful
-counters without the sidecar and 2 with it, a 92.308% reduction. Verified
-completion rose from 82.5% to 98.75%. Activation and abstention were both
-100%.
+Across the four risk scenarios, runs with at least one confirmed duplicate,
+conflict, or rejection fell from 14/80 without the sidecar to 1/80 with it, a
+92.857% reduction. The frozen `verified` field is an acceptance result from a
+condition-blind evaluator, not a measure of how often the evaluator looked.
+Acceptance rose from 66/80 to 79/80; the evaluator ran and a final response
+was present for all 160 retained risk-scenario rows.
 
-The harm metric is the preregistered sum of duplicate mutations, conflicting
-actions, provider rejections, and unresolved ambiguous outcomes. It is a
-counter total, not a claim that every counter is a distinct user incident.
+Unresolved outcomes were 0 in both conditions. The original pooled 26-to-2
+counter result therefore did not mix unknown outcomes into confirmed harm in
+this sample. It did, however, pool correlated categories: 12 unguarded overlap
+runs each contributed one duplicate-mutation and one conflicting-action
+counter, and one guarded overlap run contributed both. The pooled total is
+preserved as secondary evidence, not presented as 26 independent incidents.
+
+This is a post-hoc descriptive reanalysis of the already published rows. It
+does not alter the preregistration, rows, gates, or causal claim. The
+reproducible output is
+[`publication-reanalysis.json`](../examples/on-demand-agent-benchmark/results/publication-reanalysis.json).
 
 ## Cost of the guard
 
 The guarded condition used substantially more model tokens and wall-clock time
 in every risk-bearing scenario. Median paired input-token differences ranged
-from +240% to +572%, and median latency differences ranged from +140% to
-+365%. The sidecar is therefore not justified for every task.
+from +240% to +572%, with p90 differences from +342% to +777%. Median latency
+differences ranged from +140% to +365%, with p90 differences from +192% to
++455%. The sidecar is therefore not justified for every task.
 
 Low-risk guarded runs showed lower median tokens and latency, but the selector
 made zero adapter and remote calls. The difference is ordinary host-run

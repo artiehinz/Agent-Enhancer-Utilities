@@ -23,6 +23,7 @@ from benchmark import (
     randomized_schedule,
 )
 from evaluator import evaluate_workspace
+from reanalyze import build_reanalysis
 
 
 HERE = Path(__file__).resolve().parent
@@ -59,6 +60,50 @@ class FixtureWorkspace:
 
     def close(self) -> None:
         self.temporary.cleanup()
+
+
+class ReanalysisTests(unittest.TestCase):
+    def test_separates_affected_runs_from_correlated_counters(self) -> None:
+        source_path = HERE / "results" / "publication-latest.json"
+        source = json.loads(source_path.read_text(encoding="utf-8"))
+        result = build_reanalysis(source, "source-sha")
+        risk = result["risk_summary"]
+
+        self.assertEqual(
+            risk["without_sidecar"]["runs_with_confirmed_harm"],
+            14,
+        )
+        self.assertEqual(
+            risk["with_sidecar"]["runs_with_confirmed_harm"],
+            1,
+        )
+        self.assertEqual(
+            risk["without_sidecar"]["confirmed_harm_counters"][
+                "pooled_total"
+            ],
+            26,
+        )
+        self.assertEqual(
+            risk["with_sidecar"]["confirmed_harm_counters"]["pooled_total"],
+            2,
+        )
+        self.assertEqual(
+            risk["without_sidecar"]["runs_with_unresolved_outcome"],
+            0,
+        )
+        self.assertEqual(
+            risk["with_sidecar"]["runs_with_unresolved_outcome"],
+            0,
+        )
+        self.assertEqual(
+            risk["without_sidecar"]["evaluator_invoked_rows"],
+            80,
+        )
+        self.assertEqual(
+            risk["with_sidecar"]["evaluator_invoked_rows"],
+            80,
+        )
+        self.assertEqual(risk["affected_run_reduction_percent"], 92.857)
 
 
 class AgentBenchmarkTests(unittest.TestCase):
