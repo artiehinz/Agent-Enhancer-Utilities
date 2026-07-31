@@ -38,6 +38,19 @@ risk-bearing work. Official MCP Registry `0.7.0` is the latest immutable
 registry version and points to the same free production endpoint. Real USDC
 remains disabled.
 
+The separate exploratory checkpoint diagnostic is complete. Immutable
+`v1.7.0` remains a negative result after two full timeouts. `v1.7.1` completed
+15/15 valid trials and passed the observed harm, acceptance, abstention, token,
+and latency gates, but used the required checkpoint in only 6/10 overlap
+trials. `v1.7.2` replaced that optional-looking sequence with one fail-closed
+`checkpoint-prepare` command and passed every frozen gate: checkpoint 10/10,
+harm 0/10, acceptance 10/10, one external mutation per overlap trial,
+unresolved outcomes zero, and five low-risk controls with zero sidecar calls.
+Median paired input tokens and latency were 48.75% and 25.41% below the frozen
+`v1.6.0` trial indices. This is a synthetic, one-model remediation result and
+is not pooled with the main 200-run publication or treated as a universal
+savings claim.
+
 The next work is external commercial validation, not another broad module
 expansion:
 
@@ -574,7 +587,7 @@ are the checkpoint safety release, not a protocol-era migration.
 The reliability-sidecar pattern is applicable to MCP `2026-07-28`, but the
 hosted Agent Enhancer server does not yet claim support or conformance.
 Current immutable compatibility evidence covers MCP `2025-03-26`, backend
-`0.6.9`, and public package `v1.6.0`. Do not rewrite those historical claims.
+`0.7.0`, and public package `v1.7.2`. Do not rewrite older historical claims.
 Schedule a later backend and public-package version only after the official
 protocol, SDK, and conformance gates are reverified. Use the
 [official protocol change summary](https://modelcontextprotocol.io/specification/2026-07-28/changelog)
