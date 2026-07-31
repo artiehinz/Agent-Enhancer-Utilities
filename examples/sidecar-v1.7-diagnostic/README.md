@@ -51,6 +51,13 @@ trials. The overall safety status therefore remains failed. See
 [`v1.7.1-outcome.md`](./v1.7.1-outcome.md) and the full
 [`remediation-v1.7.1-latest.json`](./results/remediation-v1.7.1-latest.json).
 
+The follow-up `v1.7.2` contention correction is evaluated under a third frozen
+plan without rewriting either earlier report:
+
+```sh
+python -B run_contention.py
+```
+
 Every guarded run requires `AGENT_ENHANCER_INTERNAL_METRICS_TOKEN`; production
 must acknowledge that the traffic is excluded from public usage. The runner
 writes `results/diagnostic-latest.json` after every trial so interrupted work

@@ -38,12 +38,14 @@ simple lock is insufficient.
 
 When `execution_recipe.required_guard` is `workflow-checkpoint`, read
 [references/checkpoint-execution.md](references/checkpoint-execution.md) and
-use the bundled `checkpoint-blueprint` and `checkpoint-step` commands. Do not
+use the bundled `checkpoint-prepare` and `checkpoint-step` commands. Do not
 inspect the adapter source, tests, or live schema during normal execution.
-Generate one blueprint before spawning workers; give every worker the same
-file and a distinct holder label.
+Run `checkpoint-prepare` before spawning workers. It creates the blueprint,
+claims for all holders concurrently, fails closed unless exactly one winner is
+proven, and returns each disposition. Do not replace it with an unguarded
+local-only blueprint.
 
-Only a holder whose claim reports `acquired` or `reused` may continue. Record
+Only the returned winner may cross the external-write boundary. Record
 `external_attempt_started` immediately before the domain action. After a lost
 response, record uncertainty, reconcile through the destination, and never
 blindly retry. Record `caller_verified` only after destination evidence.

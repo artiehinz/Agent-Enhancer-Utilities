@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import hashlib
 import importlib.util
 import json
@@ -383,7 +384,7 @@ class DirectToolClient:
         headers = {
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "User-Agent": "agent-enhancer-skills-on-demand/1.7.1",
+            "User-Agent": "agent-enhancer-skills-on-demand/1.7.2",
             "X-Agent-Discovery-Source": self.source,
         }
         if idempotency_key is not None:
@@ -697,6 +698,78 @@ def invoke_checkpoint_blueprint_step(
     }
 
 
+def contend_checkpoint_blueprint(
+    blueprint: dict[str, Any],
+    *,
+    client: ToolClient | None = None,
+) -> dict[str, Any]:
+    """Claim one checkpoint concurrently for every local holder label."""
+
+    holders = blueprint.get("holders")
+    if not isinstance(holders, dict) or not 2 <= len(holders) <= 32:
+        raise OnDemandError(
+            "INVALID_BLUEPRINT",
+            "checkpoint contention requires between two and 32 holders",
+        )
+    selected_client = client or DirectToolClient()
+    responses: dict[str, dict[str, Any]] = {}
+    errors: dict[str, str] = {}
+    with ThreadPoolExecutor(max_workers=len(holders)) as executor:
+        pending = {
+            executor.submit(
+                invoke_checkpoint_blueprint_step,
+                blueprint,
+                holder_label=label,
+                step="claim",
+                client=selected_client,
+            ): label
+            for label in sorted(holders)
+        }
+        for future in as_completed(pending):
+            label = pending[future]
+            try:
+                responses[label] = future.result()
+            except OnDemandError as error:
+                errors[label] = error.code
+    if errors:
+        raise OnDemandError(
+            "CHECKPOINT_CONTENTION_INCOMPLETE",
+            "one or more concurrent checkpoint claims could not be confirmed; stop before the external write",
+        )
+    dispositions = {
+        label: response.get("result", {}).get("claim_disposition")
+        for label, response in responses.items()
+    }
+    admitted = sorted(
+        label
+        for label, disposition in dispositions.items()
+        if disposition in {"acquired", "reused"}
+    )
+    blocked = sorted(
+        label
+        for label, disposition in dispositions.items()
+        if disposition == "write_execution_in_progress"
+    )
+    if len(admitted) != 1 or len(blocked) != len(holders) - 1:
+        raise OnDemandError(
+            "CHECKPOINT_CONTENTION_UNSAFE",
+            "checkpoint contention did not prove exactly one admitted holder; stop before the external write",
+        )
+    return {
+        "slug": "workflow-checkpoint",
+        "decision": "checkpoint-contend",
+        "winner": admitted[0],
+        "blocked_holders": blocked,
+        "claim_dispositions": dispositions,
+        "remote_planner_calls": 0,
+        "remote_coordination_calls": len(responses),
+        "owned_automation_excluded": all(
+            response.get("owned_automation_excluded") is True
+            for response in responses.values()
+        ),
+    }
+
+
 def _execution_recipe(plan: dict[str, Any]) -> dict[str, Any] | None:
     if plan["decision"] == "no-sidecar":
         return None
@@ -746,11 +819,11 @@ def _execution_recipe(plan: dict[str, Any]) -> dict[str, Any] | None:
             if uses_checkpoint
             else None
         ),
-        "local_blueprint_command": (
-            "checkpoint-blueprint" if uses_checkpoint else None
-        ),
         "checkpoint_step_command": (
             "checkpoint-step" if uses_checkpoint else None
+        ),
+        "prepare_command": (
+            "checkpoint-prepare" if uses_checkpoint else None
         ),
         "namespace_rule": (
             "<scope>:<fresh UUID v4>" if uses_checkpoint else None
@@ -866,6 +939,14 @@ def main(argv: list[str] | None = None) -> int:
     blueprint_parser.add_argument("--claim-ttl-seconds", type=int, default=120)
     blueprint_parser.add_argument("--state-ttl-seconds", type=int, default=3_600)
     blueprint_parser.add_argument("--output")
+    prepare_parser = subparsers.add_parser("checkpoint-prepare")
+    prepare_parser.add_argument("--scope", default="workflow")
+    prepare_parser.add_argument("--operation-id", required=True)
+    prepare_parser.add_argument("--holders", nargs="+", required=True)
+    prepare_parser.add_argument("--namespace-uuid")
+    prepare_parser.add_argument("--claim-ttl-seconds", type=int, default=120)
+    prepare_parser.add_argument("--state-ttl-seconds", type=int, default=3_600)
+    prepare_parser.add_argument("--output", required=True)
     checkpoint_parser = subparsers.add_parser("checkpoint-step")
     checkpoint_parser.add_argument("--blueprint", required=True)
     checkpoint_parser.add_argument("--holder", required=True)
@@ -884,6 +965,8 @@ def main(argv: list[str] | None = None) -> int:
             "status",
         ),
     )
+    contend_parser = subparsers.add_parser("checkpoint-contend")
+    contend_parser.add_argument("--blueprint", required=True)
     args = parser.parse_args(argv)
     client = DirectToolClient(
         args.base_url,
@@ -900,7 +983,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.idempotency_key,
                 client,
             )
-        elif args.command == "checkpoint-blueprint":
+        elif args.command in {"checkpoint-blueprint", "checkpoint-prepare"}:
             blueprint = build_checkpoint_blueprint(
                 scope=args.scope,
                 operation_id=args.operation_id,
@@ -914,22 +997,37 @@ def main(argv: list[str] | None = None) -> int:
                     json.dumps(blueprint, indent=2) + "\n",
                     encoding="utf-8",
                 )
-            result = {
-                "decision": "checkpoint-blueprint",
-                "remote_planner_calls": 0,
-                "remote_coordination_calls": 0,
-                "output": args.output,
-                "holder_count": len(blueprint["holders"]),
-                "namespace": blueprint["namespace"],
-                "workflow_key": blueprint["workflow_key"],
-            }
-            if not args.output:
-                result["blueprint"] = blueprint
-        else:
+            if args.command == "checkpoint-prepare":
+                result = {
+                    **contend_checkpoint_blueprint(blueprint, client=client),
+                    "decision": "checkpoint-prepare",
+                    "output": args.output,
+                    "holder_count": len(blueprint["holders"]),
+                    "namespace": blueprint["namespace"],
+                    "workflow_key": blueprint["workflow_key"],
+                }
+            else:
+                result = {
+                    "decision": "checkpoint-blueprint",
+                    "remote_planner_calls": 0,
+                    "remote_coordination_calls": 0,
+                    "output": args.output,
+                    "holder_count": len(blueprint["holders"]),
+                    "namespace": blueprint["namespace"],
+                    "workflow_key": blueprint["workflow_key"],
+                }
+                if not args.output:
+                    result["blueprint"] = blueprint
+        elif args.command == "checkpoint-step":
             result = invoke_checkpoint_blueprint_step(
                 _read_json(args.blueprint),
                 holder_label=args.holder,
                 step=args.step,
+                client=client,
+            )
+        else:
+            result = contend_checkpoint_blueprint(
+                _read_json(args.blueprint),
                 client=client,
             )
     except (

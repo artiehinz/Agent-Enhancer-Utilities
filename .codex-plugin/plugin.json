@@ -1,6 +1,6 @@
 {
   "name": "agent-enhancer-utilities",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "Add planning, checkpoints, deduplication, recovery, and evidence to agent workflows with seven skills and a free MCP reliability sidecar.",
   "author": {
     "name": "Artie Hinz",

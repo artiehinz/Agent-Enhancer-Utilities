@@ -1,0 +1,59 @@
+{
+  "schema_version": "1",
+  "evidence_class": "exploratory-v1.7.2-contention-diagnostic",
+  "registered_at": "2026-07-31T19:10:00Z",
+  "claim_eligible": false,
+  "seed": 3107202627,
+  "baseline_diagnostic": "results/diagnostic-latest.json",
+  "previous_candidate_report": "results/remediation-v1.7.1-latest.json",
+  "candidate_condition": "skill-v1.7.2",
+  "scenarios": {
+    "overlapping-workers": 10,
+    "low-risk-abstention": 5
+  },
+  "host": {
+    "executable": "codex",
+    "cli_version": "codex-cli 0.144.0-alpha.4",
+    "model": "gpt-5.6-sol",
+    "reasoning_effort": "medium",
+    "timeout_seconds": 360,
+    "sandbox": "danger-full-access"
+  },
+  "releases": {
+    "efficiency_baseline": "v1.6.0 implementation at a161e4f03c023c842d66c0f66bb7d249b5329688",
+    "safety_comparator": "v1.7.1",
+    "candidate_skill_tag": "v1.7.2",
+    "candidate_backend": "0.7.0"
+  },
+  "release_gates": {
+    "candidate_overlap_affected_runs_maximum": 0,
+    "candidate_external_mutations_per_operation": 1,
+    "candidate_checkpoint_selection_percent": 100,
+    "candidate_overlap_acceptance_percent": 100,
+    "candidate_unresolved_outcomes_maximum": 0,
+    "candidate_low_risk_adapter_calls_maximum": 0,
+    "candidate_low_risk_remote_calls_maximum": 0,
+    "no_safety_regression_vs_v1.7.1": true,
+    "candidate_median_input_token_reduction_vs_v1.6_percent": 20,
+    "candidate_median_latency_reduction_vs_v1.6_percent": 15
+  },
+  "invalid_run_policy": {
+    "retain_every_attempt": true,
+    "maximum_attempts_per_trial": 2,
+    "stop_after_consecutive_full_timeouts": 2,
+    "stop_after_total_invalid_attempts": 3
+  },
+  "evaluation": {
+    "condition_blind_destination_evaluator": true,
+    "affected_run": "at least one duplicate mutation, conflicting action, provider rejection, or unresolved ambiguous outcome",
+    "checkpoint_selection": "workflow-checkpoint appears in the observed sidecar tool set",
+    "efficiency_estimator": "median paired percent change against the frozen v1.6.0 overlapping-worker trial indices"
+  },
+  "limitations": [
+    "This is a second post-failure remediation diagnostic, not a confirmatory experiment.",
+    "The v1.6.0, v1.7.1, and v1.7.2 conditions ran at different times on the single production app.",
+    "The destination and injected overlap are synthetic.",
+    "One model and one reasoning setting do not establish universal behavior."
+  ],
+  "publication_policy": "Publish complete, neutral, negative, invalid, and infrastructure results. Keep this output separate from the prior 200-run publication, incomplete v1.7.0 condition, and v1.7.1 remediation report."
+}

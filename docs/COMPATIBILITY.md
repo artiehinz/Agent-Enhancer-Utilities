@@ -4,7 +4,7 @@ Last verified: 2026-07-31
 
 Compatibility means more than the presence of a manifest. The tables separate
 checks reproduced in this repository from host installations that still need
-to be run after the `v1.7.1` tag is public.
+to be run after the `v1.7.2` tag is public.
 
 ## Reproduced checks
 
@@ -14,8 +14,8 @@ to be run after the `v1.7.1` tag is public.
 | Codex plugin package | Codex CLI `0.144.0-alpha.4` | `.codex-plugin/plugin.json` passed the local OpenAI plugin validator; all referenced skills, MCP config, and image assets exist | Package passed |
 | Claude Code plugin | Claude Code `2.1.220` | `claude plugin validate .` accepted the manifest, all seven skills, and companion MCP configuration | Passed |
 | GitHub Copilot CLI plugin | Copilot CLI `1.0.75` | An isolated local install accepted `plugin.json` and reported version `1.5.0` with seven installed skills | Passed |
-| Agent Skills archive | Package `1.7.1` | Repository validator checks all seven frontmatter blocks, host metadata, supporting files, contract artifacts, benchmark results, and deterministic ZIP contents | Passed |
-| Reliability contract and benchmark | Contract `1`, schema revision `2`, package `1.7.1` | Checkpoint, adapter, and fixture tests cover the external-attempt boundary while retaining the unchanged 200-run publication | Passed |
+| Agent Skills archive | Package `1.7.2` | Repository validator checks all seven frontmatter blocks, host metadata, supporting files, contract artifacts, benchmark results, and deterministic ZIP contents | Passed |
+| Reliability contract and benchmark | Contract `1`, schema revision `2`, package `1.7.2` | Checkpoint, adapter, and fixture tests cover concurrent fail-closed preparation and the external-attempt boundary while retaining the unchanged 200-run publication | Passed |
 | Metered Codex benchmark harness | Codex CLI `0.144.0-alpha.4`, model `gpt-5.6-sol` | Ten local harness/evaluator tests pass; both completed validation summaries are public. Backend `0.6.5` passed harm, completion, and abstention gates but failed token and latency overhead gates. New runs fail closed unless production acknowledges the owned-automation marker | Validation failed overall; 200-run publication is blocked |
 | Python examples | Python `3.12.0` | General sidecar, two-contender checkpoint, and deterministic paired benchmark examples passed | Passed |
 | On-demand sidecar prototype | Python `3.12.0`, backend `0.7.0` | Local selector tests prove zero remote calls for low-risk work, one existing-service call for risk-bearing work, fail-closed local/hosted plan drift, and executable checkpoint blueprints | Passed |
@@ -31,7 +31,7 @@ to report `external_proof: false`.
 
 | Host | Package entry point | Release validation still required |
 | --- | --- | --- |
-| ChatGPT and Codex | `.codex-plugin/plugin.json` | Install the public `v1.7.1` package in a clean host session, confirm seven skills, connect the MCP server, and run both example prompts |
+| ChatGPT and Codex | `.codex-plugin/plugin.json` | Install the public `v1.7.2` package in a clean host session, confirm seven skills, connect the MCP server, and run both example prompts |
 | Claude Code | `.claude-plugin/plugin.json` | Manifest validation passed; load the public tag in a clean host session and execute one skill plus MCP call |
 | GitHub Copilot CLI | `plugin.json` | Isolated local installation passed; repeat from the immutable public tag and execute one skill plus MCP call |
 | Gemini CLI | `gemini-extension.json` | Install the tagged GitHub release, restart Gemini CLI, and verify seven skills plus the Streamable HTTP server |

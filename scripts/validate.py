@@ -7,7 +7,7 @@ import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE_VERSION = "1.7.1"
+PACKAGE_VERSION = "1.7.2"
 SKILL_NAMES = (
     "coordinate-parallel-agents",
     "test-http-failure-paths",
@@ -232,12 +232,65 @@ for relative_path in (
     "examples/on-demand-agent-benchmark/run.py",
     "examples/on-demand-agent-benchmark/test_benchmark.py",
     "examples/on-demand-agent-benchmark/results/validation-latest.json",
+    "examples/sidecar-v1.7-diagnostic/README.md",
+    "examples/sidecar-v1.7-diagnostic/preregistered-plan.json",
+    "examples/sidecar-v1.7-diagnostic/post-start-amendment.json",
+    "examples/sidecar-v1.7-diagnostic/v1.7.0-outcome.md",
+    "examples/sidecar-v1.7-diagnostic/remediation-v1.7.1-plan.json",
+    "examples/sidecar-v1.7-diagnostic/run_remediation.py",
+    "examples/sidecar-v1.7-diagnostic/test_run_remediation.py",
+    "examples/sidecar-v1.7-diagnostic/v1.7.1-outcome.md",
+    "examples/sidecar-v1.7-diagnostic/contention-v1.7.2-plan.json",
+    "examples/sidecar-v1.7-diagnostic/run_contention.py",
+    "examples/sidecar-v1.7-diagnostic/test_run_contention.py",
+    "examples/sidecar-v1.7-diagnostic/results/diagnostic-latest.json",
+    "examples/sidecar-v1.7-diagnostic/results/remediation-v1.7.1-latest.json",
     "docs/RELIABILITY_SIDECAR_CONTRACT_V1.md",
     "docs/schemas/reliability-sidecar-contract-v1.schema.json",
     "docs/OPEN_SOURCE_INTEGRATION_PLAN.md",
 ):
     if not (ROOT / relative_path).is_file():
         fail(f"release package: missing {relative_path}")
+
+diagnostic_root = ROOT / "examples" / "sidecar-v1.7-diagnostic"
+v170_diagnostic = json.loads(
+    (diagnostic_root / "results" / "diagnostic-latest.json").read_text(
+        encoding="utf-8"
+    )
+)
+if v170_diagnostic.get("complete") is not False or len(
+    v170_diagnostic.get("invalid_runs", [])
+) != 2:
+    fail("v1.7.0 diagnostic: incomplete negative outcome drifted")
+v171_remediation = json.loads(
+    (
+        diagnostic_root
+        / "results"
+        / "remediation-v1.7.1-latest.json"
+    ).read_text(encoding="utf-8")
+)
+v171_summary = v171_remediation.get("candidate_summary", {})
+if (
+    v171_remediation.get("complete") is not True
+    or v171_remediation.get("safety_status") != "incomplete_or_failed"
+    or v171_remediation.get("efficiency_status") != "passed"
+    or v171_summary.get("overlap_checkpoint_selected_runs") != 6
+):
+    fail("v1.7.1 diagnostic: published gate outcome drifted")
+v172_plan = json.loads(
+    (diagnostic_root / "contention-v1.7.2-plan.json").read_text(
+        encoding="utf-8"
+    )
+)
+if (
+    v172_plan.get("claim_eligible") is not False
+    or v172_plan.get("releases", {}).get("candidate_skill_tag") != "v1.7.2"
+    or v172_plan.get("release_gates", {}).get(
+        "candidate_checkpoint_selection_percent"
+    )
+    != 100
+):
+    fail("v1.7.2 diagnostic: preregistered contention gate drifted")
 
 for relative_path in (
     "examples/common/mcp_client.py",

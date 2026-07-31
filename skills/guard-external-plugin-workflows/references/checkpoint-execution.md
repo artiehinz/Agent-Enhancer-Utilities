@@ -4,31 +4,25 @@ Use this reference only when the plan selects `workflow-checkpoint`.
 
 ## First-generation flow
 
-Generate one local blueprint before starting workers. The operation ID must
-already be opaque. Holder labels stay local and are hashed before any remote
-call.
+Prepare and claim the first generation before starting workers. The operation
+ID must already be opaque. Holder labels stay local and are hashed before any
+remote call.
 
 ```sh
-python <skill-dir>/scripts/on_demand.py checkpoint-blueprint \
+python <skill-dir>/scripts/on_demand.py checkpoint-prepare \
   --scope workflow \
   --operation-id <opaque-operation-id> \
   --holders alpha bravo \
   --output checkpoint-blueprint.json
 ```
 
-Give every worker the same blueprint and one holder label. Start claims
-concurrently:
+The command succeeds only if exactly one holder receives `acquired` or
+`reused` and every other holder receives `write_execution_in_progress`. Give
+each worker its returned disposition. All workers may inspect or verify, but
+only `winner` may perform the external mutation. Do not call `status` before
+contention.
 
-```sh
-python <skill-dir>/scripts/on_demand.py checkpoint-step \
-  --blueprint checkpoint-blueprint.json --holder alpha --step claim
-```
-
-Exactly one holder may receive `claim_disposition: acquired`. A replay by that
-same holder may receive `reused`. Every other holder must stop on
-`write_execution_in_progress`. Do not call `status` before `claim`.
-
-The admitted holder performs these steps:
+The winning holder performs these steps:
 
 1. Preflight the destination using the method named by `execution_recipe`.
 2. Run `--step start` immediately before the external mutation.

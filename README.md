@@ -19,9 +19,10 @@
   <a href="./LICENSE">MIT license</a>
 </p>
 
-> Release `v1.7.1` makes the durable checkpoint flow directly executable from
-> a compact local blueprint. Agents no longer need to rediscover the hosted
-> schema before claiming, recording the attempt boundary, or reconciling.
+> Release `v1.7.2` prepares a durable concurrent checkpoint in one fail-closed
+> command. It creates the opaque blueprint and proves exactly one winner before
+> any external worker may write, then supports the attempt boundary and
+> uncertainty recovery without blind replay.
 > Backend `0.7.0` keeps all 24 modules and 37 direct tools per connector. All
 > public modules remain free and real USDC remains disabled.
 

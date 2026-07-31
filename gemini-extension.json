@@ -1,6 +1,6 @@
 {
   "name": "agent-enhancer-utilities",
-  "version": "1.7.1",
+  "version": "1.7.2",
   "description": "Seven Agent Skills and a free MCP reliability sidecar for guarded agent workflows.",
   "mcpServers": {
     "agent-enhancer-utilities": {

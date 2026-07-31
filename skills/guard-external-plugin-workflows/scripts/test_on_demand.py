@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import importlib.util
 from pathlib import Path
+import threading
 import unittest
 
 
@@ -72,6 +73,47 @@ class FakeClient:
         }
 
 
+class ContentionClient(FakeClient):
+    def __init__(self) -> None:
+        super().__init__()
+        self.owner = None
+        self.lock = threading.Lock()
+
+    def invoke(self, slug, tool_input, idempotency_key=None):
+        with self.lock:
+            self.calls += 1
+            self.requests.append((slug, tool_input, idempotency_key))
+            holder = tool_input["holder"]
+            if self.owner is None:
+                self.owner = holder
+                disposition = "acquired"
+            elif holder == self.owner:
+                disposition = "reused"
+            else:
+                disposition = "write_execution_in_progress"
+        return {
+            "slug": slug,
+            "result": {"claim_disposition": disposition},
+            "request_id": "req_test",
+            "owned_automation_excluded": True,
+            "remote_calls": self.calls,
+        }
+
+
+class UnsafeContentionClient(ContentionClient):
+    def invoke(self, slug, tool_input, idempotency_key=None):
+        with self.lock:
+            self.calls += 1
+            self.requests.append((slug, tool_input, idempotency_key))
+        return {
+            "slug": slug,
+            "result": {"claim_disposition": "acquired"},
+            "request_id": "req_unsafe",
+            "owned_automation_excluded": True,
+            "remote_calls": self.calls,
+        }
+
+
 class OnDemandTests(unittest.TestCase):
     def test_low_risk_abstains_without_constructing_a_client(self) -> None:
         result = MODULE.plan_on_demand(LOW_RISK)
@@ -104,8 +146,8 @@ class OnDemandTests(unittest.TestCase):
                 "prohibited_action": (
                     "blind_external_retry_after_uncertain_write"
                 ),
-                "local_blueprint_command": "checkpoint-blueprint",
                 "checkpoint_step_command": "checkpoint-step",
+                "prepare_command": "checkpoint-prepare",
                 "namespace_rule": "<scope>:<fresh UUID v4>",
             },
         )
@@ -165,6 +207,41 @@ class OnDemandTests(unittest.TestCase):
         self.assertEqual(result["blueprint_step"], "claim")
         self.assertEqual(len(client.requests), 1)
         self.assertEqual(client.requests[0][1]["action"], "claim")
+
+    def test_checkpoint_contention_returns_exactly_one_winner(self) -> None:
+        blueprint = MODULE.build_checkpoint_blueprint(
+            scope="bench",
+            operation_id="operation_0123456789abcdef",
+            holder_labels=["alpha", "bravo", "charlie"],
+            namespace_uuid="6f0a1e7e-e446-46f1-88ab-bddef15f89a2",
+        )
+        result = MODULE.contend_checkpoint_blueprint(
+            blueprint,
+            client=ContentionClient(),
+        )
+        self.assertEqual(result["decision"], "checkpoint-contend")
+        self.assertEqual(len(result["blocked_holders"]), 2)
+        self.assertEqual(
+            result["claim_dispositions"][result["winner"]],
+            "acquired",
+        )
+        self.assertEqual(result["remote_coordination_calls"], 3)
+
+    def test_checkpoint_contention_fails_closed_on_multiple_winners(self) -> None:
+        blueprint = MODULE.build_checkpoint_blueprint(
+            scope="bench",
+            operation_id="operation_0123456789abcdef",
+            holder_labels=["alpha", "bravo"],
+            namespace_uuid="6f0a1e7e-e446-46f1-88ab-bddef15f89a2",
+        )
+        with self.assertRaisesRegex(
+            MODULE.OnDemandError,
+            "did not prove exactly one admitted holder",
+        ):
+            MODULE.contend_checkpoint_blueprint(
+                blueprint,
+                client=UnsafeContentionClient(),
+            )
 
     def test_checkpoint_evidence_fingerprint_matches_hosted_contract(self) -> None:
         request = {

@@ -12,6 +12,16 @@
 - Keep the 200-run publication phase blocked while a smaller host-visible MCP
   surface is designed and preregistered.
 
+## 1.7.2 - 2026-07-31
+
+- Add one `checkpoint-prepare` command that creates the opaque blueprint and
+  issues all holder claims concurrently before domain workers start.
+- Fail closed unless exactly one winner and all losing dispositions are
+  confirmed; never cross the external-write boundary after a partial or
+  contradictory contention result.
+- Preserve the complete `v1.7.1` remediation result, including its failed
+  6/10 checkpoint-adherence gate, and test this correction separately.
+
 ## 1.7.1 - 2026-07-31
 
 - Add a compact local checkpoint blueprint and deterministic step commands so

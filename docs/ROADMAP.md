@@ -27,7 +27,7 @@ help execute that plan using opaque identifiers and bounded temporary state.
 
 ## Current focus
 
-Backend `0.7.0` and public package `v1.7.1` retain all 24 modules, 37 Claude
+Backend `0.7.0` and public package `v1.7.2` retain all 24 modules, 37 Claude
 tools, 37 ChatGPT tools, and all seven skills. The release upgrades material
 duplicate-sensitive writes from a simple lock to a durable checkpoint with an
 explicit external-attempt boundary and uncertainty-preserving recovery.
@@ -568,7 +568,7 @@ Exit criteria:
 
 ## Phase 2.5 — MCP 2026-07-28 dual-era migration
 
-Status: deferred and unversioned. Backend `0.7.0` and public package `v1.7.1`
+Status: deferred and unversioned. Backend `0.7.0` and public package `v1.7.2`
 are the checkpoint safety release, not a protocol-era migration.
 
 The reliability-sidecar pattern is applicable to MCP `2026-07-28`, but the
