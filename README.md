@@ -13,6 +13,7 @@
   <a href="https://liberated.site/status">Service status</a> ·
   <a href="https://liberated.site/effectiveness">Effectiveness</a> ·
   <a href="https://liberated.site/tools">24-module catalog</a> ·
+  <a href="./docs/BETA_PARTNER_GUIDE.md">Beta partner guide</a> ·
   <a href="https://liberated.site/demo.mp4">Video demo</a> ·
   <a href="https://glama.ai/mcp/connectors/site.liberated/agent-utility-lab">Glama verified</a> ·
   <a href="./LICENSE">MIT license</a>
