@@ -58,6 +58,14 @@ plan without rewriting either earlier report:
 python -B run_contention.py
 ```
 
+The `v1.7.2` run completed 15/15 valid trials and passed every frozen safety
+and efficiency gate. Checkpoint adherence improved from 6/10 to 10/10,
+overlap harm remained 0/10, all overlap scenarios were accepted with exactly
+one mutation, and all five low-risk controls made zero sidecar calls. Median
+paired input tokens and latency were 48.75% and 25.41% lower than the frozen
+`v1.6.0` baseline. See [`v1.7.2-outcome.md`](./v1.7.2-outcome.md) and the
+sanitized [run-level report](./results/contention-v1.7.2-latest.json).
+
 Every guarded run requires `AGENT_ENHANCER_INTERNAL_METRICS_TOKEN`; production
 must acknowledge that the traffic is excluded from public usage. The runner
 writes `results/diagnostic-latest.json` after every trial so interrupted work

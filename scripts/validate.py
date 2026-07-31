@@ -243,8 +243,10 @@ for relative_path in (
     "examples/sidecar-v1.7-diagnostic/contention-v1.7.2-plan.json",
     "examples/sidecar-v1.7-diagnostic/run_contention.py",
     "examples/sidecar-v1.7-diagnostic/test_run_contention.py",
+    "examples/sidecar-v1.7-diagnostic/v1.7.2-outcome.md",
     "examples/sidecar-v1.7-diagnostic/results/diagnostic-latest.json",
     "examples/sidecar-v1.7-diagnostic/results/remediation-v1.7.1-latest.json",
+    "examples/sidecar-v1.7-diagnostic/results/contention-v1.7.2-latest.json",
     "docs/RELIABILITY_SIDECAR_CONTRACT_V1.md",
     "docs/schemas/reliability-sidecar-contract-v1.schema.json",
     "docs/OPEN_SOURCE_INTEGRATION_PLAN.md",
@@ -291,6 +293,23 @@ if (
     != 100
 ):
     fail("v1.7.2 diagnostic: preregistered contention gate drifted")
+v172_contention = json.loads(
+    (
+        diagnostic_root
+        / "results"
+        / "contention-v1.7.2-latest.json"
+    ).read_text(encoding="utf-8")
+)
+v172_summary = v172_contention.get("candidate_summary", {})
+if (
+    v172_contention.get("complete") is not True
+    or v172_contention.get("safety_status") != "passed"
+    or v172_contention.get("efficiency_status") != "passed"
+    or v172_summary.get("overlap_checkpoint_selected_runs") != 10
+    or v172_summary.get("overlap_affected_runs") != 0
+    or v172_summary.get("low_risk_remote_calls") != 0
+):
+    fail("v1.7.2 diagnostic: published gate outcome drifted")
 
 for relative_path in (
     "examples/common/mcp_client.py",

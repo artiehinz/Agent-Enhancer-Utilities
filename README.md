@@ -25,6 +25,8 @@
 > uncertainty recovery without blind replay.
 > Backend `0.7.0` keeps all 24 modules and 37 direct tools per connector. All
 > public modules remain free and real USDC remains disabled.
+> The separate exploratory `v1.7.2` diagnostic passed checkpoint adherence
+> 10/10 and low-risk abstention 5/5; [read the limitations and raw report](./examples/sidecar-v1.7-diagnostic/v1.7.2-outcome.md).
 
 Agent Enhancer is a **reliability sidecar**, not a replacement for the agent or
 domain tools you already use. Connect it to an existing workflow and call the
