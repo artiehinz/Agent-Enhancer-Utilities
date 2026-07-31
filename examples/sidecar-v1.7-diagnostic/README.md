@@ -44,6 +44,13 @@ python -B run_remediation.py
 It reuses only the published `no-sidecar` and `v1.6.0` baseline rows. It does
 not rewrite, complete, or pool the incomplete `v1.7.0` condition.
 
+The `v1.7.1` remediation completed 15/15 valid trials. It passed the observed
+harm, mutation-count, acceptance, unresolved-outcome, abstention, token, and
+latency gates, but selected the required checkpoint in only 6/10 overlap
+trials. The overall safety status therefore remains failed. See
+[`v1.7.1-outcome.md`](./v1.7.1-outcome.md) and the full
+[`remediation-v1.7.1-latest.json`](./results/remediation-v1.7.1-latest.json).
+
 Every guarded run requires `AGENT_ENHANCER_INTERNAL_METRICS_TOKEN`; production
 must acknowledge that the traffic is excluded from public usage. The runner
 writes `results/diagnostic-latest.json` after every trial so interrupted work
