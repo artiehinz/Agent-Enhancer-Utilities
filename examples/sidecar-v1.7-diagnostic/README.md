@@ -10,6 +10,11 @@ The single production app creates an explicit order limitation. The exact
 planner must run against backend `0.7.0`. The report is exploratory and cannot
 support a confirmatory product claim.
 
+The immutable `v1.6.0` tag predates the on-demand adapter used by the published
+200-run study. The baseline therefore pins the final pre-`v1.7.0` commit on the
+`1.6.0` release line (`a161e4f...`) and discloses that artifact mismatch. The
+tag is not rewritten.
+
 Run the two pre-deployment conditions:
 
 ```sh

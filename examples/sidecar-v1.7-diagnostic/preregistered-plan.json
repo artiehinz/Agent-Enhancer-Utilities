@@ -23,6 +23,8 @@
   },
   "releases": {
     "current_skill": "v1.6.0",
+    "current_skill_commit": "a161e4f03c023c842d66c0f66bb7d249b5329688",
+    "current_skill_artifact_note": "The immutable v1.6.0 tag predates scripts/on_demand.py. The baseline uses the final pre-v1.7.0 main commit on the 1.6.0 release line, which is the implementation used by the published on-demand benchmark.",
     "candidate_skill": "v1.7.0",
     "current_backend": "0.6.10",
     "candidate_backend": "0.7.0"
@@ -45,5 +47,8 @@
     "efficiency_estimator": "median paired percent change for overlapping-worker trials"
   },
   "execution_constraint": "The single production backend cannot serve the exact v1.6.0 and v1.7.0 fail-closed local planners simultaneously. Run no-sidecar and v1.6.0 before the production upgrade, then v1.7.0 after it. This prevents fully randomized cross-version execution order and blocks confirmatory claims.",
+  "amendments_before_first_run": [
+    "The first preflight found that the immutable v1.6.0 tag predates scripts/on_demand.py. Before any model run, the baseline was pinned to a161e4f03c023c842d66c0f66bb7d249b5329688, the final pre-v1.7.0 commit on the 1.6.0 release line and the implementation used by the published on-demand benchmark."
+  ],
   "publication_policy": "Publish safety, efficiency, neutral, negative, invalid, and infrastructure results. Do not pool these rows with the prior 200-run publication."
 }

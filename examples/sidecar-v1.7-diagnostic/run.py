@@ -232,6 +232,7 @@ def _build_report(
         "rows": rows,
         "limitations": [
             plan["execution_constraint"],
+            plan["releases"]["current_skill_artifact_note"],
             "The destination and injected failure are synthetic.",
             "One model and one reasoning setting do not establish universal agent behavior.",
             "ChatGPT-managed authentication exposes tokens but no defensible per-run dollar cost.",
@@ -273,7 +274,9 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="agent-skill-versions-") as temporary:
         temporary_root = Path(temporary)
         if args.condition == "skill-v1.6.0":
-            benchmark.SKILL_ROOT = _materialize_skill("v1.6.0", temporary_root)
+            benchmark.SKILL_ROOT = _materialize_skill(
+                plan["releases"]["current_skill_commit"], temporary_root
+            )
         elif args.condition == "skill-v1.7.0":
             benchmark.SKILL_ROOT = ROOT / SKILL_PATH
 
