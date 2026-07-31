@@ -307,18 +307,12 @@ promotion gates, and licensing boundary are maintained in
    MCP smoke passes. The recipe now uses goose's owner-qualified
    `agent-enhancer__lab.*` tool names and requires any separate domain
    extension through CLI or launch metadata before an external action. All
-   three content review threads are resolved. The remaining failed
-   `security-scan` check is an upstream workflow failure: its
-   `pull_request_target` job refuses its own fork checkout before scanning any
-   recipe content. That refusal protects repository secrets from the scanner's
-   network-capable developer tooling. The safe repair is proposed in
-   [workflow PR #10825](https://github.com/aaif-goose/goose/pull/10825): run
-   the privileged AI scan only for origin branches, keep the fork gate failed
-   until a write-capable reviewer approves the exact current head with no
-   active authorized change request, and preserve both the required
-   `security-scan` job and legacy scanner status from an always-running final
-   gate over the applicable path. A maintainer then reruns the failed fork
-   boundary.
+   three content review threads are resolved. The safe base-workflow repair
+   [#10825](https://github.com/aaif-goose/goose/pull/10825) merged on
+   2026-07-30. The remaining failed boundary now requires a write-capable
+   maintainer to approve exact recipe head `06123ec1` and rerun the check; one
+   concise request was posted after the merge. No recipe-only change should be
+   used merely to retrigger CI.
 4. Maintain the focused
    [Agno cookbook PR #9178](https://github.com/agno-agi/agno/pull/9178),
    which demonstrates failed-generation recovery, competing-worker fencing,
@@ -574,15 +568,15 @@ Exit criteria:
 
 ## Phase 2.5 — MCP 2026-07-28 dual-era migration
 
-Status: planned for backend `0.7.0` and public package `v1.7.0`.
+Status: deferred and unversioned. Backend `0.7.0` and public package `v1.7.0`
+are the checkpoint safety release, not a protocol-era migration.
 
 The reliability-sidecar pattern is applicable to MCP `2026-07-28`, but the
 hosted Agent Enhancer server does not yet claim support or conformance.
 Current immutable compatibility evidence covers MCP `2025-03-26`, backend
 `0.6.9`, and public package `v1.6.0`. Do not rewrite those historical claims.
-Reserve `v1.7.0` for the dual-era protocol release; publish the completed
-skills-first evidence adapter as a `v1.6.x` patch if it must be released
-earlier. Use the
+Schedule a later backend and public-package version only after the official
+protocol, SDK, and conformance gates are reverified. Use the
 [official protocol change summary](https://modelcontextprotocol.io/specification/2026-07-28/changelog)
 as the normative migration checklist.
 
@@ -617,10 +611,9 @@ stateless modern request path:
     the complete conformance output and hashes, and issue a new immutable MCP
     Registry release.
 
-The acceptance release may state that Agent Enhancer Utilities `v1.7.0`
-supports MCP `2026-07-28` only after all modern and legacy gates pass. Before
-that point, documentation may describe pattern applicability but must not
-claim hosted-server support.
+Only that later acceptance release may claim support for the newer protocol
+era after all modern and legacy gates pass. Until then, documentation may
+describe pattern applicability but must not claim hosted-server conformance.
 
 The Microsoft MCP for Beginners lesson remains unchanged during review. Its
 optional community reference already says it is not evidence of Agent
