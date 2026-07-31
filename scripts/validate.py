@@ -7,7 +7,7 @@ import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE_VERSION = "1.6.0"
+PACKAGE_VERSION = "1.7.0"
 SKILL_NAMES = (
     "coordinate-parallel-agents",
     "test-http-failure-paths",
@@ -54,20 +54,32 @@ publication = json.loads(
         / "publication-latest.json"
     ).read_text(encoding="utf-8")
 )
-observed = publication["evaluation"]["observed"]
 expected_pairs = publication["evaluation"]["expected_pairs_per_scenario"]
+reanalysis = json.loads(
+    (
+        ROOT
+        / "examples"
+        / "on-demand-agent-benchmark"
+        / "results"
+        / "publication-reanalysis.json"
+    ).read_text(encoding="utf-8")
+)
+risk_without = reanalysis["risk_summary"]["without_sidecar"]
+risk_with = reanalysis["risk_summary"]["with_sidecar"]
 effectiveness_graph = effectiveness_graph_path.read_text(encoding="utf-8")
 for claim in (
     (
-        "harmful events fell from "
-        f"{observed['unguarded_harmful_events']} without Agent Enhancer to "
-        f"{observed['guarded_harmful_events']} with it"
+        "confirmed-harm runs fell from "
+        f"{risk_without['runs_with_confirmed_harm']} of {risk_without['runs']} "
+        "without Agent Enhancer to "
+        f"{risk_with['runs_with_confirmed_harm']} of {risk_with['runs']} with it"
     ),
     (
-        "increased from "
-        f"{observed['unguarded_verified_rate_percent']:g} percent to "
-        f"{observed['guarded_verified_rate_percent']:g} percent"
+        "scenario acceptance increased from "
+        f"{risk_without['acceptance_passed_runs']} of {risk_without['runs']} to "
+        f"{risk_with['acceptance_passed_runs']} of {risk_with['runs']}"
     ),
+    "Unresolved outcomes were zero in both conditions",
     f"All {expected_pairs} low-risk runs correctly abstained",
 ):
     if claim not in effectiveness_graph:

@@ -54,7 +54,7 @@ class McpClient:
             headers={
                 "Accept": "application/json, text/event-stream",
                 "Content-Type": "application/json",
-                "User-Agent": "agent-enhancer-public-example/1.6.0",
+                "User-Agent": "agent-enhancer-public-example/1.7.0",
             },
             method="POST",
         )
@@ -82,7 +82,7 @@ class McpClient:
                 "capabilities": {},
                 "clientInfo": {
                     "name": "agent-enhancer-public-example",
-                    "version": "1.6.0",
+                    "version": "1.7.0",
                 },
             },
         )

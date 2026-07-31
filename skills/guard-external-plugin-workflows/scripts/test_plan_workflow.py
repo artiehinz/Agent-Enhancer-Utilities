@@ -95,6 +95,15 @@ class PlannerTests(unittest.TestCase):
         self.assertEqual(result["guarantee"], "duplicate-resistant")
         actions = [stage["action"] for stage in result["stages"]]
         self.assertLess(actions.index("read_after_write"), actions.index("mark_seen_after_verification"))
+        self.assertIn("claim_checkpoint", actions)
+        self.assertIn("mark_external_attempt_started", actions)
+        self.assertIn("record_external_result_uncertain_if_response_lost", actions)
+        self.assertIn("record_caller_verified", actions)
+        self.assertNotIn("acquire_lock", actions)
+        self.assertEqual(
+            result["timeout_recovery"],
+            "checkpoint_uncertain_then_search_marker",
+        )
         self.assertIn("destination_search_is_eventually_consistent", result["residual_risks"])
 
     def test_batch_create_composes_fanout_and_schedule(self):
@@ -122,7 +131,8 @@ class PlannerTests(unittest.TestCase):
         self.assertEqual(result["guarantee"], "duplicate-resistant")
         actions = [stage["action"] for stage in result["stages"]]
         self.assertIn("acquire_semaphore", actions)
-        self.assertIn("acquire_run_lock", actions)
+        self.assertIn("claim_checkpoint", actions)
+        self.assertNotIn("acquire_run_lock", actions)
         self.assertIn("consume_rate_gate", actions)
         self.assertIn("arrive_barrier", actions)
 
@@ -138,7 +148,10 @@ class PlannerTests(unittest.TestCase):
         self.assert_output_shape(result)
         self.assertEqual(result["profile"], "send-at-most-once")
         self.assertEqual(result["guarantee"], "best-effort")
-        self.assertEqual(result["timeout_recovery"], "stop_for_review")
+        self.assertEqual(
+            result["timeout_recovery"],
+            "checkpoint_uncertain_then_stop_for_review",
+        )
         self.assertIn(
             "uncertain_irreversible_action_requires_review",
             result["residual_risks"],
@@ -213,10 +226,12 @@ class PlannerTests(unittest.TestCase):
         )
         self.assert_output_shape(result)
         self.assertEqual(result["guarantee"], "best-effort")
-        self.assertIn("create", [stage["action"] for stage in result["stages"]])
+        actions = [stage["action"] for stage in result["stages"]]
+        self.assertIn("create", actions)
+        self.assertIn("claim_checkpoint", actions)
         self.assertNotIn(
             "create_if_absent",
-            [stage["action"] for stage in result["stages"]],
+            actions,
         )
 
     def test_concurrency_cap_cannot_exceed_workers(self):

@@ -30,24 +30,27 @@ Plan:
 1. Derive `operation_hmac = HMAC(shared local coordination secret,
    canonical(source identity, destination scope, "create", recipe version))`
    locally.
-2. Acquire a short `penny-lock` keyed by the opaque operation identity.
-3. Search the destination for the stored marker after acquiring the lock.
+2. Claim `workflow-checkpoint` with the opaque operation identity.
+3. Search the destination for the stored marker after acquiring the claim.
 4. If found, verify the record and skip creation.
-5. If absence is sufficiently established for the documented search
-   consistency, create the record with the marker in a queryable field. This
+5. If absence is sufficiently established, record
+   `external_attempt_started` immediately before the create. Then create the
+   record with the marker in a queryable field. Document the destination's
+   search consistency. This
    is not an atomic `create-if-absent` unless the destination explicitly
    supplies that primitive.
 6. Read it back and verify the marker and required fields.
 7. Optionally write `global-seen-stamp` only after successful verification.
    Treat it as an advisory cache; a later hit still requires destination
    verification before skipping.
-8. Allow the shortest practical lock TTL to expire. Release only if the live
-   contract explicitly exposes an authorized release operation.
+8. Record `caller_verified` with stable-marker read-back evidence.
 
 Crash recovery:
 
-- Before create: reacquire/replay the guard and repeat the preflight.
-- During or after create: search for the marker before retrying.
+- Before the attempt-boundary transition: abandon safely or recover after
+  expiry and repeat the preflight.
+- During or after create: record uncertainty, then search for the marker
+  without retrying the create.
 - Eventual search absence: wait a bounded indexing window and search again.
 - Search still inconclusive: stop for review if a duplicate is material.
 
@@ -73,14 +76,15 @@ Assumptions:
 Plan:
 
 1. Derive an opaque resource-operation identity.
-2. Acquire a `penny-lock` for that resource and update class.
-3. Re-read the current destination state after lock acquisition.
-4. Recalculate the patch; do not apply a patch based on a stale pre-lock read.
+2. For a material update that can overlap or retry, claim
+   `workflow-checkpoint`; use a simple lock only for a lower-risk update.
+3. Re-read the current destination state after guard acquisition.
+4. Recalculate the patch; do not apply one based on a stale pre-guard read.
 5. Use a destination conditional-write/version field when available.
-6. Apply the update.
+6. Record `external_attempt_started`, then apply the update once.
 7. Read back the changed fields and version.
-8. Allow the shortest practical lock TTL to expire. Release only if the live
-   contract explicitly exposes an authorized release operation.
+8. Record `caller_verified` after read-back. On a lost result, mark uncertainty
+   and re-read before any new update.
 
 Guarantee:
 
@@ -152,12 +156,11 @@ Use when simultaneous agents or retries might send the same message.
 Plan:
 
 1. Prefer a documented destination idempotency key.
-2. Otherwise derive an opaque send identity and serialize simultaneous senders
-   with a lock or one-use baton.
+2. Otherwise derive an opaque send identity and claim `workflow-checkpoint`.
 3. Re-check a queryable delivery ID or sent-message marker before sending.
-4. Send through the domain plugin.
+4. Record `external_attempt_started`, then send once through the domain plugin.
 5. Verify provider delivery/acceptance status when available.
-6. After a timeout, query status before any retry.
+6. After a timeout, mark uncertainty and query status without a blind retry.
 
 If no provider idempotency, sent-message query, or delivery identifier exists,
 stop after an uncertain result. A lock or consumed baton prevents a concurrent

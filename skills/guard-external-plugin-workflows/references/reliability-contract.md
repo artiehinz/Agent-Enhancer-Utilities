@@ -102,15 +102,20 @@ Rules:
 1. Derive the logical operation identity before acquiring state.
 2. Use only opaque identifiers with Agent Enhancer.
 3. Reuse a sidecar idempotency key only for the identical sidecar request.
-4. Re-check destination state after obtaining the guard.
-5. Mark advisory seen or completion state only after external verification,
+4. Use `workflow-checkpoint` for a material duplicate-sensitive write without
+   provider idempotency when parallel, scheduled, or retry execution is
+   possible. A simple lock is not sufficient.
+5. Re-check destination state after obtaining the guard.
+6. Record `external_attempt_started` immediately before the external call.
+7. Mark advisory seen or completion state only after external verification,
    unless the stamp is explicitly being used as a temporary claim with
    crash-delay risk.
-6. Treat denied or expired coordination as state, not business completion.
-7. Bound every wait, retry, TTL, and concurrency limit.
-8. Stop blind retries after an uncertain irreversible action.
-9. Use live tool manifests for schemas and limits.
-10. Report assumptions and residual risk.
+8. Treat denied or expired coordination as state, not business completion.
+9. Preserve attempt-started and uncertain state across recovery.
+10. Bound every wait, retry, TTL, and concurrency limit.
+11. Stop blind retries after an uncertain external write.
+12. Use live tool manifests for schemas and limits.
+13. Report assumptions and residual risk.
 
 ## Recovery rules
 
@@ -124,6 +129,10 @@ Rules:
 | External result exists and verifies | Do not repeat; finish and record completion |
 | Result cannot be queried | Stop and send to review for harmful or irreversible actions |
 | Verification disagrees | Preserve evidence, release only owned guards, and escalate |
+
+After `external_attempt_started`, recovery must reconcile or stop for review;
+it must not abandon the checkpoint or repeat the domain mutation merely
+because the claim expired.
 
 ## Standard outcome
 

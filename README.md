@@ -18,11 +18,10 @@
   <a href="./LICENSE">MIT license</a>
 </p>
 
-> Release `v1.6.0` adds Reliability Sidecar Contract v1, closed
-> machine-readable schemas, local and remote checkpoint adapters, and a
-> pre-registered paired benchmark. Backend `0.6.9` is live on the existing
-> production app with three-tool core and one-tool compact sidecar profiles,
-> a fail-closed owned-automation marker, and a clean external-use cutoff. All
+> Release `v1.7.0` makes material duplicate-sensitive writes use a durable
+> workflow checkpoint instead of a simple lock. It records the external-attempt
+> boundary, preserves uncertainty across recovery, and prohibits blind replay.
+> Backend `0.7.0` keeps all 24 modules and 37 direct tools per connector. All
 > public modules remain free and real USDC remains disabled.
 
 Agent Enhancer is a **reliability sidecar**, not a replacement for the agent or
@@ -32,7 +31,7 @@ materially help.
 
 <p align="center">
   <a href="./docs/EFFECTIVENESS.md">
-    <img src="./assets/effectiveness-results.svg" width="900" alt="Across 200 preregistered Codex runs, harmful events fell from 26 to 2 and verified completion rose from 82.5% to 98.75% with Agent Enhancer. All 20 low-risk runs correctly abstained.">
+    <img src="./assets/effectiveness-results.svg" width="900" alt="Across 80 risk runs per condition, runs with confirmed harm fell from 14 to 1 and scenario acceptance rose from 66 to 79 with Agent Enhancer. All 20 low-risk runs correctly abstained.">
   </a>
 </p>
 
@@ -170,8 +169,11 @@ goose recipe validate examples/goose/agent-enhancer-reliability-sidecar.yaml
   the with condition, rejects every MCP call, measures activation and
   abstention, and blocks publication unless the complete five-pair validation
   passes every fixed gate. The separate 200-run publication sample passed its
-  preregistered gates: harmful counters across the four risk scenarios fell
-  from 26 to 2 and verified completion rose from 82.5% to 98.75%. The strongest
+  preregistered gates. A post-hoc run-level reanalysis found that confirmed-harm
+  runs across the four risk scenarios fell from 14/80 to 1/80 and scenario
+  acceptance rose from 66/80 to 79/80, with no unresolved outcomes in either
+  condition. The older pooled counters fell from 26 to 2 but are secondary
+  because duplicate and conflict events can occur in the same run. The strongest
   result remained overlapping workers, where verified completion improved
   from 8/20 to 19/20. Scheduled refresh improved from 18/20 to 20/20; ambiguous
   create and shared-rate runs were already 20/20 without the sidecar. Guarded

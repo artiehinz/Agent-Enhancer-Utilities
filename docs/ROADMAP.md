@@ -27,14 +27,16 @@ help execute that plan using opaque identifiers and bounded temporary state.
 
 ## Current focus
 
-Backend `0.6.9` is live on the existing production app and public package
-`v1.6.0` is released. They retain all 24 modules, 37 Claude tools, 37 ChatGPT
-tools, and all seven skills, and add Reliability Sidecar Contract v1 plus a
-deterministic paired evidence suite. Persistent core and compact MCP profiles
-remain supported, but the next recommended path is one repo-scoped skill that
-selects locally and calls direct HTTP only for risk-bearing work. Official MCP
-Registry `0.6.4` remains the latest immutable registry version until the
-next registry release gate is complete. Real USDC remains disabled.
+Backend `0.7.0` and public package `v1.7.0` retain all 24 modules, 37 Claude
+tools, 37 ChatGPT tools, and all seven skills. The release upgrades material
+duplicate-sensitive writes from a simple lock to a durable checkpoint with an
+explicit external-attempt boundary and uncertainty-preserving recovery.
+Reliability Sidecar Contract v1 remains stable at schema revision 2.
+Persistent MCP profiles remain supported, but the recommended path is one
+repo-scoped skill that selects locally and calls direct HTTP only for
+risk-bearing work. Official MCP Registry `0.6.4` remains the latest immutable
+registry version until that venue requires a metadata release. Real USDC
+remains disabled.
 
 The next work is external commercial validation, not another broad module
 expansion:

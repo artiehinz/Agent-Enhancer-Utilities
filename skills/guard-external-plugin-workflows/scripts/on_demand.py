@@ -377,7 +377,7 @@ class DirectToolClient:
         headers = {
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "User-Agent": "agent-enhancer-skills-on-demand/1.0",
+            "User-Agent": "agent-enhancer-skills-on-demand/1.7.0",
             "X-Agent-Discovery-Source": self.source,
         }
         if idempotency_key is not None:
@@ -450,6 +450,58 @@ class DirectToolClient:
         }
 
 
+def _execution_recipe(plan: dict[str, Any]) -> dict[str, Any] | None:
+    if plan["decision"] == "no-sidecar":
+        return None
+    stages = plan["stages"]
+    candidate_tools = [
+        stage["candidate_tool"]
+        for stage in stages
+        if "candidate_tool" in stage
+    ]
+    required_guard = (
+        "workflow-checkpoint"
+        if "workflow-checkpoint" in candidate_tools
+        else (candidate_tools[0] if candidate_tools else None)
+    )
+    actions = [stage["action"] for stage in stages]
+    preflight = [
+        action
+        for action in actions
+        if action
+        in {
+            "search_stable_marker",
+            "read_current_version",
+            "query_delivery_status",
+        }
+    ]
+    verification = [
+        action
+        for action in actions
+        if action
+        in {
+            "read_after_write",
+            "query_delivery_status",
+            "record_caller_verified",
+        }
+    ]
+    uses_checkpoint = required_guard == "workflow-checkpoint"
+    return {
+        "required_guard": required_guard,
+        "external_preflight": preflight,
+        "attempt_boundary_transition": (
+            "claimed_to_external_attempt_started" if uses_checkpoint else None
+        ),
+        "verification": verification,
+        "uncertainty_recovery": plan["timeout_recovery"],
+        "prohibited_action": (
+            "blind_external_retry_after_uncertain_write"
+            if uses_checkpoint
+            else None
+        ),
+    }
+
+
 def plan_on_demand(
     contract: dict[str, Any],
     client: ToolClient | None = None,
@@ -467,6 +519,7 @@ def plan_on_demand(
             "remote_planner_calls": 0,
             "remote_coordination_calls": 0,
             "plan": local,
+            "execution_recipe": None,
         }
     selected_client = client or DirectToolClient()
     before = selected_client.calls
@@ -492,6 +545,7 @@ def plan_on_demand(
             False,
         ),
         "plan": remote,
+        "execution_recipe": _execution_recipe(remote),
     }
 
 

@@ -1,6 +1,6 @@
 # Reliability Sidecar Contract v1
 
-Status: stable public contract
+Status: stable public contract, schema revision 2
 
 The Reliability Sidecar Contract is a vendor-neutral boundary for coordinating
 an agent workflow around another tool or MCP server. It does not intercept the
@@ -20,12 +20,14 @@ The closed machine-readable schema is
 3. **Plan** the smallest guard that the destination capabilities justify.
 4. **Claim** the operation before an effectful attempt.
 5. **Preflight** the destination when search, version, or delivery checks exist.
-6. **Attempt** the domain operation through its own tool or MCP server.
-7. **Preserve uncertainty** when a response is lost after the operation may
+6. **Mark the attempt boundary** as `external_attempt_started` immediately
+   before calling the domain tool.
+7. **Attempt** the domain operation through its own tool or MCP server.
+8. **Preserve uncertainty** when a response is lost after the operation may
    have committed.
-8. **Reconcile** through provider status, read-after-write, or a stable marker.
-9. **Record evidence** without treating a caller assertion as provider proof.
-10. **Report** the achieved guarantee and residual failure window.
+9. **Reconcile** through provider status, read-after-write, or a stable marker.
+10. **Record evidence** without treating a caller assertion as provider proof.
+11. **Report** the achieved guarantee and residual failure window.
 
 ## Public types
 
@@ -61,9 +63,9 @@ failed
 compensated
 ```
 
-`external_attempt_started` is a caller-side lifecycle event. A remote adapter
-may keep that event locally when its checkpoint service exposes only durable
-claim, uncertainty, and verification transitions.
+`external_attempt_started` is a durable caller assertion in schema revision 2.
+After it is recorded, expiry recovery must reconcile the destination and must
+not reset the checkpoint to `claimed` or authorize a blind retry.
 
 `caller_verified` means the caller reported an allowed evidence class. It does
 not mean the sidecar independently contacted the destination.

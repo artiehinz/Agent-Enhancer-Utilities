@@ -147,6 +147,19 @@ def _eligible(contract: dict[str, Any]) -> bool:
     )
 
 
+def requires_workflow_checkpoint(contract: dict[str, Any]) -> bool:
+    return (
+        effective_operation(contract) in WRITE_OPERATIONS
+        and contract["provider_idempotency"] == "none"
+        and (
+            contract["duplicate_harm"] in {"material", "irreversible"}
+            or contract["parallel_workers"] > 1
+            or contract["retry_possible"]
+            or contract["scheduled"]
+        )
+    )
+
+
 def select_profiles(contract: dict[str, Any]) -> tuple[str, list[str]]:
     operation = effective_operation(contract)
     if operation == "create":
@@ -234,9 +247,14 @@ def build_stages(
 
     add("caller", "derive_opaque_operation_identity")
 
-    if primary == "scheduled-run" or "scheduled-run" in additional:
+    checkpoint_required = requires_workflow_checkpoint(contract)
+    if not checkpoint_required and (
+        primary == "scheduled-run" or "scheduled-run" in additional
+    ):
         add("agent-enhancer", "acquire_run_lock", "penny-lock")
-    if primary in {"create-once", "update-safely", "send-at-most-once"}:
+    if checkpoint_required:
+        add("agent-enhancer", "claim_checkpoint", "workflow-checkpoint")
+    elif primary in {"create-once", "update-safely", "send-at-most-once"}:
         add("agent-enhancer", "acquire_lock", "penny-lock")
     elif primary == "refresh-if-stale":
         add("agent-enhancer", "acquire_lease", "freshness-lease")
@@ -248,12 +266,40 @@ def build_stages(
         add("agent-enhancer", "consume_rate_gate", "swarm-rate-gate")
 
     operation = effective_operation(contract)
+
+    def start_external_attempt() -> None:
+        if checkpoint_required:
+            add(
+                "agent-enhancer",
+                "mark_external_attempt_started",
+                "workflow-checkpoint",
+            )
+
+    def record_uncertainty_branch() -> None:
+        if checkpoint_required:
+            add(
+                "agent-enhancer",
+                "record_external_result_uncertain_if_response_lost",
+                "workflow-checkpoint",
+            )
+
+    def record_verified() -> None:
+        if checkpoint_required:
+            add(
+                "agent-enhancer",
+                "record_caller_verified",
+                "workflow-checkpoint",
+            )
+
     if operation == "create":
         if contract["stable_marker"] and contract["destination_search"] != "none":
             add("external-plugin", "search_stable_marker")
+        start_external_attempt()
         add("external-plugin", "create")
+        record_uncertainty_branch()
         if contract["read_after_write"]:
             add("external-plugin", "read_after_write")
+            record_verified()
             add(
                 "agent-enhancer",
                 "mark_seen_after_verification",
@@ -261,19 +307,28 @@ def build_stages(
             )
     elif operation == "update":
         add("external-plugin", "read_current_version")
+        start_external_attempt()
         add("external-plugin", "apply_update")
+        record_uncertainty_branch()
         if contract["read_after_write"]:
             add("external-plugin", "read_after_write")
+            record_verified()
     elif operation == "send":
         if contract["delivery_status"]:
             add("external-plugin", "query_delivery_status")
+        start_external_attempt()
         add("external-plugin", "send")
+        record_uncertainty_branch()
         if contract["delivery_status"]:
             add("external-plugin", "query_delivery_status")
+            record_verified()
     elif operation == "delete":
+        start_external_attempt()
         add("external-plugin", "delete")
+        record_uncertainty_branch()
         if contract["delivery_status"]:
             add("external-plugin", "query_delivery_status")
+            record_verified()
     elif operation == "refresh":
         add("external-plugin", "refresh")
         add("external-plugin", "read")
@@ -288,6 +343,16 @@ def build_stages(
 
 def select_timeout_recovery(contract: dict[str, Any]) -> str:
     operation = effective_operation(contract)
+    if requires_workflow_checkpoint(contract):
+        if (
+            operation == "create"
+            and contract["stable_marker"]
+            and contract["destination_search"] != "none"
+        ):
+            return "checkpoint_uncertain_then_search_marker"
+        if operation in {"send", "delete"} and contract["delivery_status"]:
+            return "checkpoint_uncertain_then_query_delivery"
+        return "checkpoint_uncertain_then_stop_for_review"
     if operation == "create":
         if contract["stable_marker"] and contract["destination_search"] != "none":
             return "search_marker_then_bounded_recheck"

@@ -106,19 +106,23 @@
               "derive_opaque_operation_identity",
               "acquire_run_lock",
               "acquire_lock",
+              "claim_checkpoint",
               "acquire_lease",
               "acquire_semaphore",
               "consume_rate_gate",
               "read",
               "search_stable_marker",
               "read_current_version",
+              "mark_external_attempt_started",
               "create",
               "apply_update",
               "send",
               "delete",
+              "record_external_result_uncertain_if_response_lost",
               "refresh",
               "read_after_write",
               "query_delivery_status",
+              "record_caller_verified",
               "mark_seen_after_verification",
               "arrive_barrier",
               "report_outcome"
@@ -128,6 +132,7 @@
             "type": "string",
             "enum": [
               "penny-lock",
+              "workflow-checkpoint",
               "freshness-lease",
               "swarm-semaphore",
               "swarm-rate-gate",
@@ -147,7 +152,10 @@
             "query_delivery_then_stop_if_uncertain",
             "re_read_then_replan",
             "retry_safe_external_read",
-            "stop_for_review"
+            "stop_for_review",
+            "checkpoint_uncertain_then_search_marker",
+            "checkpoint_uncertain_then_query_delivery",
+            "checkpoint_uncertain_then_stop_for_review"
           ]
         },
         {

@@ -12,6 +12,19 @@
 - Keep the 200-run publication phase blocked while a smaller host-visible MCP
   surface is designed and preregistered.
 
+## 1.7.0 - 2026-07-31
+
+- Require `workflow-checkpoint` for material duplicate-sensitive writes that
+  can overlap, retry, or run on a schedule; keep simple locks for lower-risk
+  ownership and read coordination.
+- Add the durable `external_attempt_started` runtime transition, typed
+  `write_execution_in_progress` claim disposition, and uncertainty-preserving
+  expiry recovery.
+- Add a compact on-demand `execution_recipe` with preflight, attempt boundary,
+  verification, recovery, and prohibited blind-retry guidance.
+- Publish Reliability Sidecar Contract v1 schema revision 2 without changing
+  the contract version or the 37-tool connector count.
+
 ## 1.6.0 - 2026-07-28
 
 - Publish the vendor-neutral Reliability Sidecar Contract v1 and closed schema

@@ -1,6 +1,6 @@
-# Opaque Workflow Checkpoints proposal
+# Opaque Workflow Checkpoints
 
-Status: release candidate for Agent Enhancer backend `0.6.0`
+Status: live; attempt-boundary revision for Agent Enhancer backend `0.7.0`
 
 The sidecar needs to distinguish ownership, external uncertainty, and
 caller-observed verification. Existing locks, leases, stamps, and batons do not
@@ -19,6 +19,7 @@ claiming a transaction or external proof.
 | Stage | Meaning |
 | --- | --- |
 | `claimed` | One caller temporarily owns recovery or execution for the opaque operation |
+| `external_attempt_started` | The caller durably records the boundary immediately before an external mutation |
 | `external_result_uncertain` | The caller reports that an external attempt may have occurred but cannot yet be verified |
 | `caller_verified` | The caller reports one allowed class of external evidence |
 | `failed` | The caller reports a definite failure; recovery is allowed only when the checkpoint was created with `retry_failed: true` |
@@ -44,6 +45,7 @@ Input:
 Output includes:
 
 - whether the claim was acquired or recovered;
+- a typed claim disposition, including `write_execution_in_progress` for a competing caller;
 - whether destination inspection is required before another external action;
 - current stage and monotonically increasing generation;
 - claim and state expiry;
@@ -88,7 +90,7 @@ fingerprint exists.
 
 Release a `claimed` checkpoint only when the caller asserts that the external
 action did not start. This operation must be unavailable from
-`external_result_uncertain`. Abandonment is not allowed to erase
+`external_attempt_started` or `external_result_uncertain`. Abandonment is not allowed to erase
 `caller_verified`, `failed`, or `compensated` evidence.
 
 ## Transition rules
@@ -96,9 +98,14 @@ action did not start. This operation must be unavailable from
 Allowed:
 
 - absent or expired → `claimed`;
+- `claimed` → `external_attempt_started`;
 - `claimed` → `external_result_uncertain`;
 - `claimed` → `caller_verified`;
 - `claimed` → `failed`;
+- `external_attempt_started` → `caller_verified`;
+- `external_attempt_started` → `external_result_uncertain`;
+- `external_attempt_started` → `failed`;
+- `external_attempt_started` → `compensated`;
 - `external_result_uncertain` → `caller_verified`;
 - `external_result_uncertain` → `failed`;
 - `external_result_uncertain` → `compensated`;
@@ -112,8 +119,8 @@ Disallowed:
 - `compensated` → `claimed`;
 - any transition under a stale generation;
 - changing the transition body under a reused idempotency or observation key;
-- abandoning after the caller reported that an external action might have
-  started.
+- abandoning after the caller recorded that an external action started or
+  might have started.
 
 `caller_verified` and `compensated` are final. `failed` is retry-gated rather
 than unconditionally terminal. Final stages remain readable until state TTL
@@ -132,8 +139,9 @@ When a new worker recovers an expired `claimed` checkpoint:
    generation and continue;
 5. preserve the standard guarantee label; checkpoint state cannot raise it.
 
-When recovering `external_result_uncertain`, the worker must not repeat an
-irreversible action merely because the claim expired.
+When recovering `external_attempt_started` or `external_result_uncertain`, the
+stage is preserved. The worker must reconcile the destination and must not
+repeat a harmful action merely because the claim expired.
 
 ## Privacy and security
 
@@ -162,6 +170,7 @@ irreversible action merely because the claim expired.
 | Checkpoint evidence | Maximum label it can support by itself |
 | --- | --- |
 | `claimed` | `best-effort` |
+| `external_attempt_started` | `best-effort` |
 | `external_result_uncertain` | `best-effort` |
 | `caller_verified` with read-back | Depends on destination capability; never above `duplicate-resistant` without provider idempotency |
 | `caller_verified` with provider idempotency result | `provider-idempotent`, only because of the provider contract |
@@ -179,6 +188,7 @@ the guarantee.
 - A checkpoint cannot skip directly from absent to `caller_verified`.
 - Only the active holder can transition or abandon.
 - `external_result_uncertain` cannot be abandoned.
+- `external_attempt_started` survives expiry recovery and cannot be abandoned.
 - No terminal state can be overwritten before expiry.
 - Status is read-only and reveals no raw holder.
 - Expiry permits bounded recovery without implying that the external action did

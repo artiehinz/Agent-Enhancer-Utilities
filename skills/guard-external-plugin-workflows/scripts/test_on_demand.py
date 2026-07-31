@@ -77,6 +77,7 @@ class OnDemandTests(unittest.TestCase):
         result = MODULE.plan_on_demand(LOW_RISK)
         self.assertEqual(result["activation"], "local-abstention")
         self.assertEqual(result["remote_planner_calls"], 0)
+        self.assertIsNone(result["execution_recipe"])
 
     def test_risk_bearing_plan_calls_hosted_planner_once(self) -> None:
         client = FakeClient()
@@ -85,6 +86,26 @@ class OnDemandTests(unittest.TestCase):
         self.assertEqual(result["remote_planner_calls"], 1)
         self.assertEqual(client.calls, 1)
         self.assertEqual(client.requests[0][0], "workflow-guard-planner")
+        self.assertEqual(
+            result["execution_recipe"],
+            {
+                "required_guard": "workflow-checkpoint",
+                "external_preflight": ["search_stable_marker"],
+                "attempt_boundary_transition": (
+                    "claimed_to_external_attempt_started"
+                ),
+                "verification": [
+                    "read_after_write",
+                    "record_caller_verified",
+                ],
+                "uncertainty_recovery": (
+                    "checkpoint_uncertain_then_search_marker"
+                ),
+                "prohibited_action": (
+                    "blind_external_retry_after_uncertain_write"
+                ),
+            },
+        )
 
     def test_hosted_planner_request_accepts_contract_version_one(self) -> None:
         validated = MODULE.validate_tool_request(

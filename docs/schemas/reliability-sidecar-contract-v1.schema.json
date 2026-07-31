@@ -5,6 +5,7 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "schema_revision",
     "contract_version",
     "capability_facts",
     "guard_plan",
@@ -13,6 +14,9 @@
     "report"
   ],
   "properties": {
+    "schema_revision": {
+      "const": "2"
+    },
     "contract_version": {
       "const": "1"
     },

@@ -137,6 +137,7 @@ class BenchmarkTests(unittest.TestCase):
             ).read_text(encoding="utf-8")
         )
         self.assertFalse(schema["additionalProperties"])
+        self.assertEqual(schema["properties"]["schema_revision"]["const"], "2")
         self.assertEqual(
             set(schema["$defs"]),
             {

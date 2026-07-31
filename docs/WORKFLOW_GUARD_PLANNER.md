@@ -1,6 +1,6 @@
 # Workflow Guard Planner specification
 
-Status: live on Agent Enhancer backend `0.6.2`, with an executable local
+Status: planner `1.1.0` on Agent Enhancer backend `0.7.0`, with an executable local
 reference planner
 
 The Workflow Guard Planner converts a bounded description of an external
@@ -24,7 +24,7 @@ as a local dry-run reference. The hosted module is discoverable as
 - Accept no credentials, document contents, messages, customer records, or raw
   external identifiers.
 
-## Proposed tool identity
+## Tool identity
 
 - Progressive MCP slug: `workflow-guard-planner`
 - Direct tool name: `workflow_guard_planner`
@@ -33,7 +33,7 @@ as a local dry-run reference. The hosted module is discoverable as
 - `destructiveHint: false`
 - Idempotency key: not required
 
-## Proposed input
+## Input
 
 ```json
 {
@@ -86,7 +86,7 @@ content, or arbitrary free text.
 The exact proposed schema is
 [`schemas/workflow-guard-planner.input.schema.json`](./schemas/workflow-guard-planner.input.schema.json).
 
-## Proposed output
+## Output
 
 ```json
 {
@@ -107,8 +107,8 @@ The exact proposed schema is
     {
       "order": 2,
       "actor": "agent-enhancer",
-      "action": "acquire_lock",
-      "candidate_tool": "penny-lock"
+      "action": "claim_checkpoint",
+      "candidate_tool": "workflow-checkpoint"
     },
     {
       "order": 3,
@@ -117,28 +117,47 @@ The exact proposed schema is
     },
     {
       "order": 4,
-      "actor": "external-plugin",
-      "action": "create"
+      "actor": "agent-enhancer",
+      "action": "mark_external_attempt_started",
+      "candidate_tool": "workflow-checkpoint"
     },
     {
       "order": 5,
       "actor": "external-plugin",
-      "action": "read_after_write"
+      "action": "create"
     },
     {
       "order": 6,
+      "actor": "agent-enhancer",
+      "action": "record_external_result_uncertain_if_response_lost",
+      "candidate_tool": "workflow-checkpoint"
+    },
+    {
+      "order": 7,
+      "actor": "external-plugin",
+      "action": "read_after_write"
+    },
+    {
+      "order": 8,
+      "actor": "agent-enhancer",
+      "action": "record_caller_verified",
+      "candidate_tool": "workflow-checkpoint"
+    },
+    {
+      "order": 9,
       "actor": "agent-enhancer",
       "action": "mark_seen_after_verification",
       "candidate_tool": "global-seen-stamp"
     }
   ],
-  "timeout_recovery": "search_marker_then_bounded_recheck",
+  "timeout_recovery": "checkpoint_uncertain_then_search_marker",
   "residual_risks": [
     "destination_search_is_eventually_consistent",
     "no_cross_plugin_transaction"
   ],
   "unsupported_claims": [
-    "exactly_once_external_creation"
+    "sidecar_state_proves_external_completion",
+    "cross_plugin_exactly_once"
   ]
 }
 ```
@@ -165,6 +184,13 @@ The exact proposed output schema is
    they do not replace the primary profile.
 9. Never select `write-budget` until an atomic bounded action-counter module is
    available.
+10. Select `workflow-checkpoint` for a material or irreversible write without
+    provider idempotency when concurrency, schedule, or retry is possible.
+11. Place `external_attempt_started` immediately before the domain mutation,
+    preserve uncertainty after a lost response, and record caller verification
+    only after destination evidence.
+12. Keep `penny-lock` for lower-risk ownership and read/schedule coordination;
+    never use it as the only guard for an uncertain duplicate-sensitive write.
 
 ## Guarantee selection rules
 
@@ -230,8 +256,8 @@ indexing window.
 ### Unqueryable send
 
 Given an irreversible send with no provider idempotency, search, or delivery
-status, return `send-at-most-once` and `best-effort`. Serialize simultaneous
-senders when needed and require review after an uncertain timeout.
+status, return `send-at-most-once` and `best-effort`. Claim a checkpoint,
+record the attempt boundary, and require review after an uncertain timeout.
 
 ### Parallel read-only research
 
