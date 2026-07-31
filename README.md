@@ -19,14 +19,11 @@
   <a href="./LICENSE">MIT license</a>
 </p>
 
-> Release `v1.7.2` prepares a durable concurrent checkpoint in one fail-closed
-> command. It creates the opaque blueprint and proves exactly one winner before
-> any external worker may write, then supports the attempt boundary and
-> uncertainty recovery without blind replay.
-> Backend `0.7.0` keeps all 24 modules and 37 direct tools per connector. All
-> public modules remain free and real USDC remains disabled.
-> The separate exploratory `v1.7.2` diagnostic passed checkpoint adherence
-> 10/10 and low-risk abstention 5/5; [read the limitations and raw report](./examples/sidecar-v1.7-diagnostic/v1.7.2-outcome.md).
+> Current release: skills `v1.7.2` and backend `0.7.0`. A fail-closed checkpoint
+> proves one owner before a duplicate-sensitive external write and blocks blind
+> replay after an uncertain result. All 24 modules remain free and real USDC is
+> disabled. The separate exploratory diagnostic passed checkpoint adherence
+> 10/10 and low-risk abstention 5/5; [see its limitations and raw report](./examples/sidecar-v1.7-diagnostic/v1.7.2-outcome.md).
 
 Agent Enhancer is a **reliability sidecar**, not a replacement for the agent or
 domain tools you already use. Connect it to an existing workflow and call the
@@ -35,12 +32,12 @@ materially help.
 
 <p align="center">
   <a href="./docs/EFFECTIVENESS.md">
-    <img src="./assets/effectiveness-results.svg" width="900" alt="Across 80 risk runs per condition, runs with confirmed harm fell from 14 to 1 and scenario acceptance rose from 66 to 79 with Agent Enhancer. All 20 low-risk runs correctly abstained.">
+    <img src="./assets/effectiveness-results.svg" width="900" alt="Post-hoc run-level reanalysis of controlled Codex workflows: confirmed-harm runs were 14 of 80 without Agent Enhancer and 1 of 80 with it; accepted scenarios were 66 of 80 and 79 of 80. Neither condition had unresolved outcomes, and all 20 low-risk runs abstained.">
   </a>
 </p>
 
 <p align="center">
-  <sub>Controlled scenarios, not a universal claim. Guarded risk-bearing runs used more tokens and time. <a href="./docs/EFFECTIVENESS.md">Methodology, raw results, and limitations.</a></sub>
+  <sub><a href="./docs/EFFECTIVENESS.md">Methodology, raw results, and limitations.</a></sub>
 </p>
 
 ## Skills
