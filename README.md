@@ -191,7 +191,7 @@ after local selection. No example copies private backend code or schemas.
 
 ## Directory listings
 
-- [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=site.liberated%2Fagent-utility-lab) — `0.6.4` latest
+- [Official MCP Registry](https://registry.modelcontextprotocol.io/v0.1/servers?search=site.liberated%2Fagent-utility-lab) — `0.7.0` latest
 - [Glama](https://glama.ai/mcp/connectors/site.liberated/agent-utility-lab) — ownership verified
 - [Smithery](https://smithery.ai/servers/artemhinz2/Agent-Enhancer-Utilities)
 

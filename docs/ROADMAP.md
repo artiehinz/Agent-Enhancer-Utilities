@@ -34,8 +34,8 @@ explicit external-attempt boundary and uncertainty-preserving recovery.
 Reliability Sidecar Contract v1 remains stable at schema revision 2.
 Persistent MCP profiles remain supported, but the recommended path is one
 repo-scoped skill that selects locally and calls direct HTTP only for
-risk-bearing work. Official MCP Registry `0.6.4` remains the latest immutable
-registry version until that venue requires a metadata release. Real USDC
+risk-bearing work. Official MCP Registry `0.7.0` is the latest immutable
+registry version and points to the same free production endpoint. Real USDC
 remains disabled.
 
 The next work is external commercial validation, not another broad module
