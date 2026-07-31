@@ -12,6 +12,17 @@
 - Keep the 200-run publication phase blocked while a smaller host-visible MCP
   surface is designed and preregistered.
 
+## 1.7.1 - 2026-07-31
+
+- Add a compact local checkpoint blueprint and deterministic step commands so
+  agents do not spend the workflow budget rediscovering the hosted schema.
+- Correct checkpoint evidence-fingerprint validation to match the hosted
+  `hmac-sha256:<digest>` contract.
+- Shorten the main skill and load the detailed checkpoint procedure only when
+  the planner actually selects `workflow-checkpoint`.
+- Preserve the incomplete `v1.7.0` diagnostic as a negative result and define
+  a separate preregistered remediation diagnostic for this patch.
+
 ## 1.7.0 - 2026-07-31
 
 - Require `workflow-checkpoint` for material duplicate-sensitive writes that

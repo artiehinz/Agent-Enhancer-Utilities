@@ -1,6 +1,6 @@
 {
   "name": "agent-enhancer-utilities",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "description": "Seven Agent Skills plus a free MCP reliability sidecar for planning, checkpoints, deduplication, recovery, and evidence.",
   "author": {
     "name": "Artie Hinz",

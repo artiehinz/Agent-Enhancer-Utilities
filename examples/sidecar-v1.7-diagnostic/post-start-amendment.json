@@ -1,0 +1,19 @@
+{
+  "schema_version": "1",
+  "applies_to_plan": "preregistered-plan.json",
+  "recorded_at": "2026-07-31T18:20:00Z",
+  "trigger": {
+    "condition": "skill-v1.7.0",
+    "consecutive_full_timeouts": 2,
+    "timeout_seconds_each": 360,
+    "valid_candidate_rows": 0
+  },
+  "decision": "stop_v1.7.0_condition_for_futility",
+  "reason": "A separate 120-second trace reproduced a deterministic schema-discovery loop. The agent read implementation files, first generated a nonconforming namespace, then queried checkpoint status before claim. Repeating the same frozen package would spend more model time without testing the intended checkpoint workflow.",
+  "integrity": [
+    "Retain both invalid rows in results/diagnostic-latest.json.",
+    "Do not claim v1.7.0 safety or efficiency from this incomplete condition.",
+    "Do not rewrite the immutable v1.7.0 tag.",
+    "Test remediation only as a separately versioned package with a separately preregistered plan."
+  ]
+}

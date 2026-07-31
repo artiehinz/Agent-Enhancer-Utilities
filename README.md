@@ -19,9 +19,9 @@
   <a href="./LICENSE">MIT license</a>
 </p>
 
-> Release `v1.7.0` makes material duplicate-sensitive writes use a durable
-> workflow checkpoint instead of a simple lock. It records the external-attempt
-> boundary, preserves uncertainty across recovery, and prohibits blind replay.
+> Release `v1.7.1` makes the durable checkpoint flow directly executable from
+> a compact local blueprint. Agents no longer need to rediscover the hosted
+> schema before claiming, recording the attempt boundary, or reconciling.
 > Backend `0.7.0` keeps all 24 modules and 37 direct tools per connector. All
 > public modules remain free and real USDC remains disabled.
 

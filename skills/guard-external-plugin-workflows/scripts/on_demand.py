@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
 import json
 import os
@@ -11,6 +12,7 @@ from pathlib import Path
 import re
 import sys
 from typing import Any, Protocol
+import uuid
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
@@ -21,6 +23,7 @@ DEFAULT_SOURCE = "skills-on-demand"
 RESULT_MARKER = "AGENT_ENHANCER_ON_DEMAND_RESULT="
 IDEMPOTENCY_PATTERN = re.compile(r"^[A-Za-z0-9_-]{16,128}$")
 HEX_DIGEST_PATTERN = re.compile(r"^[a-fA-F0-9]{64}$")
+HMAC_DIGEST_PATTERN = re.compile(r"^hmac-sha256:[a-f0-9]{64}$")
 UUID_PATTERN = re.compile(
     r"(?:^|[:_-])[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-"
     r"[1-5a-fA-F0-9][a-fA-F0-9]{3}-[89abABa-fA-F0-9]"
@@ -31,6 +34,7 @@ PREFIXED_OPAQUE_PATTERN = re.compile(
 )
 CONTROL_TOKEN_PATTERN = re.compile(r"^[a-z][a-z0-9_-]{0,63}$")
 FAILURE_CODE_PATTERN = re.compile(r"^[A-Z][A-Z0-9_]{0,63}$")
+LOCAL_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9._:-]{1,64}$")
 
 ALLOWED_TOOLS = frozenset(
     {
@@ -277,7 +281,9 @@ def _validate_safe_value(
     if not isinstance(value, str):
         raise OnDemandError("UNSAFE_INPUT", "input contains an unsupported value")
     if field in IDENTITY_FIELDS:
-        if field in {"content_sha256", "evidence_fingerprint"}:
+        if field == "evidence_fingerprint":
+            valid = HMAC_DIGEST_PATTERN.fullmatch(value)
+        elif field == "content_sha256":
             valid = HEX_DIGEST_PATTERN.fullmatch(value)
         else:
             valid = _is_opaque(value)
@@ -377,7 +383,7 @@ class DirectToolClient:
         headers = {
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "User-Agent": "agent-enhancer-skills-on-demand/1.7.0",
+            "User-Agent": "agent-enhancer-skills-on-demand/1.7.1",
             "X-Agent-Discovery-Source": self.source,
         }
         if idempotency_key is not None:
@@ -450,6 +456,247 @@ class DirectToolClient:
         }
 
 
+def _digest_token(prefix: str, *values: str) -> str:
+    digest = hashlib.sha256()
+    digest.update(prefix.encode("utf-8"))
+    for value in values:
+        digest.update(b"\0")
+        digest.update(value.encode("utf-8"))
+    return f"{prefix}_{digest.hexdigest()}"
+
+
+def _checkpoint_step(
+    *,
+    name: str,
+    namespace: str,
+    workflow_key: str,
+    holder: str,
+    from_stage: str,
+    to_stage: str,
+    evidence_type: str | None = None,
+) -> dict[str, Any]:
+    return {
+        "input": {
+            "action": "transition",
+            "namespace": namespace,
+            "workflow_key": workflow_key,
+            "holder": holder,
+            "expected_generation": 1,
+            "from_stage": from_stage,
+            "to_stage": to_stage,
+            "observation_key": _digest_token(
+                "observation",
+                namespace,
+                workflow_key,
+                holder,
+                name,
+            ),
+            "evidence_type": evidence_type,
+            "evidence_fingerprint": None,
+        },
+        "idempotency_key": _digest_token(
+            "checkpoint",
+            namespace,
+            workflow_key,
+            holder,
+            name,
+        ),
+    }
+
+
+def build_checkpoint_blueprint(
+    *,
+    scope: str,
+    operation_id: str,
+    holder_labels: list[str],
+    namespace_uuid: str | None = None,
+    claim_ttl_seconds: int = 120,
+    state_ttl_seconds: int = 3_600,
+) -> dict[str, Any]:
+    """Build a local-only, executable first-generation checkpoint flow."""
+
+    if not CONTROL_TOKEN_PATTERN.fullmatch(scope) or len(scope) > 32:
+        raise OnDemandError(
+            "INVALID_BLUEPRINT",
+            "scope must be a 1-32 character lowercase control token",
+        )
+    if not _is_opaque(operation_id):
+        raise OnDemandError(
+            "INVALID_BLUEPRINT",
+            "operation_id must already be an opaque digest, UUID, or scoped token",
+        )
+    if not holder_labels or len(holder_labels) > 32:
+        raise OnDemandError(
+            "INVALID_BLUEPRINT",
+            "provide between one and 32 local holder labels",
+        )
+    if len(set(holder_labels)) != len(holder_labels):
+        raise OnDemandError("INVALID_BLUEPRINT", "holder labels must be unique")
+    if any(not LOCAL_LABEL_PATTERN.fullmatch(label) for label in holder_labels):
+        raise OnDemandError(
+            "INVALID_BLUEPRINT",
+            "holder labels must use 1-64 letters, numbers, dot, colon, underscore, or hyphen",
+        )
+    if not 60 <= claim_ttl_seconds <= 3_600:
+        raise OnDemandError(
+            "INVALID_BLUEPRINT",
+            "claim_ttl_seconds must be between 60 and 3600",
+        )
+    if not claim_ttl_seconds <= state_ttl_seconds <= 3_600:
+        raise OnDemandError(
+            "INVALID_BLUEPRINT",
+            "state_ttl_seconds must be between claim_ttl_seconds and 3600",
+        )
+    try:
+        parsed_uuid = (
+            uuid.uuid4()
+            if namespace_uuid is None
+            else uuid.UUID(namespace_uuid)
+        )
+    except ValueError as error:
+        raise OnDemandError(
+            "INVALID_BLUEPRINT",
+            "namespace_uuid must be a canonical UUID v4",
+        ) from error
+    if parsed_uuid.version != 4 or (
+        namespace_uuid is not None and namespace_uuid != str(parsed_uuid)
+    ):
+        raise OnDemandError(
+            "INVALID_BLUEPRINT",
+            "namespace_uuid must be a canonical UUID v4",
+        )
+
+    namespace = f"{scope}:{parsed_uuid}"
+    workflow_key = _digest_token("workflow", operation_id)
+    holders: dict[str, str] = {}
+    for label in holder_labels:
+        holders[label] = _digest_token("holder", operation_id, label)
+    return {
+        "schema_version": "1",
+        "fresh_namespace_only": True,
+        "namespace": namespace,
+        "workflow_key": workflow_key,
+        "generation": 1,
+        "claim_ttl_seconds": claim_ttl_seconds,
+        "state_ttl_seconds": state_ttl_seconds,
+        "holders": holders,
+        "rules": [
+            "Run claim concurrently for each holder and admit only acquired or reused.",
+            "Run start immediately before the one external mutation.",
+            "After a lost response run uncertain, reconcile, and never blind-retry.",
+            "Run exactly one verify step only after destination evidence is observed.",
+        ],
+    }
+
+
+def invoke_checkpoint_blueprint_step(
+    blueprint: dict[str, Any],
+    *,
+    holder_label: str,
+    step: str,
+    client: ToolClient | None = None,
+) -> dict[str, Any]:
+    if blueprint.get("schema_version") != "1" or not blueprint.get(
+        "fresh_namespace_only"
+    ):
+        raise OnDemandError("INVALID_BLUEPRINT", "unsupported checkpoint blueprint")
+    namespace = blueprint.get("namespace")
+    workflow_key = blueprint.get("workflow_key")
+    holder = blueprint.get("holders", {}).get(holder_label)
+    if step == "status":
+        request = {
+            "input": {
+                "action": "status",
+                "namespace": namespace,
+                "workflow_key": workflow_key,
+            },
+            "idempotency_key": None,
+        }
+    elif step == "claim" and isinstance(holder, str):
+        request = {
+            "input": {
+                "action": "claim",
+                "namespace": namespace,
+                "workflow_key": workflow_key,
+                "holder": holder,
+                "claim_ttl_seconds": blueprint.get("claim_ttl_seconds"),
+                "state_ttl_seconds": blueprint.get("state_ttl_seconds"),
+                "retry_failed": False,
+            },
+            "idempotency_key": _digest_token(
+                "checkpoint",
+                str(namespace),
+                str(workflow_key),
+                holder,
+                "claim",
+            ),
+        }
+    else:
+        transitions = {
+            "start": (
+                "claimed",
+                "external_attempt_started",
+                None,
+            ),
+            "uncertain": (
+                "external_attempt_started",
+                "external_result_uncertain",
+                None,
+            ),
+            "verify-after-attempt": (
+                "external_attempt_started",
+                "caller_verified",
+                "stable_marker_readback",
+            ),
+            "verify-after-uncertain": (
+                "external_result_uncertain",
+                "caller_verified",
+                "stable_marker_readback",
+            ),
+            "fail-before-attempt": ("claimed", "failed", None),
+            "fail-after-attempt": (
+                "external_attempt_started",
+                "failed",
+                None,
+            ),
+            "fail-after-uncertain": (
+                "external_result_uncertain",
+                "failed",
+                None,
+            ),
+        }
+        transition = transitions.get(step)
+        request = (
+            _checkpoint_step(
+                name=step,
+                namespace=str(namespace),
+                workflow_key=str(workflow_key),
+                holder=holder,
+                from_stage=transition[0],
+                to_stage=transition[1],
+                evidence_type=transition[2],
+            )
+            if transition is not None and isinstance(holder, str)
+            else None
+        )
+    if not isinstance(request, dict) or not isinstance(request.get("input"), dict):
+        raise OnDemandError(
+            "INVALID_BLUEPRINT",
+            "the requested holder or checkpoint step does not exist",
+        )
+    result = invoke_tool(
+        "workflow-checkpoint",
+        request["input"],
+        request.get("idempotency_key"),
+        client,
+    )
+    return {
+        **result,
+        "blueprint_step": step,
+        "holder_label": holder_label,
+    }
+
+
 def _execution_recipe(plan: dict[str, Any]) -> dict[str, Any] | None:
     if plan["decision"] == "no-sidecar":
         return None
@@ -498,6 +745,15 @@ def _execution_recipe(plan: dict[str, Any]) -> dict[str, Any] | None:
             "blind_external_retry_after_uncertain_write"
             if uses_checkpoint
             else None
+        ),
+        "local_blueprint_command": (
+            "checkpoint-blueprint" if uses_checkpoint else None
+        ),
+        "checkpoint_step_command": (
+            "checkpoint-step" if uses_checkpoint else None
+        ),
+        "namespace_rule": (
+            "<scope>:<fresh UUID v4>" if uses_checkpoint else None
         ),
     }
 
@@ -602,6 +858,32 @@ def main(argv: list[str] | None = None) -> int:
     invoke_parser.add_argument("--slug", required=True, choices=sorted(ALLOWED_TOOLS))
     invoke_parser.add_argument("--input", default="-")
     invoke_parser.add_argument("--idempotency-key")
+    blueprint_parser = subparsers.add_parser("checkpoint-blueprint")
+    blueprint_parser.add_argument("--scope", default="workflow")
+    blueprint_parser.add_argument("--operation-id", required=True)
+    blueprint_parser.add_argument("--holders", nargs="+", required=True)
+    blueprint_parser.add_argument("--namespace-uuid")
+    blueprint_parser.add_argument("--claim-ttl-seconds", type=int, default=120)
+    blueprint_parser.add_argument("--state-ttl-seconds", type=int, default=3_600)
+    blueprint_parser.add_argument("--output")
+    checkpoint_parser = subparsers.add_parser("checkpoint-step")
+    checkpoint_parser.add_argument("--blueprint", required=True)
+    checkpoint_parser.add_argument("--holder", required=True)
+    checkpoint_parser.add_argument(
+        "--step",
+        required=True,
+        choices=(
+            "claim",
+            "start",
+            "uncertain",
+            "verify-after-attempt",
+            "verify-after-uncertain",
+            "fail-before-attempt",
+            "fail-after-attempt",
+            "fail-after-uncertain",
+            "status",
+        ),
+    )
     args = parser.parse_args(argv)
     client = DirectToolClient(
         args.base_url,
@@ -611,12 +893,44 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "plan":
             result = plan_on_demand(_read_json(args.input), client)
-        else:
+        elif args.command == "invoke":
             result = invoke_tool(
                 args.slug,
                 _read_json(args.input),
                 args.idempotency_key,
                 client,
+            )
+        elif args.command == "checkpoint-blueprint":
+            blueprint = build_checkpoint_blueprint(
+                scope=args.scope,
+                operation_id=args.operation_id,
+                holder_labels=args.holders,
+                namespace_uuid=args.namespace_uuid,
+                claim_ttl_seconds=args.claim_ttl_seconds,
+                state_ttl_seconds=args.state_ttl_seconds,
+            )
+            if args.output:
+                Path(args.output).write_text(
+                    json.dumps(blueprint, indent=2) + "\n",
+                    encoding="utf-8",
+                )
+            result = {
+                "decision": "checkpoint-blueprint",
+                "remote_planner_calls": 0,
+                "remote_coordination_calls": 0,
+                "output": args.output,
+                "holder_count": len(blueprint["holders"]),
+                "namespace": blueprint["namespace"],
+                "workflow_key": blueprint["workflow_key"],
+            }
+            if not args.output:
+                result["blueprint"] = blueprint
+        else:
+            result = invoke_checkpoint_blueprint_step(
+                _read_json(args.blueprint),
+                holder_label=args.holder,
+                step=args.step,
+                client=client,
             )
     except (
         json.JSONDecodeError,

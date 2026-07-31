@@ -28,6 +28,22 @@ After deploying backend `0.7.0`, run:
 python -B run.py --condition skill-v1.7.0
 ```
 
+The first two `v1.7.0` trials each reached the fixed 360-second timeout. The
+run was stopped under a documented post-start futility amendment rather than
+hiding or repeatedly replacing invalid rows. See
+[`v1.7.0-outcome.md`](./v1.7.0-outcome.md) and the unchanged
+[`diagnostic-latest.json`](./results/diagnostic-latest.json).
+
+The workflow-discovery fix is released separately as `v1.7.1`. Its remediation
+diagnostic has its own frozen plan and output:
+
+```sh
+python -B run_remediation.py
+```
+
+It reuses only the published `no-sidecar` and `v1.6.0` baseline rows. It does
+not rewrite, complete, or pool the incomplete `v1.7.0` condition.
+
 Every guarded run requires `AGENT_ENHANCER_INTERNAL_METRICS_TOKEN`; production
 must acknowledge that the traffic is excluded from public usage. The runner
 writes `results/diagnostic-latest.json` after every trial so interrupted work

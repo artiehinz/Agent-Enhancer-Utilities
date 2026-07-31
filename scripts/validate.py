@@ -7,7 +7,7 @@ import zipfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE_VERSION = "1.7.0"
+PACKAGE_VERSION = "1.7.1"
 SKILL_NAMES = (
     "coordinate-parallel-agents",
     "test-http-failure-paths",
@@ -316,6 +316,7 @@ if "[TODO:" in sidecar_skill:
 for relative_path in (
     "skills/guard-external-plugin-workflows/references/reliability-contract.md",
     "skills/guard-external-plugin-workflows/references/recipes.md",
+    "skills/guard-external-plugin-workflows/references/checkpoint-execution.md",
     "docs/WORKFLOW_GUARD_PLANNER.md",
     "docs/guard-external-plugin-workflows-evals.json",
     "docs/schemas/workflow-guard-planner.input.schema.json",
@@ -740,6 +741,7 @@ for required_entry in (
     "skills/guard-external-plugin-workflows/agents/openai.yaml",
     "skills/guard-external-plugin-workflows/references/reliability-contract.md",
     "skills/guard-external-plugin-workflows/references/recipes.md",
+    "skills/guard-external-plugin-workflows/references/checkpoint-execution.md",
     "skills/guard-external-plugin-workflows/scripts/plan_workflow.py",
     "skills/guard-external-plugin-workflows/scripts/test_plan_workflow.py",
     "skills/guard-external-plugin-workflows/scripts/on_demand.py",
@@ -770,6 +772,7 @@ for required_entry in (
     "SKILL.md",
     "references/reliability-contract.md",
     "references/recipes.md",
+    "references/checkpoint-execution.md",
     "scripts/on_demand.py",
     "scripts/plan_workflow.py",
     "scripts/test_on_demand.py",

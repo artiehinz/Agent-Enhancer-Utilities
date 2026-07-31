@@ -10,7 +10,7 @@
   "portal_submission": {
     "submission_type": "WITH_MCP",
     "package_name": "agent-enhancer-utilities",
-    "version": "1.7.0",
+    "version": "1.7.1",
     "developer_name": "Agent Enhancer Utilities",
     "developer_identity_note": "Use Agent Enhancer Utilities only if that exact business identity is verified in the Platform. If submitting under an individually verified identity, replace the developer name with the exact verified individual name shown by the portal.",
     "listing": {
@@ -67,7 +67,7 @@
       "recommended_selection": "All countries and regions offered by the portal",
       "confirmation": "Select all offered countries and regions only if the verified publisher is ready to provide the public service, policies, and support there."
     },
-    "release_notes": "Version 1.7.0 strengthens duplicate-sensitive external writes. The planner now selects workflow checkpoints instead of simple locks when a harmful write can overlap or retry, and the checkpoint records an external-attempt-started boundary before the domain call. A lost response is reconciled without blind replay. Tool names and the 37-tool count are unchanged. The service remains free and account-free, and it performs no real payments or asset transfers.",
+    "release_notes": "Version 1.7.1 keeps the v1.7.0 checkpoint safety boundary and adds a compact, deterministic checkpoint blueprint so agents can claim, record the external-attempt boundary, verify, and recover uncertainty without rediscovering the hosted schema. It also corrects evidence-fingerprint validation. Tool names and the 37-tool count are unchanged. The service remains free and account-free, and it performs no real payments or asset transfers.",
     "reviewer_notes": "Use the production MCP endpoint at https://liberated.site/mcp/chatgpt. Authentication is None, so no demo account or credentials are required. The plugin has no custom UI, so screenshots and UI CSP allowlists are not applicable. Some tools intentionally create bounded, expiring private coordination state or unguessable public test-fixture URLs; their annotations and justifications describe those effects. The x402 tools only analyze caller-supplied protocol requirements and cannot sign, settle, transfer funds, or access a wallet. Use fresh UUID-v4 values in tests to avoid collisions. A public walkthrough is available at https://liberated.site/demo.mp4.",
     "policy_attestation_notes": [
       "The listing, URLs, tool metadata, skills, tests, and release notes describe the production release accurately.",

@@ -104,8 +104,93 @@ class OnDemandTests(unittest.TestCase):
                 "prohibited_action": (
                     "blind_external_retry_after_uncertain_write"
                 ),
+                "local_blueprint_command": "checkpoint-blueprint",
+                "checkpoint_step_command": "checkpoint-step",
+                "namespace_rule": "<scope>:<fresh UUID v4>",
             },
         )
+
+    def test_checkpoint_blueprint_builds_valid_first_generation_steps(self) -> None:
+        blueprint = MODULE.build_checkpoint_blueprint(
+            scope="bench",
+            operation_id="operation_0123456789abcdef",
+            holder_labels=["alpha", "bravo"],
+            namespace_uuid="6f0a1e7e-e446-46f1-88ab-bddef15f89a2",
+        )
+        self.assertEqual(
+            blueprint["namespace"],
+            "bench:6f0a1e7e-e446-46f1-88ab-bddef15f89a2",
+        )
+        self.assertEqual(blueprint["generation"], 1)
+        self.assertNotIn("operation_0123456789abcdef", str(blueprint))
+        self.assertNotEqual(
+            blueprint["holders"]["alpha"],
+            blueprint["holders"]["bravo"],
+        )
+        self.assertLess(len(str(blueprint)), 2_000)
+        client = FakeClient()
+        for step in (
+            "claim",
+            "start",
+            "uncertain",
+            "verify-after-attempt",
+            "verify-after-uncertain",
+            "fail-before-attempt",
+            "fail-after-attempt",
+            "fail-after-uncertain",
+            "status",
+        ):
+            MODULE.invoke_checkpoint_blueprint_step(
+                blueprint,
+                holder_label="alpha",
+                step=step,
+                client=client,
+            )
+
+    def test_checkpoint_blueprint_invokes_selected_step_only(self) -> None:
+        blueprint = MODULE.build_checkpoint_blueprint(
+            scope="bench",
+            operation_id="operation_0123456789abcdef",
+            holder_labels=["alpha"],
+            namespace_uuid="6f0a1e7e-e446-46f1-88ab-bddef15f89a2",
+        )
+        client = FakeClient()
+        result = MODULE.invoke_checkpoint_blueprint_step(
+            blueprint,
+            holder_label="alpha",
+            step="claim",
+            client=client,
+        )
+        self.assertEqual(result["slug"], "workflow-checkpoint")
+        self.assertEqual(result["blueprint_step"], "claim")
+        self.assertEqual(len(client.requests), 1)
+        self.assertEqual(client.requests[0][1]["action"], "claim")
+
+    def test_checkpoint_evidence_fingerprint_matches_hosted_contract(self) -> None:
+        request = {
+            "action": "transition",
+            "namespace": "bench:6f0a1e7e-e446-46f1-88ab-bddef15f89a2",
+            "workflow_key": "workflow_0123456789abcdef",
+            "holder": "holder_0123456789abcdef",
+            "expected_generation": 1,
+            "from_stage": "external_attempt_started",
+            "to_stage": "caller_verified",
+            "observation_key": "observation_0123456789abcdef",
+            "evidence_type": "stable_marker_readback",
+            "evidence_fingerprint": "hmac-sha256:" + "a" * 64,
+        }
+        MODULE.validate_tool_request(
+            "workflow-checkpoint",
+            request,
+            "checkpoint_request_0001",
+        )
+        request["evidence_fingerprint"] = "a" * 64
+        with self.assertRaisesRegex(MODULE.OnDemandError, "must be an opaque"):
+            MODULE.validate_tool_request(
+                "workflow-checkpoint",
+                request,
+                "checkpoint_request_0001",
+            )
 
     def test_hosted_planner_request_accepts_contract_version_one(self) -> None:
         validated = MODULE.validate_tool_request(
